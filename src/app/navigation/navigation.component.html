@@ -1,0 +1,78 @@
+<mat-sidenav-container class="sidenav-container"
+                       *ngIf="{state: state$ | async} as o"
+                       autosize>
+  <mat-sidenav #drawer
+               [attr.color]="'primary'"
+               class="sidenav"
+               fixedInViewport
+               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+               mode="side"
+               [opened]="isOpen$ | async">
+    <mat-toolbar color="accent">{{o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded) ? 'Menu' :
+      'M'}}
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item
+         [routerLink]="['']"
+         routerLinkActive="router-link-active">
+        <mat-icon mat-list-icon>person</mat-icon>
+        <span *ngIf="o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded)">Dashboard</span>
+      </a>
+      <a mat-list-item
+         routerLink="/events"
+         routerLinkActive="router-link-active">
+        <mat-icon mat-list-icon>assignment</mat-icon>
+        <span *ngIf="o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded)">Events</span>
+      </a>
+      <a mat-list-item
+         routerLink="/events/create"
+         routerLinkActive="router-link-active">
+        <mat-icon mat-list-icon>domain</mat-icon>
+        <span *ngIf="o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded)">Create event</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content [attr.color]="'accent'">
+    <mat-toolbar color="primary">
+      <button type="button"
+              aria-label="Toggle sidenav"
+              mat-icon-button
+              class="toggle-menu"
+              (click)="onClick({
+                  isExpanded: o.state?.isExpanded || false,
+                  isOpen: o.state?.isOpen || false,
+                  isMedium: o.state?.isMedium || false
+              })">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Angular Training</span>
+      <span class="spacer"></span>
+      <div class="search-container">
+        <mat-form-field appearance="outline"
+                        floatLabel="always"
+                        class="search-bar"
+                        [class]="isSearchActivated ? 'active' : null">
+          <input matInput
+                 formControlName="search"
+                 placeholder="Type your search and hit enter...">
+        </mat-form-field>
+        <button type="button"
+                (click)="isSearchActivated = !isSearchActivated"
+                aria-label="Toggle search"
+                mat-icon-button
+                class="search-icon">
+          <mat-icon color="accent"
+                    aria-hidden="false"
+                    aria-label="Toggle search button">search</mat-icon>
+        </button>
+      </div>
+      <span class="spacer"></span>
+      <button mat-icon-button
+              (click)="toggleDarkTheme(o.state?.isDark)"
+              aria-label="Toggle Dark Theme">
+        <mat-icon>{{ o.state?.isDark ? "dark_mode" : "light_mode"}}</mat-icon>
+      </button>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

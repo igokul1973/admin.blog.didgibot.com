@@ -1,0 +1,34 @@
+@use "@angular/material" as mat;
+@use "variables" as vars;
+
+// Defining manhattan project typography levels
+$manhattanman-headline-level: mat.define-typography-level(
+  $font-family: vars.$header-font-family,
+  $font-size: vars.$h1-font-size
+);
+$manhattanman-title-level: mat.define-typography-level(
+  $font-family: vars.$header-font-family,
+  $font-size: vars.$h2-font-size
+);
+$manhattanman-subheading-level: mat.define-typography-level(
+  $font-family: vars.$header-font-family,
+  $font-size: vars.$h3-font-size
+);
+$manhattanman-body-1-level: mat.define-typography-level(
+  $font-size: 1.3rem,
+  $line-height: 1.8rem
+);
+$manhattanman-body-2-level: mat.define-typography-level(
+  $font-size: 1.3rem,
+  $font-weight: bold,
+  $line-height: 1.8rem
+);
+
+// Defining manhattanman project typography config
+$manhattanman-typography: mat.define-typography-config(
+  $headline: $manhattanman-headline-level,
+  $title: $manhattanman-title-level,
+  $subheading-2: $manhattanman-subheading-level,
+  $body-1: $manhattanman-body-1-level,
+  $body-2: $manhattanman-body-2-level
+);

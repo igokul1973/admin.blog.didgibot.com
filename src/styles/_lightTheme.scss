@@ -1,0 +1,29 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use "@angular/material" as mat;
+@use "palettes";
+@use "./definedPalettes" as dp;
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+
+// Indigo-teal theme
+$indigo-teal-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: dp.$indigo-primary,
+      accent: dp.$teal-accent,
+      warn: dp.$red-warn,
+    )
+  )
+);
+
+// White-teal theme
+$white-teal-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: dp.$white-primary,
+      accent: dp.$teal-accent
+    )
+  )
+);

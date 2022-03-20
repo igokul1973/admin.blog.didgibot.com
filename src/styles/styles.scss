@@ -1,0 +1,142 @@
+/* Light theme */
+@use "sass:color";
+@use "@angular/material" as mat;
+@use "fonts";
+@use "variables" as vars;
+@use "lightTheme" as lt;
+@use "typography" as tp;
+@use "./definedPalettes" as dp;
+@use "./customComponentThemes/sidenav.component.theme.scss" as nav;
+@use "./customComponentThemes/toolbar.component.theme.scss" as tb;
+@use "./customComponentThemes/card.component.theme.scss" as card;
+
+// Including typography to each component
+@include mat.core(tp.$manhattanman-typography);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+
+@include mat.core-theme(lt.$indigo-teal-theme);
+@include mat.toolbar-theme(lt.$white-teal-theme);
+@include tb.toolbar-component-theme(lt.$white-teal-theme);
+@include mat.sidenav-theme(lt.$indigo-teal-theme);
+@include nav.sidenav-component-theme(lt.$white-teal-theme);
+@include mat.card-theme(lt.$indigo-teal-theme);
+@include card.card-component-theme(lt.$white-teal-theme);
+@include mat.button-theme(lt.$indigo-teal-theme);
+@include mat.icon-theme(lt.$indigo-teal-theme);
+@include mat.list-theme(lt.$indigo-teal-theme);
+@include mat.input-theme(lt.$indigo-teal-theme);
+@include mat.form-field-theme(lt.$indigo-teal-theme);
+
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: mat.get-color-from-palette(dp.$teal-accent, 100);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: mat.get-color-from-palette(dp.$indigo-primary);
+}
+
+.mat-card.mat-card {
+  padding: 16px;
+  width: 85%;
+
+  @media screen and (min-width: vars.$tablet-width) {
+    padding: vars.$card-padding;
+  }
+
+  .mat-card-title {
+    h1 {
+      font-size: vars.$h1-tablet-font-size;
+
+      @media screen and (min-width: vars.$tablet-width) {
+        font-size: vars.$h1-font-size;
+      }
+    }
+  }
+
+  .mat-card-subtitle {
+    h3 {
+      color: mat.get-color-from-palette(dp.$teal-accent);
+    }
+  }
+
+  .mat-headline {
+    // color: mat.get-color-from-palette(lt.$manhattanman-primary);
+    font-size: vars.$h2-font-size;
+    padding: 15px 0 10px;
+
+    @media screen and (min-width: vars.$tablet-width) {
+      font-size: vars.$h1-font-size;
+    }
+  }
+
+  .mat-card-content {
+    padding-bottom: 16px;
+  }
+
+  .mat-card-header {
+    display: block;
+  }
+
+  .mat-card-header-text {
+    margin: 0;
+  }
+
+  .mat-card-actions {
+    padding-top: 24px;
+  }
+}
+
+.at-list-base .mat-list-item {
+  font-size: vars.$h4-font-size;
+}
+
+.search-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 1.3rem;
+
+  .search-bar {
+    width: 0;
+    transition: width 0.4s linear;
+
+    .mat-form-field-wrapper {
+      padding: 0;
+    }
+
+    &.active {
+      width: 100%;
+    }
+  }
+
+  .mat-form-field {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .mat-form-field-appearance-outline {
+    .mat-form-field-infix {
+      padding: 0.3em 0;
+      border-top: 0.3em solid transparent;
+    }
+  }
+
+  .mat-icon {
+    margin-left: 0.8rem;
+  }
+}

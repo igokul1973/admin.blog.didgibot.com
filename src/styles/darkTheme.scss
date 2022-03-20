@@ -1,0 +1,53 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "typography" as tp;
+@use "palettes";
+@use "./customComponentThemes/toolbar.component.theme.scss" as tb;
+@use "./customComponentThemes/sidenav.component.theme.scss" as nav;
+@use "./customComponentThemes/card.component.theme.scss" as card;
+@use "./definedPalettes" as dp;
+
+// Main theme
+$blue-grey-amber-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: dp.$blue-grey-primary,
+      accent: dp.$amber-accent,
+      warn: dp.$orange-warn
+    )
+  )
+);
+
+.dark-theme {
+  .mat-card.mat-card {
+    .mat-card-title {
+      h1 {
+        color: mat.get-color-from-palette(dp.$indigo-primary, 100);
+      }
+    }
+
+    .mat-card-subtitle {
+      h3 {
+        color: mat.get-color-from-palette(dp.$teal-accent, 100);
+      }
+    }
+
+    .mat-button.mat-warn {
+      color: mat.get-color-from-palette(dp.$red-warn, 200);
+    }
+  }
+
+  @include mat.core-color($blue-grey-amber-dark-theme);
+  @include mat.toolbar-color($blue-grey-amber-dark-theme);
+  @include tb.toolbar-component-theme($blue-grey-amber-dark-theme);
+  @include mat.sidenav-color($blue-grey-amber-dark-theme);
+  @include nav.sidenav-component-theme($blue-grey-amber-dark-theme);
+  @include mat.card-color($blue-grey-amber-dark-theme);
+  @include card.card-component-theme($blue-grey-amber-dark-theme);
+  @include mat.button-color($blue-grey-amber-dark-theme);
+  @include mat.icon-color($blue-grey-amber-dark-theme);
+  @include mat.list-color($blue-grey-amber-dark-theme);
+  @include mat.list-color($blue-grey-amber-dark-theme);
+  @include mat.input-color($blue-grey-amber-dark-theme);
+  @include mat.form-field-color($blue-grey-amber-dark-theme);
+}

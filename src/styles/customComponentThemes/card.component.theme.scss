@@ -1,0 +1,27 @@
+@use "sass:map";
+@use "sass:color";
+@use "@angular/material" as mat;
+@use "../mixins";
+
+@mixin card-component-theme($theme) {
+  // retrieve variables from theme
+  // (all possible variables, use only what you really need)
+  $color-config: mat.get-color-config($theme);
+  $primary: map.get($color-config, primary);
+  $accent: map.get($color-config, accent);
+  $warn: map.get($color-config, warn);
+
+  .mat-card {
+    &[color="primary"] {
+      @include mixins.change-colors($primary);
+    }
+
+    &[color="accent"] {
+      @include mixins.change-colors($accent);
+    }
+
+    &[color="warn"] {
+      @include mixins.change-colors($warn);
+    }
+  }
+}
