@@ -13,11 +13,42 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-
+import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
+import { InMemoryCache } from '@apollo/client/core';
+import { HttpLink } from 'apollo-angular/http';
+import { HttpClientModule } from '@angular/common/http';
+import { environment } from '@src/environments/environment';
+import { ArticlesComponent } from './articles/articles.component';
 @NgModule({
-    declarations: [AppComponent, PageNotFoundComponent, NavigationComponent],
-    imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, MaterialModule, LayoutModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule],
-    providers: [],
+    declarations: [AppComponent, PageNotFoundComponent, NavigationComponent, ArticlesComponent],
+    imports: [
+        ApolloModule,
+        HttpClientModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MaterialModule,
+        LayoutModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatListModule
+    ],
+    providers: [
+        {
+            provide: APOLLO_OPTIONS,
+            useFactory: (httpLink: HttpLink) => {
+                return {
+                    cache: new InMemoryCache(),
+                    link: httpLink.create({
+                        uri: environment.apiUrl
+                    })
+                };
+            },
+            deps: [HttpLink]
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

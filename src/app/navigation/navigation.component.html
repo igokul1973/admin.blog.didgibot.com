@@ -13,10 +13,10 @@
     </mat-toolbar>
     <mat-nav-list>
       <a mat-list-item
-         [routerLink]="['']"
+         [routerLink]="['/']"
          routerLinkActive="router-link-active">
         <mat-icon mat-list-icon>person</mat-icon>
-        <span *ngIf="o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded)">Dashboard</span>
+        <span *ngIf="o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded)">Articles</span>
       </a>
       <a mat-list-item
          routerLink="/events"
