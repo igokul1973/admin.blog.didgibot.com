@@ -49,60 +49,73 @@ h6 {
   color: mat.get-color-from-palette(dp.$indigo-primary);
 }
 
-.mat-card.mat-card {
-  padding: 16px;
-  width: 85%;
-
-  @media screen and (min-width: vars.$tablet-width) {
-    padding: vars.$card-padding;
+// Resetting Angular Material components
+.mat-typography {
+  .mat-button,
+  .mat-raised-button,
+  .mat-stroked-button,
+  .mat-flat-button {
+    font-size: 1.5rem;
+    padding: 5px 30px;
   }
 
-  .mat-card-title {
-    h1 {
-      font-size: vars.$h1-tablet-font-size;
+  .mat-card {
+    padding: 16px;
+    width: 85%;
+
+    @media screen and (min-width: vars.$tablet-width) {
+      padding: vars.$card-padding;
+    }
+
+    .mat-card-title {
+      h1 {
+        font-size: vars.$h1-tablet-font-size;
+
+        @media screen and (min-width: vars.$tablet-width) {
+          font-size: vars.$h1-font-size;
+        }
+      }
+    }
+
+    .mat-card-subtitle {
+      h3 {
+        color: mat.get-color-from-palette(dp.$teal-accent);
+      }
+    }
+
+    .mat-headline {
+      // color: mat.get-color-from-palette(lt.$manhattanman-primary);
+      font-size: vars.$h2-font-size;
+      padding: 15px 0 10px;
 
       @media screen and (min-width: vars.$tablet-width) {
         font-size: vars.$h1-font-size;
       }
     }
-  }
 
-  .mat-card-subtitle {
-    h3 {
-      color: mat.get-color-from-palette(dp.$teal-accent);
+    .mat-card-content {
+      padding-bottom: 16px;
     }
-  }
 
-  .mat-headline {
-    // color: mat.get-color-from-palette(lt.$manhattanman-primary);
-    font-size: vars.$h2-font-size;
-    padding: 15px 0 10px;
-
-    @media screen and (min-width: vars.$tablet-width) {
-      font-size: vars.$h1-font-size;
+    .mat-card-header {
+      display: block;
     }
-  }
 
-  .mat-card-content {
-    padding-bottom: 16px;
-  }
+    .mat-card-header-text {
+      margin: 0;
+    }
 
-  .mat-card-header {
-    display: block;
-  }
-
-  .mat-card-header-text {
-    margin: 0;
-  }
-
-  .mat-card-actions {
-    padding-top: 24px;
+    .mat-card-actions {
+      padding-top: 24px;
+    }
   }
 }
 
 .at-list-base .mat-list-item {
   font-size: vars.$h4-font-size;
 }
+
+// Global styles
 
 .search-container {
   width: 100%;

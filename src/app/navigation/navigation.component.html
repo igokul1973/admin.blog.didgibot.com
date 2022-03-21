@@ -8,7 +8,7 @@
                [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
                mode="side"
                [opened]="isOpen$ | async">
-    <mat-toolbar color="accent">{{o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded) ? 'Menu' :
+    <mat-toolbar color="accent">{{o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded) ? 'Manhattanman' :
       'M'}}
     </mat-toolbar>
     <mat-nav-list>
@@ -19,10 +19,10 @@
         <span *ngIf="o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded)">Articles</span>
       </a>
       <a mat-list-item
-         routerLink="/events"
+         routerLink="/login"
          routerLinkActive="router-link-active">
         <mat-icon mat-list-icon>assignment</mat-icon>
-        <span *ngIf="o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded)">Events</span>
+        <span *ngIf="o.state?.isOpen && (!o.state?.isMedium || o.state?.isExpanded)">Login</span>
       </a>
       <a mat-list-item
          routerLink="/events/create"
@@ -45,7 +45,6 @@
               })">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Angular Training</span>
       <span class="spacer"></span>
       <div class="search-container">
         <mat-form-field appearance="outline"

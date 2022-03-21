@@ -1,0 +1,41 @@
+<section class="page-wrapper">
+  <mat-card class="login"
+            [attr.color]="'primary'">
+    <mat-card-header>
+      <mat-card-title>
+        <h1>
+          Log in
+        </h1>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-divider inset></mat-divider>
+    <mat-card-content>
+      <form class="login-form">
+        <mat-form-field appearance="outline"
+                        floatLabel="always"
+                        class="login-form__username full-width">
+          <mat-label>Username</mat-label>
+          <input matInput
+                 formControlName="login"
+                 placeholder="Enter your username...">
+        </mat-form-field>
+        <mat-form-field appearance="outline"
+                        floatLabel="always"
+                        class="login-form__password full-width">
+          <mat-label>Password</mat-label>
+          <input matInput
+                 formControlName="password"
+                 placeholder="Enter your password">
+        </mat-form-field>
+        <button type="button"
+                color="accent"
+                mat-stroked-button
+                (click)="login()"
+                aria-label="Log in"
+                class="search-icon">
+          Log in
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>

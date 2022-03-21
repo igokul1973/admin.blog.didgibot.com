@@ -19,8 +19,9 @@ import { HttpLink } from 'apollo-angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { environment } from '@src/environments/environment';
 import { ArticlesComponent } from './articles/articles.component';
+import { LoginComponent } from './login/login.component';
 @NgModule({
-    declarations: [AppComponent, PageNotFoundComponent, NavigationComponent, ArticlesComponent],
+    declarations: [AppComponent, PageNotFoundComponent, NavigationComponent, ArticlesComponent, LoginComponent],
     imports: [
         ApolloModule,
         HttpClientModule,

@@ -1,0 +1,21 @@
+@use "../../styles/variables" as vars;
+
+.mat-card.login {
+  width: 400px;
+
+  @media screen and (min-width: vars.$desktop-width) {
+    width: 50%;
+  }
+
+  .mat-card-content {
+    margin-top: 20px;
+  }
+}
+
+.login-form {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
