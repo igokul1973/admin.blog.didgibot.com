@@ -1,9 +1,13 @@
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatDrawer } from '@angular/material/sidenav';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { MatDrawer } from '@angular/material/sidenav';
-import { StyleManagerService } from '../services/style-manager.service';
+import { StyleManagerService } from '@services/style-manager.service';
+import { LocalStorageService } from '@services/local-storage.service';
+import { AuthService } from '@services/auth.service';
+import { RouteUrlEnum } from '../types';
 
 @Component({
     selector: 'app-navigation',
@@ -12,6 +16,12 @@ import { StyleManagerService } from '../services/style-manager.service';
 })
 export class NavigationComponent implements OnInit, OnDestroy {
     @ViewChild('drawer') drawer!: MatDrawer; // ElementRef<HTMLDivElement>;
+
+    searchForm = new FormGroup({
+        searchInput: new FormControl('')
+    });
+
+    routes = RouteUrlEnum;
 
     isSearchActivated = false;
 
@@ -73,6 +83,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
     constructor(
         private breakpointObserver: BreakpointObserver,
         private styleManager: StyleManagerService,
+        private localStorageService: LocalStorageService,
+        private authService: AuthService,
         private renderer: Renderer2
     ) {
         this.renderer.listen('window', 'click', (e: MouseEvent) => {
@@ -139,5 +151,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
         if (typeof isDark === 'boolean') {
             this.styleManager.toggleDarkTheme(isDark);
         }
+    }
+
+    logout() {
+        this.authService.logOut();
     }
 }

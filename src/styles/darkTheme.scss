@@ -2,10 +2,11 @@
 @use "@angular/material" as mat;
 @use "typography" as tp;
 @use "palettes";
+@use "./definedPalettes" as dp;
 @use "./customComponentThemes/toolbar.component.theme.scss" as tb;
 @use "./customComponentThemes/sidenav.component.theme.scss" as nav;
 @use "./customComponentThemes/card.component.theme.scss" as card;
-@use "./definedPalettes" as dp;
+@use "./customComponentThemes/snackbar.component.theme.scss" as snack;
 
 // Main theme
 $blue-grey-amber-dark-theme: mat.define-dark-theme(
@@ -19,17 +20,13 @@ $blue-grey-amber-dark-theme: mat.define-dark-theme(
 );
 
 .dark-theme {
-  .mat-card.mat-card {
+  .mat-card {
     .mat-card-title {
-      h1 {
-        color: mat.get-color-from-palette(dp.$indigo-primary, 100);
-      }
+      color: mat.get-color-from-palette(dp.$indigo-primary, 100);
     }
 
     .mat-card-subtitle {
-      h3 {
-        color: mat.get-color-from-palette(dp.$teal-accent, 100);
-      }
+      color: mat.get-color-from-palette(dp.$teal-accent, 100);
     }
 
     .mat-button.mat-warn {
@@ -50,4 +47,6 @@ $blue-grey-amber-dark-theme: mat.define-dark-theme(
   @include mat.list-color($blue-grey-amber-dark-theme);
   @include mat.input-color($blue-grey-amber-dark-theme);
   @include mat.form-field-color($blue-grey-amber-dark-theme);
+  @include mat.snack-bar-color($blue-grey-amber-dark-theme);
+  @include snack.snackbar-theme($blue-grey-amber-dark-theme);
 }

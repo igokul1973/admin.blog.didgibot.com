@@ -1,2 +1,3 @@
-<app-navigation></app-navigation>
-<router-outlet></router-outlet>
+<app-navigation *ngIf="displayNavigation"></app-navigation>
+<router-outlet *ngIf="!displayNavigation"></router-outlet>
+<app-snackbar></app-snackbar>

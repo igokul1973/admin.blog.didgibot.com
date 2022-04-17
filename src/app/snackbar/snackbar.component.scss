@@ -1,0 +1,62 @@
+@use "@angular/material" as mat;
+@use "../../styles/definedPalettes" as dp;
+@use "../../styles/mixins" as mix;
+
+.snackbar {
+  position: absolute;
+  right: 40px;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+
+  .item {
+    padding: 0.5em 0.7em;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    width: 280px;
+    background-color: mat.get-color-from-palette(dp.$indigo-primary);
+    color: white;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    transition: transform 500ms;
+
+    &.hidden {
+      transform: translateX(500px);
+    }
+
+    &.shown {
+      transform: translateX(0);
+    }
+
+    &.success {
+      //   background: mat.get-color-from-palette(dp.$teal-accent);
+      background: green;
+    }
+
+    &.info {
+      background: mat.get-color-from-palette(dp.$indigo-primary);
+    }
+
+    &.warning {
+      background: mat.get-color-from-palette(dp.$orange-warn);
+    }
+
+    &.error {
+      background: mat.get-color-from-palette(dp.$red-warn);
+    }
+
+    .type-icon {
+      @include mix.md-icon-size(26px);
+
+      margin-right: 12px;
+    }
+
+    .clear-icon {
+      @include mix.md-icon-size(26px);
+
+      margin-left: auto;
+    }
+  }
+}

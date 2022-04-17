@@ -36,11 +36,11 @@
     }
 
     &[color="warn"] {
-      @include mixins.change-colors($warn);
+      @include mixins.change-color($warn);
 
       .mat-nav-list {
         .mat-list-item {
-          @include mixins.change-color($primary);
+          @include mixins.change-colors($primary);
         }
       }
     }

@@ -13,7 +13,7 @@ $indigo-teal-theme: mat.define-light-theme(
     color: (
       primary: dp.$indigo-primary,
       accent: dp.$teal-accent,
-      warn: dp.$red-warn,
+      warn: dp.$red-warn
     )
   )
 );
@@ -23,7 +23,8 @@ $white-teal-theme: mat.define-light-theme(
   (
     color: (
       primary: dp.$white-primary,
-      accent: dp.$teal-accent
+      accent: dp.$teal-accent,
+      warn: dp.$red-warn
     )
   )
 );

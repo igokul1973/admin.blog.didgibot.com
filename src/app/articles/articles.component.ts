@@ -1,30 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { Apollo, gql } from 'apollo-angular';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { IArticle } from '@src/generated/types';
+import { GET_ARTICLES } from '@src/operations/mutations/getArticles';
+import { Apollo } from 'apollo-angular';
+import { Subscription } from 'rxjs';
+import { SnackbarService } from '../services/snackbar.service';
 
 @Component({
     selector: 'app-articles',
     templateUrl: './articles.component.html',
     styleUrls: ['./articles.component.scss']
 })
-export class ArticlesComponent implements OnInit {
-    articles: any[] = [];
-    constructor(private apollo: Apollo) {}
+export class ArticlesComponent implements OnInit, OnDestroy {
+    articles: IArticle[] = [];
+    articlesSubscription: Subscription | null = null;
+
+    constructor(private apollo: Apollo, private snackbarService: SnackbarService) {}
 
     ngOnInit(): void {
-        this.apollo
-            .watchQuery({
-                query: gql`
-                    {
-                        articles {
-                            header
-                            subheader
-                            content
-                        }
-                    }
-                `
+        this.articlesSubscription = this.apollo
+            .watchQuery<{ articles: IArticle[] }>({
+                query: GET_ARTICLES,
+                fetchPolicy: 'cache-and-network'
             })
-            .valueChanges.subscribe((result: any) => {
-                this.articles = result?.data?.articles;
+            .valueChanges.subscribe({
+                next: (result) => {
+                    this.articles = result?.data?.articles;
+                },
+                error: () => {
+                    this.snackbarService.addSnackbar({
+                        type: 'error',
+                        data: { message: 'Could not fetch articles' }
+                    });
+                }
             });
+    }
+
+    ngOnDestroy(): void {
+        this.articlesSubscription?.unsubscribe();
     }
 }

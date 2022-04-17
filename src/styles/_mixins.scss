@@ -8,3 +8,14 @@
 @mixin change-color($palette) {
   color: mat.get-color-from-palette($palette, default-contrast);
 }
+
+@mixin change-text-color($palette) {
+  color: mat.get-color-from-palette($palette);
+}
+
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
