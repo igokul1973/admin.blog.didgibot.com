@@ -16,8 +16,7 @@ export const apolloProviderFactory = (
     snackbarService: SnackbarService
 ) => {
     const httpApolloLink = httpLink.create({
-        // uri: environment.apiUrl
-        uri: 'http://192.168.10.250:4000/graphql'
+        uri: environment.apiUrl
     });
     // Adding an access token to each request but the LoginUser
     const authLink = new ApolloLink((operation, forward) => {
