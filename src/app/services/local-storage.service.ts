@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ITokens, IUser } from '@src/generated/types';
-import { isUserLoggedIn } from '../cache';
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, LAST_VISITED_ROUTE_KEY, USER_KEY } from './constants';
 
 @Injectable({

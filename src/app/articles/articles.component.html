@@ -10,9 +10,17 @@
         </mat-card-header>
         <mat-divider inset></mat-divider>
         <mat-card-content>
-            <div>
-                {{articles | json}}
-            </div>
+            <ng-container *ngIf="errors$ | async">
+                <div *ngFor="let error of errors$ | async">
+                    {{error | json}}
+                </div>
+            </ng-container>
+            <div *ngIf="loading$ | async">Loading...</div>
+            <ng-container *ngIf="!(loading$ | async)">
+                <div *ngFor="let article of articles$ | async">
+                    {{article | json}}
+                </div>
+            </ng-container>
         </mat-card-content>
     </mat-card>
 </section>

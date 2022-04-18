@@ -5,6 +5,7 @@ import HttpStatus from 'http-status-codes';
 import { BehaviorSubject, Observable, Subject, take } from 'rxjs';
 import { GenericError } from './errors';
 import { SnackbarService } from '../app/services/snackbar.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * The logic below makes sure that multiple requests (operations) that
@@ -92,6 +93,23 @@ export function getApolloErrorLink(authService: AuthService, snackbarService: Sn
                         }
                     }
                 }
+            }
+        }
+        if (res.networkError) {
+            if (
+                res.networkError instanceof HttpErrorResponse &&
+                res.networkError.name === 'HttpErrorResponse' &&
+                res.networkError.statusText === 'Unknown Error'
+            ) {
+                snackbarService.addSnackbar({
+                    type: 'error',
+                    data: { message: 'Could not fetch data. Please check that you have an Internet connection' }
+                });
+            } else {
+                snackbarService.addSnackbar({
+                    type: 'error',
+                    data: { message: `The fetch operation resulted in following error: ${res.networkError.message}` }
+                });
             }
         }
         return;

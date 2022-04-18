@@ -1,9 +1,12 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "./tsconfig.json",
-  "include": [
-    "src/environments/**/*.ts",
-    "src/**/*.ts"
-  ],
-  "exclude": []
+    "extends": "./tsconfig.json",
+    "files": [
+        "karma.conf.js"
+    ],
+    "include": [
+        "src/environments/**/*.ts",
+        "src/**/*.ts"
+    ],
+    "exclude": []
 }

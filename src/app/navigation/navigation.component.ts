@@ -2,11 +2,10 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
+import { AuthService } from '@services/auth.service';
+import { StyleManagerService } from '@services/style-manager.service';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { StyleManagerService } from '@services/style-manager.service';
-import { LocalStorageService } from '@services/local-storage.service';
-import { AuthService } from '@services/auth.service';
 import { RouteUrlEnum } from '../types';
 
 @Component({
@@ -83,7 +82,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     constructor(
         private breakpointObserver: BreakpointObserver,
         private styleManager: StyleManagerService,
-        private localStorageService: LocalStorageService,
         private authService: AuthService,
         private renderer: Renderer2
     ) {

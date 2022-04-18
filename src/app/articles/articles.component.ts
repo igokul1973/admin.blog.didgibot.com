@@ -1,41 +1,33 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IArticle } from '@src/generated/types';
 import { GET_ARTICLES } from '@src/operations/mutations/getArticles';
 import { Apollo } from 'apollo-angular';
-import { Subscription } from 'rxjs';
-import { SnackbarService } from '../services/snackbar.service';
+import { GraphQLError } from 'graphql';
+import { Observable, pluck } from 'rxjs';
 
 @Component({
     selector: 'app-articles',
     templateUrl: './articles.component.html',
     styleUrls: ['./articles.component.scss']
 })
-export class ArticlesComponent implements OnInit, OnDestroy {
-    articles: IArticle[] = [];
-    articlesSubscription: Subscription | null = null;
+export class ArticlesComponent implements OnInit {
+    articles$: Observable<IArticle[]> | null = null;
+    loading$: Observable<boolean> = new Observable<boolean>();
+    errors$: Observable<readonly GraphQLError[] | undefined> | null = null;
 
-    constructor(private apollo: Apollo, private snackbarService: SnackbarService) {}
+    constructor(private apollo: Apollo) {}
 
     ngOnInit(): void {
-        this.articlesSubscription = this.apollo
-            .watchQuery<{ articles: IArticle[] }>({
-                query: GET_ARTICLES,
-                fetchPolicy: 'cache-and-network'
-            })
-            .valueChanges.subscribe({
-                next: (result) => {
-                    this.articles = result?.data?.articles;
-                },
-                error: () => {
-                    this.snackbarService.addSnackbar({
-                        type: 'error',
-                        data: { message: 'Could not fetch articles' }
-                    });
-                }
-            });
+        const source$ = this.getArticles();
+        this.loading$ = source$.pipe(pluck('loading'));
+        this.errors$ = source$.pipe(pluck('errors'));
+        this.articles$ = source$.pipe(pluck('data', 'articles'));
     }
 
-    ngOnDestroy(): void {
-        this.articlesSubscription?.unsubscribe();
+    getArticles() {
+        return this.apollo.watchQuery<{ articles: IArticle[] }>({
+            query: GET_ARTICLES,
+            fetchPolicy: 'cache-and-network'
+        }).valueChanges;
     }
 }
