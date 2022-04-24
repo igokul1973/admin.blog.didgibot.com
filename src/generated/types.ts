@@ -128,6 +128,11 @@ export type IArticleAggregateSelection = {
   updatedAt: IDateTimeAggregateSelectionNonNullable;
 };
 
+export type IArticleArticleSearchFulltext = {
+  phrase: Scalars['String'];
+  score_EQUAL?: InputMaybe<Scalars['Int']>;
+};
+
 export type IArticleAuthorAggregateInput = {
   AND?: InputMaybe<Array<IArticleAuthorAggregateInput>>;
   OR?: InputMaybe<Array<IArticleAuthorAggregateInput>>;
@@ -516,6 +521,10 @@ export type IArticleDisconnectInput = {
   author?: InputMaybe<IArticleAuthorDisconnectFieldInput>;
   categories?: InputMaybe<Array<IArticleCategoriesDisconnectFieldInput>>;
   tags?: InputMaybe<Array<IArticleTagsDisconnectFieldInput>>;
+};
+
+export type IArticleFulltext = {
+  ArticleSearch?: InputMaybe<IArticleArticleSearchFulltext>;
 };
 
 export type IArticleOnCreateInput = {
@@ -1421,12 +1430,14 @@ export type IQuery = {
 
 
 export type IQueryArticlesArgs = {
+  fulltext?: InputMaybe<IArticleFulltext>;
   options?: InputMaybe<IArticleOptions>;
   where?: InputMaybe<IArticleWhere>;
 };
 
 
 export type IQueryArticlesAggregateArgs = {
+  fulltext?: InputMaybe<IArticleFulltext>;
   where?: InputMaybe<IArticleWhere>;
 };
 
@@ -2386,6 +2397,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type IResolversTypes = {
   Article: ResolverTypeWrapper<IArticle>;
   ArticleAggregateSelection: ResolverTypeWrapper<IArticleAggregateSelection>;
+  ArticleArticleSearchFulltext: IArticleArticleSearchFulltext;
   ArticleAuthorAggregateInput: IArticleAuthorAggregateInput;
   ArticleAuthorConnectFieldInput: IArticleAuthorConnectFieldInput;
   ArticleAuthorConnectOrCreateFieldInput: IArticleAuthorConnectOrCreateFieldInput;
@@ -2425,6 +2437,7 @@ export type IResolversTypes = {
   ArticleCreateInput: IArticleCreateInput;
   ArticleDeleteInput: IArticleDeleteInput;
   ArticleDisconnectInput: IArticleDisconnectInput;
+  ArticleFulltext: IArticleFulltext;
   ArticleOnCreateInput: IArticleOnCreateInput;
   ArticleOptions: IArticleOptions;
   ArticleRelationInput: IArticleRelationInput;
@@ -2585,6 +2598,7 @@ export type IResolversTypes = {
 export type IResolversParentTypes = {
   Article: IArticle;
   ArticleAggregateSelection: IArticleAggregateSelection;
+  ArticleArticleSearchFulltext: IArticleArticleSearchFulltext;
   ArticleAuthorAggregateInput: IArticleAuthorAggregateInput;
   ArticleAuthorConnectFieldInput: IArticleAuthorConnectFieldInput;
   ArticleAuthorConnectOrCreateFieldInput: IArticleAuthorConnectOrCreateFieldInput;
@@ -2624,6 +2638,7 @@ export type IResolversParentTypes = {
   ArticleCreateInput: IArticleCreateInput;
   ArticleDeleteInput: IArticleDeleteInput;
   ArticleDisconnectInput: IArticleDisconnectInput;
+  ArticleFulltext: IArticleFulltext;
   ArticleOnCreateInput: IArticleOnCreateInput;
   ArticleOptions: IArticleOptions;
   ArticleRelationInput: IArticleRelationInput;

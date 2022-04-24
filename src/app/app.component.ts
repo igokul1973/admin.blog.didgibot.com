@@ -18,7 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
     isUserLoggedInLoading = true;
     displayNavigation = false;
     loginSubscription: Subscription | null = null;
-    routerEventsSubscription: Subscription;
+    routerEventsSubscription: Subscription | null = null;
 
     constructor(private apollo: Apollo, private router: Router, private localStorageService: LocalStorageService) {
         this.routerEventsSubscription = router.events.subscribe((event) => {
@@ -48,6 +48,7 @@ export class AppComponent implements OnInit, OnDestroy {
             .valueChanges.subscribe({
                 next: (result) => {
                     this.isUserLoggedInLoading = result.loading;
+
                     if (!this.isUserLoggedInLoading) {
                         this.isUserLoggedIn = result?.data?.isUserLoggedIn;
                         this.displayNavigation = this.isUserLoggedIn;

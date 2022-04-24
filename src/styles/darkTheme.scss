@@ -49,4 +49,8 @@ $blue-grey-amber-dark-theme: mat.define-dark-theme(
   @include mat.form-field-color($blue-grey-amber-dark-theme);
   @include mat.snack-bar-color($blue-grey-amber-dark-theme);
   @include snack.snackbar-theme($blue-grey-amber-dark-theme);
+  @include mat.expansion-theme($blue-grey-amber-dark-theme);
+  @include mat.progress-bar-theme($blue-grey-amber-dark-theme);
+  @include mat.select-theme($blue-grey-amber-dark-theme);
+  @include mat.option-theme($blue-grey-amber-dark-theme);
 }

@@ -1,4 +1,5 @@
-<section class="page-wrapper">
+<section class="page-wrapper"
+         *ngIf="(data$ | async) as data">
     <mat-card class="articles"
               [attr.color]="'primary'">
         <mat-card-header>
@@ -6,21 +7,91 @@
                 <h1>
                     Articles
                 </h1>
+                <mat-icon mat-list-icon
+                          (click)="isFilterSectionOpen = !isFilterSectionOpen"
+                          color="accent">filter</mat-icon>
             </mat-card-title>
+            <mat-card-subtitle [ngClass]="[isFilterSectionOpen ? 'shown' : 'hidden']">
+                <mat-form-field appearance="outline"
+                                floatLabel="always">
+                    <mat-label>Filter</mat-label>
+                    <input matInput
+                           (keyup)="filterEmit($event)"
+                           placeholder="Filter by header, subheader or article content...">
+                    <mat-hint>Hint: you can use the <a target="_blank"
+                           href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene search syntax</a>
+                    </mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline"
+                                floatLabel="always">
+                    <mat-label>Sort by updated date</mat-label>
+                    <mat-select matInput
+                                [value]="data.sortUpdatedAt"
+                                (selectionChange)="sortArticles($event.value)">
+                        <mat-option *ngFor="let dir of sortDirections"
+                                    [value]="dir.value">{{dir.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-card-subtitle>
         </mat-card-header>
-        <mat-divider inset></mat-divider>
+        <mat-divider inset
+                     *ngIf="!data.loading"></mat-divider>
+        <div *ngIf="data.loading">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
         <mat-card-content>
-            <ng-container *ngIf="errors$ | async">
-                <div *ngFor="let error of errors$ | async">
+            <ng-container *ngIf="data.errors">
+                <div *ngFor="let error of data.errors">
                     {{error | json}}
                 </div>
             </ng-container>
-            <div *ngIf="loading$ | async">Loading...</div>
-            <ng-container *ngIf="!(loading$ | async)">
-                <div *ngFor="let article of articles$ | async">
-                    {{article | json}}
-                </div>
-            </ng-container>
+            <mat-accordion *ngIf="!data.loading">
+                <mat-expansion-panel *ngFor="let article of data.articles">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <div class="title-wrapper">
+                                <h3>{{article.header}}</h3>
+                                <div class="meta">
+                                    <div class="categories">
+                                        Categories:
+                                        <span *ngFor="let cat of article.categories">
+                                            {{cat.name}}
+                                        </span>
+                                    </div>
+                                    <div class="dates">
+                                        <div class="date-updated">
+                                            Updated: {{ article.updatedAt | date: 'hh:mm, yyyy MMM dd'}}
+                                        </div>
+                                        <div class="date-created">
+                                            Created: {{ article.createdAt | date: 'hh:mm, yyyy MMM dd'}}
+                                        </div>
+                                    </div>
+                                    <div class="is-published">
+                                        <span class="text">
+                                            Published:
+                                        </span>
+                                        <mat-icon mat-list-icon
+                                                  *ngIf="article.isPublished"
+                                                  color="accent">visibility</mat-icon>
+                                        <mat-icon mat-list-icon
+                                                  *ngIf="!article.isPublished"
+                                                  color="grey">visibility_off</mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <mat-icon mat-list-icon
+                                      (click)="editArticle({$event, article})"
+                                      color="accent">edit</mat-icon>
+                            <mat-icon mat-list-icon
+                                      (click)="deleteArticle({$event, article})"
+                                      color="warn">delete</mat-icon>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    {{article.content}}
+                </mat-expansion-panel>
+            </mat-accordion>
         </mat-card-content>
     </mat-card>
 </section>

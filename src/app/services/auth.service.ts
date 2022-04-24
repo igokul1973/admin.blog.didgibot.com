@@ -27,7 +27,8 @@ export class AuthService {
                 mutation: REFRESH_TOKENS,
                 variables: {
                     refreshToken
-                }
+                },
+                fetchPolicy: 'no-cache'
             })
             .pipe(
                 map((d) => {

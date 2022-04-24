@@ -6,7 +6,6 @@ import { TSnackbar, TSnackbarArguments } from './types';
     providedIn: 'root'
 })
 export class SnackbarService {
-    // TODO: Check if config interface should be changed
     snackbarSubject = new Subject<TSnackbar>();
     snackbar$ = this.snackbarSubject.asObservable();
 

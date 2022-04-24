@@ -91,6 +91,12 @@ export function getApolloErrorLink(authService: AuthService, snackbarService: Sn
                                 data: { message: `The fetch operation ${res.operation.operationName} is forbidden` }
                             });
                         }
+                    } else if (error.path && error.path[0] === 'articles') {
+                        snackbarService.addSnackbar({
+                            type: 'error',
+                            data: { message: 'Wrong Lucene search syntax. Please correct your search term.' }
+                        });
+                        throw error;
                     }
                 }
             }

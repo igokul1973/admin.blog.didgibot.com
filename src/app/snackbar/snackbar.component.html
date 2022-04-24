@@ -6,7 +6,7 @@
          [ngClass]="[snackbar.type, snackbar.isShow ? 'shown' : 'hidden']">
         <mat-icon mat-list-icon
                   class="type-icon">{{snackbarTypeToIconMap[snackbar.type]}}</mat-icon>
-        <span>{{ snackbar.data?.message }}</span>
+        <span class="message">{{ snackbar.data?.message }}</span>
         <mat-icon mat-list-icon
                   class="clear-icon"
                   (click)="closeSnackbar(snackbar)">clear</mat-icon>

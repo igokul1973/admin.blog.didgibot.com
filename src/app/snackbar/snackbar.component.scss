@@ -15,7 +15,7 @@
     flex: 1 1 auto;
     display: flex;
     align-items: center;
-    width: 280px;
+    width: 400px;
     background-color: mat.get-color-from-palette(dp.$indigo-primary);
     color: white;
     margin-bottom: 10px;
@@ -45,6 +45,11 @@
 
     &.error {
       background: mat.get-color-from-palette(dp.$red-warn);
+    }
+
+    .message {
+      max-width: 320px;
+      overflow: hidden;
     }
 
     .type-icon {
