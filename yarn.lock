@@ -264,6 +264,13 @@
   resolved "https://registry.yarnpkg.com/@assemblyscript/loader/-/loader-0.10.1.tgz#70e45678f06c72fa2e350e8553ec4a4d72b92e06"
   integrity sha512-H71nDOOL8Y7kWRLqf6Sums+01Q5msqBW2KhDUTemh1tvY04eSkSXrK0uj/4mmY0Xr16/3zyZmsrxN7CKuRbNRg==
 
+"@auth0/angular-jwt@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@auth0/angular-jwt/-/angular-jwt-5.0.2.tgz#0a23f240e8c6ed37c5c7a354ad79a755a217936e"
+  integrity sha512-rSamC9mu+gUxoR86AXcIo+KD7xRIro+/iu1F2Ld85YAZEVKlpB5vYG+g0yGaEOqjtQWP/i0H6fi6XMGPVHSYYQ==
+  dependencies:
+    tslib "^2.0.0"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.16.7":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.16.7.tgz#44416b6bd7624b998f5b1af5d470856c40138789"
@@ -1289,6 +1296,13 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@kolkov/angular-editor@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@kolkov/angular-editor/-/angular-editor-2.0.0.tgz#bddd07097f59da57e1be69dda54a03317a165ccd"
+  integrity sha512-61Kxfd5LCiX8NmuT78o4VipaL5mfgKcd6bh5KRbMAMMBrmXH1ANRBeoalfjnd2G9MWVMxV5LBSrMrNp5mXERjA==
+  dependencies:
+    tslib "^2.3.0"
+
 "@ngtools/webpack@13.3.0":
   version "13.3.0"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-13.3.0.tgz#4aa73b6e05aafbe539b7442eae248a02d5f8619f"
@@ -1505,6 +1519,13 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+
+"@types/jsonwebtoken@^8.5.8":
+  version "8.5.8"
+  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.8.tgz#01b39711eb844777b7af1d1f2b4cf22fda1c0c44"
+  integrity sha512-zm6xBQpFDIDM6o9r6HSgDeIcLy82TKWctCXEPbJJcXb5AKmi5BNNdLXneixK4lplX3PqIVcwLBCGE/kAGnlD4A==
+  dependencies:
+    "@types/node" "*"
 
 "@types/mime@^1":
   version "1.3.2"
@@ -1949,6 +1970,14 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.8.0:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
+
+angular-froala-wysiwyg@^4.0.10:
+  version "4.0.10"
+  resolved "https://registry.yarnpkg.com/angular-froala-wysiwyg/-/angular-froala-wysiwyg-4.0.10.tgz#3478b7af74f330175538b88d2e65c9401a35fc1c"
+  integrity sha512-+Du3EzZ8rSqw91MtONLegqfHVJBRmPxkBu4/MkNStlYHLDpdnl+xs3t/Vzm6oQOWJ/Y5gqDkw0m7BBbJc0DXqA==
+  dependencies:
+    froala-editor "4.0.10"
+    tslib "^2.0.0"
 
 ansi-colors@4.1.1:
   version "4.1.1"
@@ -3715,6 +3744,11 @@ fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
+
+froala-editor@4.0.10:
+  version "4.0.10"
+  resolved "https://registry.yarnpkg.com/froala-editor/-/froala-editor-4.0.10.tgz#4539d71d73b2671d9b29b4ba4b151e1f37324b86"
+  integrity sha512-q7KglNOyo7tsK8sdO548qBfuKi+RdAFuC1Zt1E1l7LTzmkCXjGXR5clJJg9zb4V3D06KuPnNeNCGcfVEaalLww==
 
 fs-extra@^10.0.1:
   version "10.0.1"

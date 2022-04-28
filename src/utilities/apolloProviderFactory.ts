@@ -1,11 +1,12 @@
 import { ApolloLink } from '@apollo/client/core';
 import { HttpLink } from 'apollo-angular/http';
 import { cache } from '@src/app/cache';
-import { AuthService } from '@src/app/services/auth.service';
-import { LocalStorageService } from '@src/app/services/local-storage.service';
-import { SnackbarService } from '@src/app/services/snackbar.service';
+import { AuthService } from '@services/auth.service';
+import { LocalStorageService } from '@services/local-storage.service';
+import { SnackbarService } from '@services/snackbar.service';
 import { environment } from '@src/environments/environment';
 import { getApolloErrorLink } from './getApolloErrorLink';
+import { JwtService } from '@services/jwt.service';
 
 const ACCESS_TOKEN_HEADER_KEY = 'Authorization';
 
@@ -13,7 +14,8 @@ export const apolloProviderFactory = (
     httpLink: HttpLink,
     localStorageService: LocalStorageService,
     authService: AuthService,
-    snackbarService: SnackbarService
+    snackbarService: SnackbarService,
+    jwtService: JwtService
 ) => {
     const httpApolloLink = httpLink.create({
         uri: environment.apiUrl
@@ -30,7 +32,7 @@ export const apolloProviderFactory = (
         return forward(operation);
     });
 
-    const errorApolloLink = getApolloErrorLink(authService, snackbarService);
+    const errorApolloLink = getApolloErrorLink(authService, snackbarService, jwtService);
 
     const link = errorApolloLink.concat(authLink.concat(httpApolloLink));
 

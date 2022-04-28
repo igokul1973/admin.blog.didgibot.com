@@ -26,11 +26,11 @@
 
     .mat-card-subtitle {
       &[color="primary"] {
-        @include mixins.change-text-color($primary);
+        @include mixins.change-color($primary);
       }
 
       &[color="accent"] {
-        @include mixins.change-text-color($accent);
+        @include mixins.change-color($accent);
       }
 
       &[color="warn"] {

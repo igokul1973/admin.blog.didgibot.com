@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ApolloTestingModule, ApolloTestingController } from 'apollo-angular/testing';
 import { AppComponent } from './app.component';
-import { MaterialModule } from './material/material.module';
-import { SnackbarComponent } from './snackbar/snackbar.component';
+import { MaterialModule } from '@modules/material.module';
+import { SnackbarComponent } from '@components/snackbar/snackbar.component';
 
 describe('AppComponent', () => {
     let controller: ApolloTestingController;

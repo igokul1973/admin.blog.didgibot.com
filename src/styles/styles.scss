@@ -10,6 +10,7 @@
 @use "./customComponentThemes/toolbar.component.theme.scss" as tb;
 @use "./customComponentThemes/card.component.theme.scss" as card;
 @use "./customComponentThemes/snackbar.component.theme.scss" as snack;
+@use "./customComponentThemes/slide-toggle.component.theme.scss" as slide-toggle;
 
 // Including typography to each component
 @include mat.core(tp.$manhattanman-typography);
@@ -36,6 +37,8 @@
 @include mat.progress-bar-theme(lt.$indigo-teal-theme);
 @include mat.select-theme(lt.$indigo-teal-theme);
 @include mat.option-theme(lt.$indigo-teal-theme);
+@include mat.slide-toggle-theme(lt.$indigo-teal-theme);
+@include slide-toggle.slide-toggle-theme(lt.$indigo-teal-theme);
 
 /* You can add global styles to this file, and also import other style files */
 
@@ -47,15 +50,6 @@ body {
   background-color: mat.get-color-from-palette(dp.$teal-accent, 100);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  //   color: mat.get-color-from-palette(dp.$indigo-primary);
-}
-
 // Resetting Angular Material components
 .mat-typography {
   .mat-button,
@@ -64,6 +58,43 @@ h6 {
   .mat-flat-button {
     font-size: 1.5rem;
     padding: 5px 30px;
+  }
+
+  .search-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 1.3rem;
+
+    .search-bar {
+      width: 0;
+      transition: width 0.4s linear;
+
+      .mat-form-field-wrapper {
+        padding: 0;
+      }
+
+      &.active {
+        width: 100%;
+      }
+    }
+
+    .mat-form-field {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .mat-form-field-appearance-outline {
+      .mat-form-field-infix {
+        padding: 0.3em 0;
+        border-top: 0.3em solid transparent;
+      }
+    }
+
+    .mat-icon {
+      margin-left: 0.8rem;
+    }
   }
 
   .mat-card {
@@ -110,6 +141,39 @@ h6 {
       padding-top: 24px;
     }
   }
+
+  .article-form {
+    .mat-card-title {
+      display: flex;
+      align-items: center;
+
+      .mat-icon-button {
+        margin-left: auto;
+      }
+    }
+
+    .mat-card-content {
+      padding-top: 0.5em;
+
+      .mat-slide-toggle {
+        margin-bottom: 2em;
+      }
+
+      form {
+        & > * {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .mat-form-field.hidden-input {
+    .mat-form-field-wrapper {
+      .mat-form-field-flex {
+        display: none;
+      }
+    }
+  }
 }
 
 .at-list-base .mat-list-item {
@@ -117,43 +181,6 @@ h6 {
 }
 
 // Global styles
-
-.search-container {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  font-size: 1.3rem;
-
-  .search-bar {
-    width: 0;
-    transition: width 0.4s linear;
-
-    .mat-form-field-wrapper {
-      padding: 0;
-    }
-
-    &.active {
-      width: 100%;
-    }
-  }
-
-  .mat-form-field {
-    padding: 0;
-    overflow: hidden;
-  }
-
-  .mat-form-field-appearance-outline {
-    .mat-form-field-infix {
-      padding: 0.3em 0;
-      border-top: 0.3em solid transparent;
-    }
-  }
-
-  .mat-icon {
-    margin-left: 0.8rem;
-  }
-}
 
 .page-wrapper {
   display: grid;

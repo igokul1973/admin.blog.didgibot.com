@@ -5,12 +5,12 @@
   color: mat.get-color-from-palette($palette, default-contrast);
 }
 
-@mixin change-color($palette) {
+@mixin change-contrast-color($palette) {
   color: mat.get-color-from-palette($palette, default-contrast);
 }
 
-@mixin change-text-color($palette) {
-  color: mat.get-color-from-palette($palette);
+@mixin change-color($palette, $hue: 500) {
+  color: mat.get-color-from-palette($palette, $hue);
 }
 
 @mixin md-icon-size($size: 24px) {

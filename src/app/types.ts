@@ -10,3 +10,16 @@ export enum RouteUrlEnum {
     ARTICLES = '/articles',
     LOGIN = '/login'
 }
+
+export interface ITokenPayload {
+    id: string;
+    email: string;
+    exp?: number;
+    iat?: number;
+    iss?: string;
+}
+
+export enum FormTypeEnum {
+    CREATE = 'create',
+    UPDATE = 'update'
+}

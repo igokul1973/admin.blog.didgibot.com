@@ -3,9 +3,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IUser } from '@src/generated/types';
 import { GET_USERS } from '@src/operations/queries/getUsers';
 import { ApolloTestingController, ApolloTestingModule } from 'apollo-angular/testing';
-import { pluck } from 'rxjs';
+import { map } from 'rxjs';
 import { AppComponent } from '../app.component';
-
 import { UserService } from './user.service';
 
 describe('UserService', () => {
@@ -29,7 +28,7 @@ describe('UserService', () => {
 
     it('expect and answer', () => {
         //Call the relevant method
-        service.admin$.pipe(pluck('data', 'users')).subscribe((users: IUser[]) => {
+        service.admin$.pipe(map((r) => r?.data.users)).subscribe((users: IUser[]) => {
             //Make some assertion about the result;
             expect(users.length).toEqual(1);
             expect(users[0].phone).toEqual('+7657483909');

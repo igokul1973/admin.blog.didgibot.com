@@ -7,6 +7,8 @@
 @use "./customComponentThemes/sidenav.component.theme.scss" as nav;
 @use "./customComponentThemes/card.component.theme.scss" as card;
 @use "./customComponentThemes/snackbar.component.theme.scss" as snack;
+@use "./customComponentThemes/slide-toggle.component.theme.scss" as slide-toggle;
+@use "./mixins";
 
 // Main theme
 $blue-grey-amber-dark-theme: mat.define-dark-theme(
@@ -22,15 +24,15 @@ $blue-grey-amber-dark-theme: mat.define-dark-theme(
 .dark-theme {
   .mat-card {
     .mat-card-title {
-      color: mat.get-color-from-palette(dp.$indigo-primary, 100);
+      @include mixins.change-color(dp.$indigo-primary, 100);
     }
 
     .mat-card-subtitle {
-      color: mat.get-color-from-palette(dp.$teal-accent, 100);
+      @include mixins.change-color(dp.$teal-accent, 100);
     }
 
     .mat-button.mat-warn {
-      color: mat.get-color-from-palette(dp.$red-warn, 200);
+      @include mixins.change-color(dp.$red-warn, 200);
     }
   }
 
@@ -49,8 +51,10 @@ $blue-grey-amber-dark-theme: mat.define-dark-theme(
   @include mat.form-field-color($blue-grey-amber-dark-theme);
   @include mat.snack-bar-color($blue-grey-amber-dark-theme);
   @include snack.snackbar-theme($blue-grey-amber-dark-theme);
-  @include mat.expansion-theme($blue-grey-amber-dark-theme);
-  @include mat.progress-bar-theme($blue-grey-amber-dark-theme);
-  @include mat.select-theme($blue-grey-amber-dark-theme);
-  @include mat.option-theme($blue-grey-amber-dark-theme);
+  @include mat.expansion-color($blue-grey-amber-dark-theme);
+  @include mat.progress-bar-color($blue-grey-amber-dark-theme);
+  @include mat.select-color($blue-grey-amber-dark-theme);
+  @include mat.option-color($blue-grey-amber-dark-theme);
+  @include mat.slide-toggle-color($blue-grey-amber-dark-theme);
+  @include slide-toggle.slide-toggle-theme($blue-grey-amber-dark-theme);
 }

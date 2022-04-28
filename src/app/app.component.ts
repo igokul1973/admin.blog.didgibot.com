@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { AuthService } from '@services/auth.service';
 import { LocalStorageService } from '@services/local-storage.service';
-import { ICachedFields } from '@src/app/cache';
-import { Apollo, gql } from 'apollo-angular';
 import { Subscription } from 'rxjs';
 import { RouteUrlEnum } from './types';
 
@@ -20,7 +19,11 @@ export class AppComponent implements OnInit, OnDestroy {
     loginSubscription: Subscription | null = null;
     routerEventsSubscription: Subscription | null = null;
 
-    constructor(private apollo: Apollo, private router: Router, private localStorageService: LocalStorageService) {
+    constructor(
+        private router: Router,
+        private authService: AuthService,
+        private localStorageService: LocalStorageService
+    ) {
         this.routerEventsSubscription = router.events.subscribe((event) => {
             if (event instanceof NavigationStart) {
                 this.currentUrl = event.url;
@@ -37,36 +40,28 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.loginSubscription = this.apollo
-            .watchQuery<ICachedFields>({
-                query: gql`
-                    query GetIsUserLoggedIn {
-                        isUserLoggedIn @client
-                    }
-                `
-            })
-            .valueChanges.subscribe({
-                next: (result) => {
-                    this.isUserLoggedInLoading = result.loading;
+        this.loginSubscription = this.authService.getIsUserLoggedIn().valueChanges.subscribe({
+            next: (result) => {
+                this.isUserLoggedInLoading = result.loading;
 
-                    if (!this.isUserLoggedInLoading) {
-                        this.isUserLoggedIn = result?.data?.isUserLoggedIn;
-                        this.displayNavigation = this.isUserLoggedIn;
-                        if (this.isUserLoggedIn) {
-                            const lastVisitedRoute = this.localStorageService.getLastVisitedRoute();
-                            this.localStorageService.removeLastVisitedRoute();
-                            this.router.navigateByUrl(this.getCurrentUrl(lastVisitedRoute));
-                        } else {
-                            if (this.currentUrl !== RouteUrlEnum.LOGIN) {
-                                this.router.navigateByUrl(RouteUrlEnum.LOGIN);
-                            }
+                if (!this.isUserLoggedInLoading) {
+                    this.isUserLoggedIn = result?.data?.isUserLoggedIn;
+                    this.displayNavigation = this.isUserLoggedIn;
+                    if (this.isUserLoggedIn) {
+                        const lastVisitedRoute = this.localStorageService.getLastVisitedRoute();
+                        this.localStorageService.removeLastVisitedRoute();
+                        this.router.navigateByUrl(this.getCurrentUrl(lastVisitedRoute));
+                    } else {
+                        if (this.currentUrl !== RouteUrlEnum.LOGIN) {
+                            this.router.navigateByUrl(RouteUrlEnum.LOGIN);
                         }
                     }
-                },
-                error: (err: unknown) => {
-                    console.error(err);
                 }
-            });
+            },
+            error: (err: unknown) => {
+                console.error(err);
+            }
+        });
     }
 
     ngOnDestroy(): void {

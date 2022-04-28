@@ -1,11 +1,19 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ApolloError, FetchResult, Observable as ZenObservable } from '@apollo/client/core';
 import { onError } from '@apollo/client/link/error';
-import { AuthService } from '@src/app/services/auth.service';
+import { AuthService } from '@services/auth.service';
+import { JwtService } from '@services/jwt.service';
+import { SnackbarService } from '@services/snackbar.service';
 import HttpStatus from 'http-status-codes';
 import { BehaviorSubject, Observable, Subject, take } from 'rxjs';
 import { GenericError } from './errors';
-import { SnackbarService } from '../app/services/snackbar.service';
-import { HttpErrorResponse } from '@angular/common/http';
+
+function announceGenericNetworkError(networkError: HttpErrorResponse, snackbarService: SnackbarService) {
+    snackbarService.addSnackbar({
+        type: 'error',
+        data: { message: `The operation resulted in following error: ${networkError.message}` }
+    });
+}
 
 /**
  * The logic below makes sure that multiple requests (operations) that
@@ -13,7 +21,7 @@ import { HttpErrorResponse } from '@angular/common/http';
  * and, on success, they will be repeated.
  * If the refresh is unsuccessful, the operations will not be repeated.
  */
-export function getApolloErrorLink(authService: AuthService, snackbarService: SnackbarService) {
+export function getApolloErrorLink(authService: AuthService, snackbarService: SnackbarService, jwtService: JwtService) {
     // Flag for starting a tokens refresh process
     const isStartedRefreshSubject = new BehaviorSubject<boolean>(false);
     const isStartedRefresh$ = isStartedRefreshSubject.asObservable();
@@ -31,12 +39,16 @@ export function getApolloErrorLink(authService: AuthService, snackbarService: Sn
             .refreshTokens()
             .pipe(take(1))
             .subscribe({
-                next: (res) => {
-                    if (res) {
-                        authService.logIn(res);
-                    } else {
-                        logOut();
+                next: (tokens) => {
+                    if (tokens) {
+                        // Verifying the access token
+                        const tokenPayload = jwtService.decode(tokens.accessToken);
+                        const { id, email } = tokenPayload;
+                        if (id && email) {
+                            return authService.logIn(tokens, { id, email });
+                        }
                     }
+                    return logOut();
                 },
                 error: (error: unknown) => {
                     if (error instanceof ApolloError && error.graphQLErrors) {
@@ -102,19 +114,36 @@ export function getApolloErrorLink(authService: AuthService, snackbarService: Sn
             }
         }
         if (res.networkError) {
-            if (
-                res.networkError instanceof HttpErrorResponse &&
-                res.networkError.name === 'HttpErrorResponse' &&
-                res.networkError.statusText === 'Unknown Error'
-            ) {
-                snackbarService.addSnackbar({
-                    type: 'error',
-                    data: { message: 'Could not fetch data. Please check that you have an Internet connection' }
-                });
+            if (res.networkError instanceof HttpErrorResponse && res.networkError.name === 'HttpErrorResponse') {
+                if (res.networkError.statusText === 'Unknown Error' || res.networkError.status === 0) {
+                    snackbarService.addSnackbar({
+                        type: 'error',
+                        data: { message: 'Could make a request. Please check that you have an Internet connection' }
+                    });
+                } else if (res.networkError.status === HttpStatus.BAD_REQUEST) {
+                    if (res.networkError.error.errors) {
+                        for (const error of res.networkError.error.errors) {
+                            snackbarService.addSnackbar({
+                                type: 'error',
+                                data: {
+                                    message: `The operation resulted in following error: ${error.message}`
+                                }
+                            });
+                        }
+                    } else {
+                        announceGenericNetworkError(res.networkError, snackbarService);
+                    }
+                } else {
+                    announceGenericNetworkError(res.networkError, snackbarService);
+                }
             } else {
                 snackbarService.addSnackbar({
                     type: 'error',
-                    data: { message: `The fetch operation resulted in following error: ${res.networkError.message}` }
+                    data: {
+                        message: `The operation resulted in following error: ${
+                            res.networkError.message || 'something went wrong'
+                        }`
+                    }
                 });
             }
         }

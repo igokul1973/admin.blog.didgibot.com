@@ -10,6 +10,12 @@
             "@interfaces/*": [
                 "./interfaces/*"
             ],
+            "@modules/*": [
+                "./app/modules/*"
+            ],
+            "@components/*": [
+                "./app/components/*"
+            ],
             "@services/*": [
                 "./app/services/*"
             ],

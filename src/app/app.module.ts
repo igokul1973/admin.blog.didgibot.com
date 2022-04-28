@@ -4,16 +4,20 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 import { AppRoutingModule } from '@src/app/app-routing.module';
 import { AppComponent } from '@src/app/app.component';
-import { ArticlesComponent } from '@src/app/articles/articles.component';
-import { GraphQLModule } from '@src/app/graphql.module';
-import { LoginComponent } from '@src/app/login/login.component';
-import { MaterialModule } from '@src/app/material/material.module';
-import { NavigationComponent } from '@src/app/navigation/navigation.component';
-import { PageNotFoundComponent } from '@src/app/page-not-found/page-not-found.component';
-import { SnackbarComponent } from '@src/app/snackbar/snackbar.component';
-import { ApolloModule } from 'apollo-angular';
+import { ArticlesComponent } from '@components/articles/articles.component';
+import { GraphQLModule } from '@modules/graphql.module';
+import { LoginComponent } from '@components/login/login.component';
+import { NavigationComponent } from '@components/navigation/navigation.component';
+import { PageNotFoundComponent } from '@components/page-not-found/page-not-found.component';
+import { SnackbarComponent } from '@components/snackbar/snackbar.component';
+import { CreateArticleComponent } from '@components/create-article/create-article.component';
+import { MaterialInputErrorModule } from '@modules/materialInputError.module';
+import { MaterialModule } from '@modules/material.module';
+import { ArticleFormComponent } from '@components/article-form/article-form.component';
+import { UpdateArticleComponent } from './components/update-article/update-article.component';
 
 @NgModule({
     declarations: [
@@ -22,10 +26,12 @@ import { ApolloModule } from 'apollo-angular';
         PageNotFoundComponent,
         NavigationComponent,
         ArticlesComponent,
-        SnackbarComponent
+        SnackbarComponent,
+        CreateArticleComponent,
+        ArticleFormComponent,
+        UpdateArticleComponent
     ],
     imports: [
-        ApolloModule,
         GraphQLModule,
         FormsModule,
         HttpClientModule,
@@ -34,7 +40,9 @@ import { ApolloModule } from 'apollo-angular';
         ReactiveFormsModule,
         AppRoutingModule,
         MaterialModule,
-        LayoutModule
+        LayoutModule,
+        AngularEditorModule,
+        MaterialInputErrorModule
     ],
     providers: [],
     bootstrap: [AppComponent]

@@ -1,0 +1,50 @@
+<section class="page-wrapper login-form-wrapper">
+    <mat-card class="login"
+              [attr.color]="'primary'">
+        <mat-card-header>
+            <mat-card-title>
+                <h1>
+                    Log in
+                </h1>
+            </mat-card-title>
+            <mat-card-subtitle *ngIf="(errorMessage$ | async) as errorMessage"
+                               [attr.color]="'warn'">
+                <h3>
+                    Log-in failed: {{errorMessage}}
+                </h3>
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider inset></mat-divider>
+        <mat-card-content>
+            <form class="login-form"
+                  [formGroup]="loginForm"
+                  (ngSubmit)="onLoginFormSubmit()">
+                <mat-form-field appearance="outline"
+                                floatLabel="always"
+                                class="login-form__username full-width">
+                    <mat-label required>Username</mat-label>
+                    <input matInput
+                           formControlName="email"
+                           placeholder="Enter your email...">
+                </mat-form-field>
+                <mat-form-field appearance="outline"
+                                floatLabel="always"
+                                class="login-form__password full-width">
+                    <mat-label required>Password</mat-label>
+                    <input type="password"
+                           matInput
+                           formControlName="password"
+                           [autocomplete]="false"
+                           placeholder="Enter your password">
+                </mat-form-field>
+                <button type="submit"
+                        color="accent"
+                        mat-stroked-button
+                        aria-label="Log in"
+                        class="login-form__button full-width">
+                    Log in
+                </button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</section>

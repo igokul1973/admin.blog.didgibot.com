@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ArticlesComponent } from './articles/articles.component';
-import { LoginComponent } from './login/login.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ArticlesComponent } from '@components/articles/articles.component';
+import { LoginComponent } from '@components/login/login.component';
+import { PageNotFoundComponent } from '@components/page-not-found/page-not-found.component';
 import { RoutePathEnum } from './types';
 
 const routes: Routes = [

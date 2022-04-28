@@ -12,3 +12,8 @@ export type TSnackbar = MatSnackBarConfig<ISnackbarData> & {
     isShow: boolean;
 };
 export type TSnackbarArguments = { data: ISnackbarData; type?: TSnackbarType; duration?: TSnackbar['duration'] };
+
+export enum RightDrawerComponentsEnum {
+    createArticle = 'createArticle',
+    updateArticle = 'updateArticle'
+}

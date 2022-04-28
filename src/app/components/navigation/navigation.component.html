@@ -1,0 +1,103 @@
+<mat-sidenav-container class="sidenav-container"
+                       *ngIf="(state$ | async) as state"
+                       autosize>
+    <mat-sidenav #drawer
+                 [attr.color]="'primary'"
+                 class="sidenav"
+                 fixedInViewport
+                 [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+                 mode="side"
+                 [opened]="isLeftDrawerOpen$ | async">
+        <mat-toolbar color="accent">{{state.isLeftDrawerOpen && (!state.isMedium || state.isExpanded) ? 'Manhattanman' :
+            'M'}}
+        </mat-toolbar>
+        <mat-nav-list>
+            <a mat-list-item
+               [routerLink]="routes['ARTICLES']"
+               routerLinkActive="router-link-active">
+                <mat-icon mat-list-icon>person</mat-icon>
+                <span *ngIf="state.isLeftDrawerOpen && (!state.isMedium || state.isExpanded)">Articles</span>
+            </a>
+            <a mat-list-item
+               [routerLink]="routes['LOGIN']"
+               routerLinkActive="router-link-active">
+                <mat-icon mat-list-icon>assignment</mat-icon>
+                <span *ngIf="state?.isLeftDrawerOpen && (!state.isMedium || state.isExpanded)">Login</span>
+            </a>
+            <a mat-list-item
+               routerLink="/snackbar"
+               routerLinkActive="router-link-active">
+                <mat-icon mat-list-icon>domain</mat-icon>
+                <span *ngIf="state.isLeftDrawerOpen && (!state.isMedium || state.isExpanded)">Create event</span>
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav [opened]="state.isRightDrawerOpen"
+                 position="end"
+                 [attr.color]="'primary'"
+                 class="leftSidenav"
+                 fixedInViewport
+                 [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+                 mode="over">
+        <app-create-article *ngIf="state.leftDrawerComponent === leftDrawerComponents['createArticle']">
+        </app-create-article>
+        <app-update-article *ngIf="state.leftDrawerComponent === leftDrawerComponents['updateArticle']">
+        </app-update-article>
+    </mat-sidenav>
+    <mat-sidenav-content [attr.color]="'accent'">
+        <mat-toolbar color="primary">
+            <button type="button"
+                    aria-label="Toggle sidenav"
+                    mat-icon-button
+                    class="toggle-menu"
+                    (click)="onClick({
+                  isExpanded: state.isExpanded || false,
+                  isOpen: state.isLeftDrawerOpen || false,
+                  isMedium: state.isMedium || false
+              })">
+                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            </button>
+            <span class="spacer"></span>
+            <form class="search-container"
+                  [formGroup]="searchForm">
+                <mat-form-field appearance="outline"
+                                floatLabel="always"
+                                class="search-bar"
+                                [class]="isSearchActivated ? 'active' : null">
+                    <input matInput
+                           formControlName="searchInput"
+                           placeholder="Type your search and hit enter...">
+                </mat-form-field>
+                <button type="button"
+                        (click)="isSearchActivated = !isSearchActivated"
+                        aria-label="Toggle search"
+                        color="accent"
+                        mat-icon-button
+                        class="search-icon">
+                    <mat-icon aria-hidden="false"
+                              aria-label="Toggle search button">search</mat-icon>
+                </button>
+
+            </form>
+            <span class="spacer"></span>
+            <button mat-icon-button
+                    (click)="openCreateArticleSidenav()"
+                    aria-label="Create article">
+                <mat-icon>add_circle_outline</mat-icon>
+            </button>
+            <span class="spacer"></span>
+            <button mat-icon-button
+                    (click)="toggleDarkTheme(state.isDark)"
+                    aria-label="Toggle Dark Theme">
+                <mat-icon>{{ state.isDark ? "dark_mode" : "light_mode"}}</mat-icon>
+            </button>
+            <span class="spacer"></span>
+            <button mat-icon-button
+                    (click)="logout()"
+                    aria-label="Log out current user">
+                <mat-icon>logout</mat-icon>
+            </button>
+        </mat-toolbar>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

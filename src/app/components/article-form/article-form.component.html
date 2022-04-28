@@ -1,0 +1,81 @@
+<section class="page-wrapper article-form"
+         *ngIf="(data$ | async) as data">
+    <mat-card [attr.color]="'primary'">
+        <mat-card-header>
+            <mat-card-title class="article-form-title">
+                <ng-content></ng-content>
+            </mat-card-title>
+            <mat-card-subtitle [attr.color]="'accent'">
+                Fill in all required fields and click Submit button
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider inset
+                     *ngIf="!data.loading"></mat-divider>
+        <div *ngIf="data.loading">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+        <mat-card-content>
+            <ng-container *ngIf="data.errors">
+                <div *ngFor="let error of data.errors">
+                    {{error | json}}
+                </div>
+            </ng-container>
+            <form [formGroup]="articleForm"
+                  (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="outline"
+                                floatLabel="always">
+                    <mat-label required>Header</mat-label>
+                    <input matInput
+                           formControlName="header"
+                           placeholder="Fill in an article header...">
+                    <mat-error>
+                        Please fill in an article header
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline"
+                                floatLabel="always">
+                    <mat-label>Subheader</mat-label>
+                    <input matInput
+                           formControlName="subheader"
+                           placeholder="Fill in an article subheader...">
+                </mat-form-field>
+                <mat-form-field appearance="outline"
+                                floatLabel="always">
+                    <mat-label required>Categories</mat-label>
+                    <mat-select matInput
+                                placeholder="Select an article category..."
+                                formControlName="category">
+                        <mat-option [value]="">Select categories below...</mat-option>
+                        <mat-option *ngFor="let cat of data.categories"
+                                    [value]="cat.id">{{cat.name}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                        Please select a category
+                    </mat-error>
+                </mat-form-field>
+                <mat-slide-toggle formControlName="isPublished">
+                    {{ isPublished ? 'Published' : 'Not published' }}
+                </mat-slide-toggle>
+                <angular-editor formControlName="content"
+                                [config]="angularEditorConfig"></angular-editor>
+                <mat-form-field appearance="outline"
+                                class="hidden-input"
+                                floatLabel="always">
+                    <input matInput
+                           formControlName="content"
+                           placeholder="Fill in an article subheader...">
+                    <mat-error>
+                        Please fill in an article content
+                    </mat-error>
+                </mat-form-field>
+                <button class="submit-btn"
+                        mat-raised-button
+                        color="primary"
+                        type="submit"
+                        [disabled]="!articleForm.valid">
+                    Submit
+                </button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</section>
