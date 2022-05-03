@@ -135,7 +135,7 @@ export class ArticlesComponent implements OnInit, OnDestroy {
     deleteArticle({ $event, article }: { $event: MouseEvent; article: IArticle }) {
         $event.stopPropagation();
         this.articleService
-            .deleteArticle({
+            .deleteArticles({
                 where: {
                     id: article.id
                 }
@@ -194,18 +194,32 @@ export class ArticlesComponent implements OnInit, OnDestroy {
 
     private getNewFulltextSearchVariables(value: IArticleArticleSearchFulltext['phrase']): IQueryArticlesArgs | null {
         if (this.currentQueryVariables) {
+            if (this.currentQueryVariables.fulltext) {
+                this.currentQueryVariables.fulltext =
+                    (value && {
+                        ...this.currentQueryVariables.fulltext,
+                        ArticleSearch: {
+                            ...this.currentQueryVariables.fulltext.ArticleSearch,
+                            phrase: value
+                        }
+                    }) ||
+                    undefined;
+            } else {
+                this.currentQueryVariables.fulltext = {
+                    ArticleSearch: { phrase: value }
+                };
+            }
+        }
+
+        if (this.currentQueryVariables) {
             const fullTextObject = this.currentQueryVariables.fulltext;
 
             if (!value) {
                 this.currentQueryVariables.fulltext = undefined;
             } else if (fullTextObject && fullTextObject.ArticleSearch) {
-                // fullTextObject.ArticleSearch.phrase = `*${value}*`;
-                // fullTextObject.ArticleSearch.phrase = `"${value}"`;
                 fullTextObject.ArticleSearch.phrase = value;
             } else {
                 this.currentQueryVariables.fulltext = {
-                    // ArticleSearch: { phrase: `*${value}*` }
-                    // ArticleSearch: { phrase: `"${value}"` }
                     ArticleSearch: { phrase: value }
                 };
             }

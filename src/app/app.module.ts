@@ -17,7 +17,11 @@ import { CreateArticleComponent } from '@components/create-article/create-articl
 import { MaterialInputErrorModule } from '@modules/materialInputError.module';
 import { MaterialModule } from '@modules/material.module';
 import { ArticleFormComponent } from '@components/article-form/article-form.component';
-import { UpdateArticleComponent } from './components/update-article/update-article.component';
+import { UpdateArticleComponent } from '@components/update-article/update-article.component';
+import { CategoriesComponent } from '@components/categories/categories.component';
+import { CategoryFormComponent } from '@components/category-form/category-form.component';
+import { CreateCategoryComponent } from '@components/create-category/create-category.component';
+import { UpdateCategoryComponent } from '@components/update-category/update-category.component';
 
 @NgModule({
     declarations: [
@@ -29,7 +33,11 @@ import { UpdateArticleComponent } from './components/update-article/update-artic
         SnackbarComponent,
         CreateArticleComponent,
         ArticleFormComponent,
-        UpdateArticleComponent
+        UpdateArticleComponent,
+        CategoriesComponent,
+        CategoryFormComponent,
+        CreateCategoryComponent,
+        UpdateCategoryComponent
     ],
     imports: [
         GraphQLModule,

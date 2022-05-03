@@ -7,9 +7,9 @@ import {
     IMutationDeleteArticlesArgs,
     IDeleteInfo
 } from '@src/generated/types';
-import { CREATE_ARTICLE } from '@src/operations/mutations/createArticle';
+import { CREATE_ARTICLES } from '@src/operations/mutations/createArticles';
 import { DELETE_ARTICLES } from '@src/operations/mutations/deleteArticles';
-import { UPDATE_ARTICLE } from '@src/operations/mutations/updateArticle';
+import { UPDATE_ARTICLES } from '@src/operations/mutations/updateArticles';
 import { GET_ARTICLES } from '@src/operations/queries/getArticles';
 import { Apollo, QueryRef } from 'apollo-angular';
 import { map, take } from 'rxjs';
@@ -28,10 +28,10 @@ export class ArticleService {
         });
     }
 
-    createArticle(variables: IMutationCreateArticlesArgs) {
+    createArticles(variables: IMutationCreateArticlesArgs) {
         return this.apollo
             .mutate<{ createArticles: { articles: IArticle[] } }, IMutationCreateArticlesArgs>({
-                mutation: CREATE_ARTICLE,
+                mutation: CREATE_ARTICLES,
                 variables,
                 refetchQueries: ['articles']
             })
@@ -41,12 +41,11 @@ export class ArticleService {
             );
     }
 
-    updateArticle(variables: IMutationUpdateArticlesArgs) {
+    updateArticles(variables: IMutationUpdateArticlesArgs) {
         return this.apollo
             .mutate<{ updateArticles: { articles: IArticle[] } }, IMutationUpdateArticlesArgs>({
-                mutation: UPDATE_ARTICLE,
-                variables,
-                refetchQueries: ['articles']
+                mutation: UPDATE_ARTICLES,
+                variables
             })
             .pipe(
                 map((r) => r?.data?.updateArticles?.articles),
@@ -54,12 +53,18 @@ export class ArticleService {
             );
     }
 
-    deleteArticle(variables: IMutationDeleteArticlesArgs) {
+    deleteArticles(variables: IMutationDeleteArticlesArgs) {
         return this.apollo
             .mutate<{ deleteArticles: IDeleteInfo }, IMutationDeleteArticlesArgs>({
                 mutation: DELETE_ARTICLES,
                 variables,
-                refetchQueries: ['articles']
+                update: (cache, { data }, { variables }) => {
+                    const deletedArticleId = cache.identify({ __typename: 'Article', id: variables?.where?.id });
+                    if (deletedArticleId && data?.deleteArticles.nodesDeleted === 1) {
+                        cache.evict({ id: deletedArticleId });
+                        cache.gc();
+                    }
+                }
             })
             .pipe(
                 map((r) => r?.data?.deleteArticles),

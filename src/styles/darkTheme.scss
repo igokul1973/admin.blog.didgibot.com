@@ -57,4 +57,5 @@ $blue-grey-amber-dark-theme: mat.define-dark-theme(
   @include mat.option-color($blue-grey-amber-dark-theme);
   @include mat.slide-toggle-color($blue-grey-amber-dark-theme);
   @include slide-toggle.slide-toggle-theme($blue-grey-amber-dark-theme);
+  @include mat.menu-theme($blue-grey-amber-dark-theme);
 }

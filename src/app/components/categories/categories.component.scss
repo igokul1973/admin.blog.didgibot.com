@@ -1,0 +1,64 @@
+@use "../../../styles/variables" as vars;
+
+.mat-card .mat-card-content {
+  padding-top: 0.5em;
+}
+
+.mat-expansion-panel {
+  box-shadow: none;
+  border-bottom: 1px solid lightgray;
+}
+
+.mat-card-title {
+  display: flex;
+  align-items: center;
+
+  & > :last-child {
+    margin-left: auto;
+  }
+}
+
+.mat-card-subtitle {
+  display: flex;
+  flex-direction: column;
+
+  &.hidden {
+    display: none;
+  }
+
+  > * {
+    width: 100%;
+  }
+
+  @media screen and (min-width: vars.$desktop-width) {
+    flex-direction: row;
+
+    > * {
+      width: 49%;
+    }
+
+    > :last-child {
+      margin-left: auto;
+    }
+  }
+}
+
+.category-wrapper {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+  padding: 0.3em 0;
+
+  .category-title {
+    display: flex;
+    flex-direction: column;
+
+    .dates {
+      font-size: 0.6em;
+    }
+  }
+
+  .category-actions {
+    margin-left: auto;
+  }
+}

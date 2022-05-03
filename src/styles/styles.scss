@@ -39,6 +39,7 @@
 @include mat.option-theme(lt.$indigo-teal-theme);
 @include mat.slide-toggle-theme(lt.$indigo-teal-theme);
 @include slide-toggle.slide-toggle-theme(lt.$indigo-teal-theme);
+@include mat.menu-theme(lt.$indigo-teal-theme);
 
 /* You can add global styles to this file, and also import other style files */
 
@@ -142,7 +143,7 @@ body {
     }
   }
 
-  .article-form {
+  .right-sidebar-form {
     .mat-card-title {
       display: flex;
       align-items: center;

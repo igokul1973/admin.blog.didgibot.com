@@ -15,14 +15,14 @@
             <a mat-list-item
                [routerLink]="routes['ARTICLES']"
                routerLinkActive="router-link-active">
-                <mat-icon mat-list-icon>person</mat-icon>
+                <mat-icon mat-list-icon>assignment</mat-icon>
                 <span *ngIf="state.isLeftDrawerOpen && (!state.isMedium || state.isExpanded)">Articles</span>
             </a>
             <a mat-list-item
-               [routerLink]="routes['LOGIN']"
+               [routerLink]="routes['CATEGORIES']"
                routerLinkActive="router-link-active">
-                <mat-icon mat-list-icon>assignment</mat-icon>
-                <span *ngIf="state?.isLeftDrawerOpen && (!state.isMedium || state.isExpanded)">Login</span>
+                <mat-icon mat-list-icon>category</mat-icon>
+                <span *ngIf="state?.isLeftDrawerOpen && (!state.isMedium || state.isExpanded)">Categories</span>
             </a>
             <a mat-list-item
                routerLink="/snackbar"
@@ -43,6 +43,10 @@
         </app-create-article>
         <app-update-article *ngIf="state.leftDrawerComponent === leftDrawerComponents['updateArticle']">
         </app-update-article>
+        <app-create-category *ngIf="state.leftDrawerComponent === leftDrawerComponents['createCategory']">
+        </app-create-category>
+        <app-update-category *ngIf="state.leftDrawerComponent === leftDrawerComponents['updateCategory']">
+        </app-update-category>
     </mat-sidenav>
     <mat-sidenav-content [attr.color]="'accent'">
         <mat-toolbar color="primary">
@@ -81,10 +85,16 @@
             </form>
             <span class="spacer"></span>
             <button mat-icon-button
-                    (click)="openCreateArticleSidenav()"
-                    aria-label="Create article">
+                    [matMenuTriggerFor]="createMenu"
+                    aria-label="Create entities">
                 <mat-icon>add_circle_outline</mat-icon>
             </button>
+            <mat-menu #createMenu="matMenu">
+                <button mat-menu-item
+                        (click)="openCreateArticleSidenav()">Create article</button>
+                <button mat-menu-item
+                        (click)="openCreateCategorySidenav()">Create category</button>
+            </mat-menu>
             <span class="spacer"></span>
             <button mat-icon-button
                     (click)="toggleDarkTheme(state.isDark)"

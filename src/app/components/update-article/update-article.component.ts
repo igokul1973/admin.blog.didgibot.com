@@ -44,7 +44,7 @@ export class UpdateArticleComponent implements OnInit, OnDestroy {
     }
 
     private updateArticle(variables: IMutationUpdateArticlesArgs, form: FormGroup): void {
-        this.articleService.updateArticle(variables).subscribe({
+        this.articleService.updateArticles(variables).subscribe({
             next: () => this.handleCreateArticleSuccess(form)
         });
     }

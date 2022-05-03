@@ -15,5 +15,7 @@ export type TSnackbarArguments = { data: ISnackbarData; type?: TSnackbarType; du
 
 export enum RightDrawerComponentsEnum {
     createArticle = 'createArticle',
-    updateArticle = 'updateArticle'
+    updateArticle = 'updateArticle',
+    createCategory = 'createCategory',
+    updateCategory = 'updateCategory'
 }

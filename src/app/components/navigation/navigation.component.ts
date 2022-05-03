@@ -155,4 +155,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
     openCreateArticleSidenav() {
         this.rightDrawerService.open<IArticle>(RightDrawerComponentsEnum.createArticle);
     }
+
+    openCreateCategorySidenav() {
+        this.rightDrawerService.open<IArticle>(RightDrawerComponentsEnum.createCategory);
+    }
 }

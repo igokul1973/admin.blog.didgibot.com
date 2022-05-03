@@ -1,7 +1,7 @@
 import { gql } from 'apollo-angular';
 import { ArticleFragment } from '../fragments/article';
 
-export const UPDATE_ARTICLE = gql`
+export const UPDATE_ARTICLES = gql`
     mutation updateArticles(
         $where: ArticleWhere
         $update: ArticleUpdateInput!

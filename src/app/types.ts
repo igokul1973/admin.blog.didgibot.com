@@ -1,6 +1,7 @@
 export enum RoutePathEnum {
     HOME = '',
     ARTICLES = 'articles',
+    CATEGORIES = 'categories',
     LOGIN = 'login',
     NOT_FOUND = '**'
 }
@@ -8,6 +9,7 @@ export enum RoutePathEnum {
 export enum RouteUrlEnum {
     HOME = '/',
     ARTICLES = '/articles',
+    CATEGORIES = '/categories',
     LOGIN = '/login'
 }
 

@@ -23,7 +23,7 @@ export class CreateArticleComponent {
     ) {}
 
     private createArticle(variables: IMutationCreateArticlesArgs, form: FormGroup): void {
-        this.articleService.createArticle(variables).subscribe({
+        this.articleService.createArticles(variables).subscribe({
             next: () => this.handleCreateArticleSuccess(form)
         });
     }
@@ -38,6 +38,7 @@ export class CreateArticleComponent {
         });
         this.rightDrawerService.close();
         form.reset();
+        form.get('isPublished')?.setValue(false);
     }
 
     closeRightDrawer() {

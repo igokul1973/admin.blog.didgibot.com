@@ -1,12 +1,13 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '@services/category.service';
 import { SnackbarService } from '@services/snackbar.service';
 import { FormTypeEnum } from '@src/app/types';
 import { IArticle, ICategory, IQueryCategoriesArgs } from '@src/generated/types';
 import { editorConfig } from '@src/utilities/angularEditorConfig';
+import { accumulateFormChanges, getFormChangesFromResponse } from '@src/utilities/getFormChanges';
 import { QueryRef } from 'apollo-angular';
-import { combineLatest, map, scan, tap } from 'rxjs';
+import { combineLatest, map, scan, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-article-form',
@@ -26,6 +27,7 @@ export class ArticleFormComponent implements OnChanges {
     articleForm: FormGroup = this.fb.group(this.getInitialFormBuilderGroupValues());
     angularEditorConfig = editorConfig;
     formChanges: Record<string, string> | null = null;
+    articleFormSubscription: Subscription | null = null;
 
     constructor(
         private fb: FormBuilder,
@@ -33,41 +35,33 @@ export class ArticleFormComponent implements OnChanges {
         private snackbarService: SnackbarService
     ) {}
 
+    ngOnInit() {
+        if (!this.articleFormSubscription) {
+            this.handleInitialFormValues();
+        }
+    }
+
     ngOnChanges(changes: SimpleChanges) {
         const { currentValue } = changes['initialFormVariables'];
         this.handleInitialFormValues(currentValue);
+    }
+
+    ngOnDestroy() {
+        if (this.articleFormSubscription) {
+            this.articleFormSubscription.unsubscribe();
+        }
     }
 
     private handleInitialFormValues(initialFormVariables?: IArticle) {
         if (initialFormVariables) {
             this.formType = FormTypeEnum.UPDATE;
             this.articleForm = this.fb.group(this.getInitialFormBuilderGroupValues(initialFormVariables));
-        } else {
-            this.formType = FormTypeEnum.CREATE;
-            this.articleForm = this.fb.group(this.getInitialFormBuilderGroupValues());
         }
-        this.articleForm.valueChanges
-            .pipe(
-                scan(
-                    (acc: Record<string, string>[], v: Record<string, string>) => {
-                        Object.keys(acc[0]).forEach((key) => {
-                            if (acc[0][key] !== v[key]) {
-                                acc[1][key] = v[key];
-                            } else {
-                                delete acc[1][key];
-                            }
-                        });
-                        return acc;
-                    },
-                    [this.articleForm.value, {}]
-                )
-            )
+        this.articleFormSubscription = this.articleForm.valueChanges
+            .pipe(scan(accumulateFormChanges, [this.articleForm.value, {}]))
             .subscribe({
                 next: (res) => {
-                    if (typeof res[1] === 'object' && Object.keys(res[1]).length) {
-                        return (this.formChanges = res[1]);
-                    }
-                    return (this.formChanges = null);
+                    this.formChanges = getFormChangesFromResponse(res);
                 }
             });
     }
@@ -81,7 +75,7 @@ export class ArticleFormComponent implements OnChanges {
             category: [
                 (initialFormVariables &&
                     initialFormVariables.categories &&
-                    initialFormVariables.categories &&
+                    initialFormVariables.categories[0] &&
                     initialFormVariables.categories[0].id) ||
                     null,
                 Validators.required
