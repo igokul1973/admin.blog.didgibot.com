@@ -4,6 +4,7 @@ import { ArticlesComponent } from '@components/articles/articles.component';
 import { LoginComponent } from '@components/login/login.component';
 import { PageNotFoundComponent } from '@components/page-not-found/page-not-found.component';
 import { CategoriesComponent } from '@components/categories/categories.component';
+import { TagsComponent } from '@components/tags/tags.component';
 import { RoutePathEnum } from './types';
 
 const routes: Routes = [
@@ -14,6 +15,10 @@ const routes: Routes = [
     {
         path: RoutePathEnum.CATEGORIES,
         component: CategoriesComponent
+    },
+    {
+        path: RoutePathEnum.TAGS,
+        component: TagsComponent
     },
     {
         path: RoutePathEnum.LOGIN,

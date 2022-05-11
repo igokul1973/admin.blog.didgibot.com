@@ -3,13 +3,13 @@ import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/cor
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { AuthService } from '@services/auth.service';
+import { RightDrawerService } from '@services/right-drawer.service';
 import { StyleManagerService } from '@services/style-manager.service';
+import { RightDrawerComponentsEnum } from '@services/types';
+import { RouteUrlEnum } from '@src/app/types';
+import { IArticle, ICategory, ITag } from '@src/generated/types';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { RouteUrlEnum } from '@src/app/types';
-import { RightDrawerService } from '@services/right-drawer.service';
-import { RightDrawerComponentsEnum } from '@services/types';
-import { IArticle } from '@src/generated/types';
 
 @Component({
     selector: 'app-navigation',
@@ -157,6 +157,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     openCreateCategorySidenav() {
-        this.rightDrawerService.open<IArticle>(RightDrawerComponentsEnum.createCategory);
+        this.rightDrawerService.open<ICategory>(RightDrawerComponentsEnum.createCategory);
+    }
+
+    openCreateTagSidenav() {
+        this.rightDrawerService.open<ITag>(RightDrawerComponentsEnum.createTag);
     }
 }

@@ -1109,6 +1109,11 @@ export type ICategoryArticlesUpdateFieldInput = {
   where?: InputMaybe<ICategoryArticlesConnectionWhere>;
 };
 
+export type ICategoryCategorySearchFulltext = {
+  phrase: Scalars['String'];
+  score_EQUAL?: InputMaybe<Scalars['Int']>;
+};
+
 export type ICategoryConnectInput = {
   articles?: InputMaybe<Array<ICategoryArticlesConnectFieldInput>>;
 };
@@ -1136,6 +1141,10 @@ export type ICategoryDeleteInput = {
 
 export type ICategoryDisconnectInput = {
   articles?: InputMaybe<Array<ICategoryArticlesDisconnectFieldInput>>;
+};
+
+export type ICategoryFulltext = {
+  CategorySearch?: InputMaybe<ICategoryCategorySearchFulltext>;
 };
 
 export type ICategoryOnCreateInput = {
@@ -1443,23 +1452,27 @@ export type IQueryArticlesAggregateArgs = {
 
 
 export type IQueryCategoriesArgs = {
+  fulltext?: InputMaybe<ICategoryFulltext>;
   options?: InputMaybe<ICategoryOptions>;
   where?: InputMaybe<ICategoryWhere>;
 };
 
 
 export type IQueryCategoriesAggregateArgs = {
+  fulltext?: InputMaybe<ICategoryFulltext>;
   where?: InputMaybe<ICategoryWhere>;
 };
 
 
 export type IQueryTagsArgs = {
+  fulltext?: InputMaybe<ITagFulltext>;
   options?: InputMaybe<ITagOptions>;
   where?: InputMaybe<ITagWhere>;
 };
 
 
 export type IQueryTagsAggregateArgs = {
+  fulltext?: InputMaybe<ITagFulltext>;
   where?: InputMaybe<ITagWhere>;
 };
 
@@ -1779,6 +1792,10 @@ export type ITagDisconnectInput = {
   articles?: InputMaybe<Array<ITagArticlesDisconnectFieldInput>>;
 };
 
+export type ITagFulltext = {
+  TagSearch?: InputMaybe<ITagTagSearchFulltext>;
+};
+
 export type ITagOnCreateInput = {
   id?: InputMaybe<Scalars['ID']>;
   name?: InputMaybe<Scalars['String']>;
@@ -1801,6 +1818,11 @@ export type ITagSort = {
   id?: InputMaybe<ISortDirection>;
   name?: InputMaybe<ISortDirection>;
   updatedAt?: InputMaybe<ISortDirection>;
+};
+
+export type ITagTagSearchFulltext = {
+  phrase: Scalars['String'];
+  score_EQUAL?: InputMaybe<Scalars['Int']>;
 };
 
 export type ITagUniqueWhere = {
@@ -2039,6 +2061,7 @@ export type IUserSort = {
 };
 
 export type IUserUniqueWhere = {
+  email?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -2484,6 +2507,7 @@ export type IResolversTypes = {
   CategoryArticlesRelationship: ResolverTypeWrapper<ICategoryArticlesRelationship>;
   CategoryArticlesUpdateConnectionInput: ICategoryArticlesUpdateConnectionInput;
   CategoryArticlesUpdateFieldInput: ICategoryArticlesUpdateFieldInput;
+  CategoryCategorySearchFulltext: ICategoryCategorySearchFulltext;
   CategoryConnectInput: ICategoryConnectInput;
   CategoryConnectOrCreateInput: ICategoryConnectOrCreateInput;
   CategoryConnectOrCreateWhere: ICategoryConnectOrCreateWhere;
@@ -2491,6 +2515,7 @@ export type IResolversTypes = {
   CategoryCreateInput: ICategoryCreateInput;
   CategoryDeleteInput: ICategoryDeleteInput;
   CategoryDisconnectInput: ICategoryDisconnectInput;
+  CategoryFulltext: ICategoryFulltext;
   CategoryOnCreateInput: ICategoryOnCreateInput;
   CategoryOptions: ICategoryOptions;
   CategoryRelationInput: ICategoryRelationInput;
@@ -2546,10 +2571,12 @@ export type IResolversTypes = {
   TagCreateInput: ITagCreateInput;
   TagDeleteInput: ITagDeleteInput;
   TagDisconnectInput: ITagDisconnectInput;
+  TagFulltext: ITagFulltext;
   TagOnCreateInput: ITagOnCreateInput;
   TagOptions: ITagOptions;
   TagRelationInput: ITagRelationInput;
   TagSort: ITagSort;
+  TagTagSearchFulltext: ITagTagSearchFulltext;
   TagUniqueWhere: ITagUniqueWhere;
   TagUpdateInput: ITagUpdateInput;
   TagWhere: ITagWhere;
@@ -2685,6 +2712,7 @@ export type IResolversParentTypes = {
   CategoryArticlesRelationship: ICategoryArticlesRelationship;
   CategoryArticlesUpdateConnectionInput: ICategoryArticlesUpdateConnectionInput;
   CategoryArticlesUpdateFieldInput: ICategoryArticlesUpdateFieldInput;
+  CategoryCategorySearchFulltext: ICategoryCategorySearchFulltext;
   CategoryConnectInput: ICategoryConnectInput;
   CategoryConnectOrCreateInput: ICategoryConnectOrCreateInput;
   CategoryConnectOrCreateWhere: ICategoryConnectOrCreateWhere;
@@ -2692,6 +2720,7 @@ export type IResolversParentTypes = {
   CategoryCreateInput: ICategoryCreateInput;
   CategoryDeleteInput: ICategoryDeleteInput;
   CategoryDisconnectInput: ICategoryDisconnectInput;
+  CategoryFulltext: ICategoryFulltext;
   CategoryOnCreateInput: ICategoryOnCreateInput;
   CategoryOptions: ICategoryOptions;
   CategoryRelationInput: ICategoryRelationInput;
@@ -2745,10 +2774,12 @@ export type IResolversParentTypes = {
   TagCreateInput: ITagCreateInput;
   TagDeleteInput: ITagDeleteInput;
   TagDisconnectInput: ITagDisconnectInput;
+  TagFulltext: ITagFulltext;
   TagOnCreateInput: ITagOnCreateInput;
   TagOptions: ITagOptions;
   TagRelationInput: ITagRelationInput;
   TagSort: ITagSort;
+  TagTagSearchFulltext: ITagTagSearchFulltext;
   TagUniqueWhere: ITagUniqueWhere;
   TagUpdateInput: ITagUpdateInput;
   TagWhere: ITagWhere;

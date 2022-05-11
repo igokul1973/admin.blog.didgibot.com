@@ -1,11 +1,11 @@
 <section class="page-wrapper"
          *ngIf="(data$ | async) as data">
-    <mat-card class="categories"
+    <mat-card class="tags"
               [attr.color]="'primary'">
         <mat-card-header>
             <mat-card-title>
                 <h1>
-                    Categories
+                    Tags
                 </h1>
                 <mat-icon mat-list-icon
                           (click)="isFilterSectionOpen = !isFilterSectionOpen"
@@ -27,7 +27,7 @@
                     <mat-label>Sort by updated date</mat-label>
                     <mat-select matInput
                                 [value]="data.sortName"
-                                (selectionChange)="sortCategories($event.value)">
+                                (selectionChange)="sortTags($event.value)">
                         <mat-option *ngFor="let dir of sortDirections"
                                     [value]="dir.value">{{dir.name}}</mat-option>
                     </mat-select>
@@ -46,23 +46,23 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="!data.loading">
-                <div *ngFor="let category of data.categories"
-                     class="category-wrapper">
-                    <div class="category-title">
-                        <h3>{{category.name}}</h3>
+                <div *ngFor="let tag of data.tags"
+                     class="tag-wrapper">
+                    <div class="tag-title">
+                        <h3>{{tag.name}}</h3>
                         <div class="dates">
                             <div class="date-updated">
-                                Updated: {{ category.updatedAt | date: 'hh:mm, yyyy MMM dd'}}
+                                Updated: {{ tag.updatedAt | date: 'hh:mm, yyyy MMM dd'}}
                             </div>
                             <div class="date-created">
-                                Created: {{ category.createdAt | date: 'hh:mm, yyyy MMM dd'}}
+                                Created: {{ tag.createdAt | date: 'hh:mm, yyyy MMM dd'}}
                             </div>
                         </div>
                     </div>
-                    <div class="category-actions">
+                    <div class="tag-actions">
                         <button matButton
                                 mat-icon-button>
-                            <mat-icon (click)="editCategory({$event, category})"
+                            <mat-icon (click)="editTag({$event, tag})"
                                       aria-label="Side nav toggle icon"
                                       color="accent">
                                 edit
@@ -70,7 +70,7 @@
                         </button>
                         <button matButton
                                 mat-icon-button>
-                            <mat-icon (click)="deleteCategory({$event, category})"
+                            <mat-icon (click)="deleteTag({$event, tag})"
                                       aria-label="Side nav toggle icon"
                                       color="warn">
                                 delete

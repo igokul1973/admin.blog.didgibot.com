@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { JwtService } from './jwt.service';
+import { TagService } from './tag.service';
 
-describe('JwtService', () => {
-    let service: JwtService;
+describe('TagService', () => {
+    let service: TagService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.inject(JwtService);
+        service = TestBed.inject(TagService);
     });
 
     it('should be created', () => {

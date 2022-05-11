@@ -17,5 +17,7 @@ export enum RightDrawerComponentsEnum {
     createArticle = 'createArticle',
     updateArticle = 'updateArticle',
     createCategory = 'createCategory',
-    updateCategory = 'updateCategory'
+    updateCategory = 'updateCategory',
+    createTag = 'createTag',
+    updateTag = 'updateTag'
 }

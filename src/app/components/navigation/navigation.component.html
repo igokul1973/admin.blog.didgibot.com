@@ -25,10 +25,10 @@
                 <span *ngIf="state?.isLeftDrawerOpen && (!state.isMedium || state.isExpanded)">Categories</span>
             </a>
             <a mat-list-item
-               routerLink="/snackbar"
+               [routerLink]="routes['TAGS']"
                routerLinkActive="router-link-active">
                 <mat-icon mat-list-icon>domain</mat-icon>
-                <span *ngIf="state.isLeftDrawerOpen && (!state.isMedium || state.isExpanded)">Create event</span>
+                <span *ngIf="state.isLeftDrawerOpen && (!state.isMedium || state.isExpanded)">Tags</span>
             </a>
         </mat-nav-list>
     </mat-sidenav>
@@ -47,6 +47,10 @@
         </app-create-category>
         <app-update-category *ngIf="state.leftDrawerComponent === leftDrawerComponents['updateCategory']">
         </app-update-category>
+        <app-create-tag *ngIf="state.leftDrawerComponent === leftDrawerComponents['createTag']">
+        </app-create-tag>
+        <app-update-tag *ngIf="state.leftDrawerComponent === leftDrawerComponents['updateTag']">
+        </app-update-tag>
     </mat-sidenav>
     <mat-sidenav-content [attr.color]="'accent'">
         <mat-toolbar color="primary">
@@ -94,6 +98,8 @@
                         (click)="openCreateArticleSidenav()">Create article</button>
                 <button mat-menu-item
                         (click)="openCreateCategorySidenav()">Create category</button>
+                <button mat-menu-item
+                        (click)="openCreateTagSidenav()">Create tag</button>
             </mat-menu>
             <span class="spacer"></span>
             <button mat-icon-button

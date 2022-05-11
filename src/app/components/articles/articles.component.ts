@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { ArticleService } from '@services/article.service';
 import { RightDrawerService } from '@services/right-drawer.service';
+import { RightDrawerComponentsEnum } from '@services/types';
+import { SnackbarService } from '@src/app/services/snackbar.service';
 import { IArticle, IArticleArticleSearchFulltext, IQueryArticlesArgs, ISortDirection } from '@src/generated/types';
 import { QueryRef } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
@@ -16,8 +18,6 @@ import {
     takeUntil
 } from 'rxjs';
 import { IObservables } from './types';
-import { RightDrawerComponentsEnum } from '@services/types';
-import { SnackbarService } from '@src/app/services/snackbar.service';
 
 @Component({
     selector: 'app-articles',
@@ -107,9 +107,9 @@ export class ArticlesComponent implements OnInit, OnDestroy {
             )
             .subscribe({
                 next: (value: IArticleArticleSearchFulltext['phrase']) => {
-                    const newQueryVariables = this.getNewFulltextSearchVariables(value);
-                    if (newQueryVariables) {
-                        this.queryVariablesSubject.next(newQueryVariables);
+                    this.setNewArticlesQueryVariables(value);
+                    if (this.currentQueryVariables) {
+                        this.queryVariablesSubject.next(this.currentQueryVariables);
                     }
                 }
             });
@@ -192,19 +192,21 @@ export class ArticlesComponent implements OnInit, OnDestroy {
         return null;
     }
 
-    private getNewFulltextSearchVariables(value: IArticleArticleSearchFulltext['phrase']): IQueryArticlesArgs | null {
+    private setNewArticlesQueryVariables(value?: IArticleArticleSearchFulltext['phrase'] | null): void {
         if (this.currentQueryVariables) {
             if (this.currentQueryVariables.fulltext) {
-                this.currentQueryVariables.fulltext =
-                    (value && {
+                if (!value) {
+                    return (this.currentQueryVariables.fulltext = undefined);
+                } else {
+                    this.currentQueryVariables.fulltext = {
                         ...this.currentQueryVariables.fulltext,
                         ArticleSearch: {
                             ...this.currentQueryVariables.fulltext.ArticleSearch,
                             phrase: value
                         }
-                    }) ||
-                    undefined;
-            } else {
+                    };
+                }
+            } else if (value) {
                 this.currentQueryVariables.fulltext = {
                     ArticleSearch: { phrase: value }
                 };
@@ -223,9 +225,7 @@ export class ArticlesComponent implements OnInit, OnDestroy {
                     ArticleSearch: { phrase: value }
                 };
             }
-            return this.currentQueryVariables;
         }
-        return null;
     }
 
     filterEmit($event: KeyboardEvent) {

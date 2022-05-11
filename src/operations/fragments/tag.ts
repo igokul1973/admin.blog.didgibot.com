@@ -1,7 +1,7 @@
 import { gql } from 'apollo-angular';
 
-export const CategoryFragment = gql`
-    fragment CategoryFragment on Category {
+export const TagFragment = gql`
+    fragment TagFragment on Tag {
         id
         name
         createdAt

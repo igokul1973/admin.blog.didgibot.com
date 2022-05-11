@@ -1,15 +1,9 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { CategoryService } from '@services/category.service';
 import { RightDrawerService } from '@services/right-drawer.service';
 import { SnackbarService } from '@services/snackbar.service';
+import { TagService } from '@services/tag.service';
 import { RightDrawerComponentsEnum } from '@services/types';
-import {
-    ICategory,
-    ICategoryCategorySearchFulltext,
-    ICategoryWhere,
-    IQueryCategoriesArgs,
-    ISortDirection
-} from '@src/generated/types';
+import { IQueryTagsArgs, ISortDirection, ITag, ITagTagSearchFulltext, ITagWhere } from '@src/generated/types';
 import { QueryRef } from 'apollo-angular';
 import { GraphQLError } from 'graphql';
 import {
@@ -23,15 +17,15 @@ import {
     Subscription,
     takeUntil
 } from 'rxjs';
-import { IObservables } from '../categories/types';
+import { IObservables } from '../tags/types';
 
 @Component({
-    selector: 'app-categories',
-    templateUrl: './categories.component.html',
-    styleUrls: ['./categories.component.scss']
+    selector: 'app-tags',
+    templateUrl: './tags.component.html',
+    styleUrls: ['./tags.component.scss']
 })
-export class CategoriesComponent implements OnInit {
-    queryVariablesSubject = new BehaviorSubject<IQueryCategoriesArgs>({
+export class TagsComponent implements OnInit {
+    queryVariablesSubject = new BehaviorSubject<IQueryTagsArgs>({
         options: {
             sort: [
                 {
@@ -41,16 +35,16 @@ export class CategoriesComponent implements OnInit {
         }
     });
     queryVariables$ = this.queryVariablesSubject.asObservable();
-    currentQueryVariables: IQueryCategoriesArgs | null = null;
+    currentQueryVariables: IQueryTagsArgs | null = null;
 
     sortNameSubject = new BehaviorSubject<ISortDirection>(ISortDirection.Asc);
-    source$: QueryRef<{ categories: ICategory[] }, IQueryCategoriesArgs> | null = null;
+    source$: QueryRef<{ tags: ITag[] }, IQueryTagsArgs> | null = null;
     observables: IObservables | null = null;
     data$: Observable<{
         [x: string]: unknown;
         loading: boolean;
         errors: readonly GraphQLError[] | undefined;
-        categories: ICategory[];
+        tags: ITag[];
         sortName: ISortDirection;
     }> | null = null;
     isFilterSectionOpen = false;
@@ -66,12 +60,12 @@ export class CategoriesComponent implements OnInit {
     ];
     sortNameSubscription: Subscription | null = null;
     queryVariablesSubscription: Subscription | null = null;
-    filter = new EventEmitter<ICategoryWhere['name']>();
+    filter = new EventEmitter<ITagWhere['name']>();
     destroyedSubject = new Subject<boolean>();
     destroyed$ = this.destroyedSubject.asObservable();
 
     constructor(
-        private categoryService: CategoryService,
+        private tagService: TagService,
         private rightDrawerService: RightDrawerService,
         private snackbarService: SnackbarService
     ) {}
@@ -80,7 +74,7 @@ export class CategoriesComponent implements OnInit {
         this.queryVariablesSubscription = this.queryVariables$.pipe(takeUntil(this.destroyed$)).subscribe({
             next: (queryVariables) => {
                 if (!this.source$) {
-                    this.source$ = this.categoryService.getCategories(queryVariables);
+                    this.source$ = this.tagService.getTags(queryVariables);
                 } else {
                     this.source$.refetch(queryVariables);
                     this.source$.refetch;
@@ -90,7 +84,7 @@ export class CategoriesComponent implements OnInit {
                     this.observables = {
                         loading: this.source$.valueChanges.pipe(map((r) => r?.loading)),
                         errors: this.source$.valueChanges.pipe(map((r) => r?.errors)),
-                        categories: this.source$.valueChanges.pipe(map((r) => r?.data?.categories)),
+                        tags: this.source$.valueChanges.pipe(map((r) => r?.data?.tags)),
                         sortName: this.sortNameSubject.asObservable()
                     };
                 }
@@ -112,8 +106,8 @@ export class CategoriesComponent implements OnInit {
                 takeUntil(this.destroyed$)
             )
             .subscribe({
-                next: (value: ICategoryWhere['name']) => {
-                    this.setNewCategoriesQueryVariables(value);
+                next: (value: ITagWhere['name']) => {
+                    this.setNewTagsQueryVariables(value);
                     if (this.currentQueryVariables) {
                         this.queryVariablesSubject.next(this.currentQueryVariables);
                     }
@@ -125,25 +119,25 @@ export class CategoriesComponent implements OnInit {
         this.destroyedSubject.next(true);
     }
 
-    openRightDrawer(category: ICategory) {
-        this.rightDrawerService.open<ICategory>(RightDrawerComponentsEnum.updateCategory, category);
+    openRightDrawer(tag: ITag) {
+        this.rightDrawerService.open<ITag>(RightDrawerComponentsEnum.updateTag, tag);
     }
 
-    sortCategories(sortDirection: ISortDirection) {
+    sortTags(sortDirection: ISortDirection) {
         this.sortNameSubject.next(sortDirection);
     }
 
-    editCategory({ $event, category }: { $event: MouseEvent; category: ICategory }) {
+    editTag({ $event, tag }: { $event: MouseEvent; tag: ITag }) {
         $event.stopPropagation();
-        this.openRightDrawer(category);
+        this.openRightDrawer(tag);
     }
 
-    deleteCategory({ $event, category }: { $event: MouseEvent; category: ICategory }) {
+    deleteTag({ $event, tag }: { $event: MouseEvent; tag: ITag }) {
         $event.stopPropagation();
-        this.categoryService
-            .deleteCategories({
+        this.tagService
+            .deleteTags({
                 where: {
-                    id: category.id
+                    id: tag.id
                 }
             })
             .subscribe({
@@ -151,7 +145,7 @@ export class CategoriesComponent implements OnInit {
                     this.snackbarService.addSnackbar({
                         type: 'success',
                         data: {
-                            message: `The category ${category.name} was successfully deleted`
+                            message: `The tag ${tag.name} was successfully deleted`
                         }
                     });
                 }
@@ -171,7 +165,7 @@ export class CategoriesComponent implements OnInit {
         }
     }
 
-    private getNewUpdatedAtSortVariables(sortDirection: ISortDirection): IQueryCategoriesArgs | null {
+    private getNewUpdatedAtSortVariables(sortDirection: ISortDirection): IQueryTagsArgs | null {
         if (this.currentQueryVariables?.options?.sort) {
             const sortObject = this.currentQueryVariables.options.sort[0];
             if (sortObject) {
@@ -194,7 +188,7 @@ export class CategoriesComponent implements OnInit {
         return null;
     }
 
-    private setNewCategoriesQueryVariables(value?: ICategoryCategorySearchFulltext['phrase'] | null): void {
+    private setNewTagsQueryVariables(value?: ITagTagSearchFulltext['phrase'] | null): void {
         if (this.currentQueryVariables) {
             if (this.currentQueryVariables.fulltext) {
                 if (!value) {
@@ -202,15 +196,15 @@ export class CategoriesComponent implements OnInit {
                 } else {
                     this.currentQueryVariables.fulltext = {
                         ...this.currentQueryVariables.fulltext,
-                        CategorySearch: {
-                            ...this.currentQueryVariables.fulltext.CategorySearch,
+                        TagSearch: {
+                            ...this.currentQueryVariables.fulltext.TagSearch,
                             phrase: value
                         }
                     };
                 }
             } else if (value) {
                 this.currentQueryVariables.fulltext = {
-                    CategorySearch: { phrase: value }
+                    TagSearch: { phrase: value }
                 };
             }
         }
@@ -220,11 +214,11 @@ export class CategoriesComponent implements OnInit {
 
             if (!value) {
                 this.currentQueryVariables.fulltext = undefined;
-            } else if (fullTextObject && fullTextObject.CategorySearch) {
-                fullTextObject.CategorySearch.phrase = value;
+            } else if (fullTextObject && fullTextObject.TagSearch) {
+                fullTextObject.TagSearch.phrase = value;
             } else {
                 this.currentQueryVariables.fulltext = {
-                    CategorySearch: { phrase: value }
+                    TagSearch: { phrase: value }
                 };
             }
         }

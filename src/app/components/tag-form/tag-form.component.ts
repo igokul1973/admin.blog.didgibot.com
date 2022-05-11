@@ -2,28 +2,28 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackbarService } from '@services/snackbar.service';
 import { FormTypeEnum } from '@src/app/types';
-import { ICategory } from '@src/generated/types';
+import { ITag } from '@src/generated/types';
 import { editorConfig } from '@src/utilities/angularEditorConfig';
 import { accumulateFormChanges, getFormChangesFromResponse } from '@src/utilities/getFormChanges';
 import { scan, Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-category-form',
-    templateUrl: './category-form.component.html'
+    selector: 'app-tag-form',
+    templateUrl: './tag-form.component.html'
 })
-export class CategoryFormComponent implements OnInit {
-    @Input('initialFormVariables') initialFormVariables: ICategory | undefined = undefined;
+export class TagFormComponent implements OnInit {
+    @Input('initialFormVariables') initialFormVariables: ITag | undefined = undefined;
     @Output('submitForm') submitForm = new EventEmitter<{ formChanges: Record<string, string>; form: FormGroup }>();
     formType: FormTypeEnum = FormTypeEnum.CREATE;
-    categoryForm: FormGroup = this.fb.group(this.getInitialFormBuilderGroupValues());
+    tagForm: FormGroup = this.fb.group(this.getInitialFormBuilderGroupValues());
     angularEditorConfig = editorConfig;
     formChanges: Record<string, string> | null = null;
-    categoryFormSubscription: Subscription | null = null;
+    tagFormSubscription: Subscription | null = null;
 
     constructor(private fb: FormBuilder, private snackbarService: SnackbarService) {}
 
     ngOnInit() {
-        if (!this.categoryFormSubscription) {
+        if (!this.tagFormSubscription) {
             this.handleInitialFormValues();
         }
     }
@@ -34,18 +34,18 @@ export class CategoryFormComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        if (this.categoryFormSubscription) {
-            this.categoryFormSubscription.unsubscribe();
+        if (this.tagFormSubscription) {
+            this.tagFormSubscription.unsubscribe();
         }
     }
 
-    private handleInitialFormValues(initialFormVariables?: ICategory) {
+    private handleInitialFormValues(initialFormVariables?: ITag) {
         if (initialFormVariables) {
             this.formType = FormTypeEnum.UPDATE;
-            this.categoryForm = this.fb.group(this.getInitialFormBuilderGroupValues(initialFormVariables));
+            this.tagForm = this.fb.group(this.getInitialFormBuilderGroupValues(initialFormVariables));
         }
-        this.categoryFormSubscription = this.categoryForm.valueChanges
-            .pipe(scan(accumulateFormChanges, [this.categoryForm.value, {}]))
+        this.tagFormSubscription = this.tagForm.valueChanges
+            .pipe(scan(accumulateFormChanges, [this.tagForm.value, {}]))
             .subscribe({
                 next: (res) => {
                     this.formChanges = getFormChangesFromResponse(res);
@@ -53,7 +53,7 @@ export class CategoryFormComponent implements OnInit {
             });
     }
 
-    private getInitialFormBuilderGroupValues(initialFormVariables?: ICategory) {
+    private getInitialFormBuilderGroupValues(initialFormVariables?: ITag) {
         return {
             name: [(initialFormVariables && initialFormVariables.name) || null, Validators.required]
         };
@@ -61,10 +61,10 @@ export class CategoryFormComponent implements OnInit {
 
     onSubmit() {
         if (this.formChanges) {
-            this.submitForm.emit({ formChanges: this.formChanges, form: this.categoryForm });
+            this.submitForm.emit({ formChanges: this.formChanges, form: this.tagForm });
             this.formChanges = null;
         } else {
-            console.log(this.categoryForm);
+            console.log(this.tagForm);
             this.snackbarService.addSnackbar({
                 type: 'warning',
                 data: {
