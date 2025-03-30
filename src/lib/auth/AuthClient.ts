@@ -1,3 +1,4 @@
+import getErrorMessage from '@/lib/getErrorMessage';
 import type { IUser } from '@/types/user';
 
 export interface IUserPayload {
@@ -43,7 +44,14 @@ class AuthClient {
         return JSON.parse(jsonPayload);
     }
 
-    async signInWithPassword(params: ISignInWithPasswordParams): Promise<{ error?: string }> {
+    /**
+     * Sign in with password and set
+     * JWT token and user in local storage.
+     *
+     * @param {ISignInWithPasswordParams} params
+     * @returns {Promise<{ error: string | null }>}
+     */
+    async signInWithPassword(params: ISignInWithPasswordParams): Promise<{ error: string | null }> {
         const { email, password } = params;
         const formData = new FormData();
         formData.append('username', email);
@@ -71,12 +79,12 @@ class AuthClient {
 
         const { access_token: jwtToken } = decodedResponse;
 
-        const payload = this.getJwtPayload(jwtToken);
-
-        localStorage.setItem('jwtToken', jwtToken);
-        localStorage.setItem('user', JSON.stringify(payload.user));
-
-        return {};
+        try {
+            this.setAuthInStorage(jwtToken);
+            return { error: null };
+        } catch (e: unknown) {
+            return { error: getErrorMessage(e) };
+        }
     }
 
     async resetPassword(_: IResetPasswordParams): Promise<{ error?: string }> {
@@ -87,22 +95,27 @@ class AuthClient {
         return { error: 'Update reset not implemented' };
     }
 
-    async getUser(): Promise<{ data?: IUser | null; error?: string }> {
+    getUser(): { user: IUser | null; token: string | null } {
         // We do not handle the API, so just check if we have a token in localStorage.
         const token = localStorage.getItem('jwtToken');
         const user = localStorage.getItem('user');
 
         if (!token || !user) {
-            return { data: null };
+            return { user: null, token: null };
         }
 
-        return { data: JSON.parse(user) };
+        return { user: JSON.parse(user), token };
     }
 
-    async signOut(): Promise<{ error?: string }> {
-        localStorage.removeItem('jwtToken');
+    setAuthInStorage(jwtToken: string): void {
+        const payload = this.getJwtPayload(jwtToken);
+        localStorage.setItem('jwtToken', jwtToken);
+        localStorage.setItem('user', JSON.stringify(payload.user));
+    }
 
-        return {};
+    unsetAuthInStorage(): void {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('user');
     }
 }
 

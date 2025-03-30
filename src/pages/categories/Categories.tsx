@@ -1,35 +1,34 @@
-import CategoriesTable from '@/components/categories-table/CategoriesTable';
+import CategoriesTable, { ICategoryTableRow } from '@/components/categories-table/CategoriesTable';
 import Filter from '@/components/filter/Filter';
 import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
+import { transformRawCategories } from '@/components/utils';
+import { GET_CATEGORIES } from '@/operations';
+import { paths } from '@/paths';
 import { IRawCategory } from '@/types/category';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Stack } from '@mui/material';
 import { JSX, useEffect, useState } from 'react';
 import { DEFAULT_ROWS_PER_PAGE } from '../constants';
-
-const GET_CATEGORIES = gql`
-    query categories($filter: String, $limit: Int, $skip: Int, $entityName: EntityEnum) {
-        categories(filter_input: { name: $filter }, limit: $limit, skip: $skip) {
-            id
-            name
-            created_at
-            updated_at
-        }
-        count(entity: $entityName) {
-            count
-            entity
-        }
-    }
-`;
 
 export default function Categories(): JSX.Element {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
     const [skip, setSkip] = useState(0);
     const [filter, setFilter] = useState('');
+    const [categories, setCategories] = useState<ICategoryTableRow[]>([]);
+    const [count, setCount] = useState<number>(0);
 
-    const { data, error, loading } = useQuery(GET_CATEGORIES, {
-        variables: { limit: rowsPerPage, skip, entityName: 'category', filter }
+    const { data, error, loading } = useQuery<{
+        categories: IRawCategory[];
+        count: { count: number };
+    }>(GET_CATEGORIES, {
+        variables: {
+            entityName: 'category',
+            filterInput: { name: filter },
+            sortInput: [{ field: 'name', dir: 'asc' }],
+            limit: rowsPerPage,
+            skip
+        }
     });
 
     useEffect(() => {
@@ -40,26 +39,29 @@ export default function Categories(): JSX.Element {
         setPage(0);
     }, [filter]);
 
-    let categories = data?.categories ?? [];
-    if (categories.length > 0) {
-        categories = categories.map((category: IRawCategory) => {
-            return {
-                id: category.id,
-                name: category.name,
-                createdAt: new Date(category.created_at),
-                updatedAt: new Date(category.updated_at)
-            };
-        });
-    }
-
-    const count = data?.count.count ?? 0;
+    useEffect(() => {
+        if (data) {
+            const categories = transformRawCategories(data.categories);
+            setCategories(categories);
+            setCount(data.count.count);
+        } else if (error) {
+            console.error(
+                'Error occurred while fetching Categories. Please contact application administrator.'
+            );
+        }
+    }, [data, error]);
 
     return (
         <Stack spacing={3}>
-            <EntitiesPageHeader entityNamePlural='Categories' isDisplayAddButton />
+            <EntitiesPageHeader
+                entityNamePlural='Categories'
+                backPath={paths.dashboard.categories}
+                isDisplayAddButton
+            />
             <Filter entityToSearch='categories' setFilter={setFilter} />
             <CategoriesTable
                 count={count}
+                setCount={setCount}
                 page={page}
                 rows={categories}
                 rowsPerPage={rowsPerPage}

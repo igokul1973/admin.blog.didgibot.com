@@ -1,11 +1,11 @@
 export interface IUser {
     id: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string;
+    updated_at: string;
     email: string;
     phone: string;
     first_name: string;
     last_name: string;
     ip: string;
-    last_logged_at: Date;
+    last_logged_at: string;
 }

@@ -6,7 +6,8 @@ export const paths = {
     dashboard: {
         articles: '/articles',
         categories: '/categories',
-        tags: '/tags'
+        tags: '/tags',
+        settings: '/settings'
     },
     errors: { notFound: '/errors/not-found' }
 } as const;

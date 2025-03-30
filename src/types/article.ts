@@ -10,3 +10,8 @@ export interface IArticle extends IEntityDates {
     id: string;
     translations: IArticleTranslation[];
 }
+
+export interface IArticlePartial extends IEntityDates {
+    id: string;
+    translations: Partial<IArticleTranslation>[];
+}

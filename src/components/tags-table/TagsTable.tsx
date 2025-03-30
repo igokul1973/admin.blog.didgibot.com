@@ -1,3 +1,12 @@
+import BaseLinkIconButton from '@/components/base-link-icon-button/BaseLinkIconButton';
+import { onPageChange, onRowsPerPageChange } from '@/components/utils';
+import { useSnackbar } from '@/contexts/snackbar/provider';
+import { useSelection } from '@/hooks/use-selection';
+import { DELETE_TAG } from '@/operations';
+import { ITableProps } from '@/types/pages';
+import { ITag } from '@/types/tag';
+import { useMutation } from '@apollo/client';
+import ModeEditOutlined from '@mui/icons-material/ModeEditOutlined';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Checkbox from '@mui/material/Checkbox';
@@ -11,32 +20,15 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
-
-import BaseLinkIconButton from '@/base-link-icon-button/BaseLinkIconButton';
-import { onPageChange, onRowsPerPageChange } from '@/components/utils';
-import { useSelection } from '@/hooks/use-selection';
-import { paths } from '@/paths';
-import { ITableProps } from '@/types/pages';
-import { ITag } from '@/types/tag';
-import { gql, useMutation } from '@apollo/client';
-import ModeEditOutlined from '@mui/icons-material/ModeEditOutlined';
 import { JSX, useEffect, useMemo } from 'react';
-import { Navigate } from 'react-router';
 import { DeleteIconButton } from '../delete-icon-button/DeleteIconButton';
 
 export interface ITagTableRow extends ITag {}
 
-const DELETE_TAG = gql`
-    mutation delete_tag($id: String!) {
-        delete_tag(data: { id: $id }) {
-            id
-        }
-    }
-`;
-
 export default function TagsTable({
     setPage,
     setRowsPerPage,
+    setCount,
     count = 0,
     rows = [],
     page = 0,
@@ -44,6 +36,7 @@ export default function TagsTable({
     loading,
     error
 }: ITableProps<ITagTableRow>): JSX.Element {
+    const { openSnackbar } = useSnackbar();
     const rowIds = useMemo(() => {
         return rows.map((customer) => customer.id);
     }, [rows]);
@@ -53,26 +46,38 @@ export default function TagsTable({
     const [
         deleteTagFunction,
         { data: deleteTagData, error: deleteTagError, loading: deleteTagLoading }
-    ] = useMutation(DELETE_TAG);
+    ] = useMutation(DELETE_TAG, {
+        update(cache, _, context) {
+            const { variables } = context;
+            if (!variables) {
+                return;
+            }
+            cache.modify({
+                fields: {
+                    tags(existingTags = []) {
+                        return existingTags.filter(
+                            (tag: { __ref: string }) => tag.__ref !== 'TagType:' + variables.id
+                        );
+                    },
+                    count(existingCount) {
+                        return existingCount.count - 1;
+                    }
+                }
+            });
+        }
+    });
 
     useEffect(() => {
         if (deleteTagData) {
-            // TODO: Handle deletion
-            console.log('Deleted id: ', deleteTagData.delete_tag.id);
+            openSnackbar('Tag deleted successfully', 'success');
         }
 
         if (deleteTagError) {
-            // TODO: Handle deletion
-            console.log('Deleted id: ', deleteTagData.delete_tag.id);
+            openSnackbar(deleteTagError.message, 'error');
         }
     }, [deleteTagData, deleteTagError, deleteTagLoading]);
 
     if (error) {
-        if (error.message === 'Unauthorized user') {
-            return <Navigate replace to={paths.auth.signIn} />;
-        }
-
-        // TODO: Handle error properly
         return <div>Error: {error.message}</div>;
     }
 
@@ -80,9 +85,13 @@ export default function TagsTable({
     const selectedAll = rows.length > 0 && selected?.size === rows.length;
 
     const deleteTag = async (id: string) => {
-        // TODO: Handle deletion
-        console.log('Deleting id: ', id);
-        await deleteTagFunction({ variables: { id } });
+        try {
+            await deleteTagFunction({ variables: { id } });
+        } catch (e) {
+            if (e instanceof Error || e instanceof String) {
+                openSnackbar('Something went wrong while deleting a tag', 'error');
+            }
+        }
     };
 
     return (
@@ -107,6 +116,7 @@ export default function TagsTable({
                             <TableCell width={400}>Name</TableCell>
                             <TableCell>Created At</TableCell>
                             <TableCell>Updated At</TableCell>
+                            <TableCell align='center'>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -147,8 +157,8 @@ export default function TagsTable({
                                                 direction='row'
                                                 spacing={2}
                                             >
-                                                <Typography variant='subtitle2'>
-                                                    {row.name}
+                                                <Typography variant='body2'>
+                                                    <b>{row.name}</b>
                                                 </Typography>
                                             </Stack>
                                         </TableCell>
@@ -190,7 +200,7 @@ export default function TagsTable({
             </Box>
             <Divider />
             <TablePagination
-                component='div'
+                component={Box}
                 count={count}
                 onPageChange={onPageChange(setPage)}
                 onRowsPerPageChange={onRowsPerPageChange(setRowsPerPage)}

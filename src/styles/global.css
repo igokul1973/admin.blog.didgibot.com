@@ -51,3 +51,74 @@ body {
 a {
     text-decoration: none;
 }
+
+/* Reset the counter on the main ordered list */
+ol {
+    list-style: none;
+    counter-reset: section;
+}
+/* Style for main list items (first level) */
+ol > li {
+    counter-increment: section;
+}
+/* First level - add section number before each main list item */
+ol > li::before {
+    content: counter(section) '. ';
+}
+/* Second level - reset the subsection counter for nested lists */
+ol > li > ol {
+    counter-reset: subsection;
+}
+/* Second level - increment subsection counter */
+ol > li > ol > li {
+    counter-increment: subsection;
+}
+/* Format for second-level items with section and subsection numbers */
+ol > li > ol > li::before {
+    content: counter(section) '.' counter(subsection) ' ';
+}
+/* Third level - reset the sub-subsection counter for third-level nested lists */
+ol > li > ol > li > ol {
+    counter-reset: subsubsection;
+}
+/* Third level - increment sub-subsection counter */
+ol > li > ol > li > ol > li {
+    counter-increment: subsubsection;
+}
+/* Format for third-level items with section, subsection, and sub-subsection numbers */
+ol > li > ol > li > ol > li::before {
+    content: counter(section) '.' counter(subsection) '.' counter(subsubsection) ' ';
+}
+
+/* EditorJS */
+@media (min-width: 651px) {
+    .ce-block__content {
+        max-width: calc(100% - 120px) !important;
+        margin: 0 60px;
+    }
+}
+
+@media (min-width: 651px) {
+    .ce-toolbar__content {
+        width: 0px !important;
+        margin: 0 60px;
+    }
+}
+
+.cdx-block {
+    max-width: 100% !important;
+}
+
+@media (min-width: 651px) {
+    .codex-editor--narrow .ce-toolbox .ce-popover {
+        left: 0;
+        right: 0;
+    }
+}
+
+@media (min-width: 651px) {
+    .codex-editor--narrow .ce-settings .ce-popover {
+        right: 0;
+        left: 0;
+    }
+}

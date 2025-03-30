@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, createContext, useContext, useState } from 'react';
+import { FC, PropsWithChildren, createContext, useContext, useMemo, useState } from 'react';
 import { ISnackbarState } from './types';
 
 const SnackbarContext = createContext<ISnackbarState>({
@@ -16,7 +16,7 @@ const SnackbarProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const openSnackbar = (
         message: ISnackbarState['message'],
-        severity: ISnackbarState['severity']
+        severity: ISnackbarState['severity'] = 'info'
     ) => {
         setMessage(message);
         setIsOpen(true);
@@ -26,14 +26,17 @@ const SnackbarProvider: FC<PropsWithChildren> = ({ children }) => {
     const closeSnackbar = () => {
         setIsOpen(false);
     };
-
-    return (
-        <SnackbarContext.Provider
-            value={{ isOpen, message, severity, openSnackbar, closeSnackbar }}
-        >
-            {children}
-        </SnackbarContext.Provider>
+    const value = useMemo(
+        () => ({
+            isOpen,
+            message,
+            severity,
+            openSnackbar,
+            closeSnackbar
+        }),
+        [isOpen, message, severity, openSnackbar, closeSnackbar]
     );
+    return <SnackbarContext.Provider value={value}>{children}</SnackbarContext.Provider>;
 };
 
 export const useSnackbar = () => {

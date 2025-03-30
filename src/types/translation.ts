@@ -1,26 +1,44 @@
-import { ICategory } from './category';
-import { ITag } from './tag';
+import { Dayjs } from 'dayjs';
+import { ICategory, IRawCategory } from './category';
+import { IRawTag, ITag } from './tag';
 
 export enum LanguageEnum {
     RU = 'ru',
     EN = 'en'
 }
 
+interface IContentBlock {
+    __typename?: string;
+    id: string;
+    type: string;
+    data: object[];
+}
+
+export interface IContent {
+    __typename?: string;
+    version?: string;
+    time?: number;
+    blocks: IContentBlock[];
+}
+
 export interface IRawArticleTranslation {
     language: LanguageEnum;
     header: string;
-    content: string;
-    category: string;
-    tags: string[];
+    content: IContent;
+    category: IRawCategory;
+    tags: IRawTag[];
     is_published: boolean;
-    published_at?: Date;
+    published_at?: string;
+    __typename?: string;
 }
 
 export interface IArticleTranslation {
+    language: LanguageEnum;
     header: string;
-    content: string;
+    content: IContent;
     category: ICategory;
     tags: ITag[];
     isPublished: boolean;
-    publishedAt?: Date;
+    publishedAt?: Dayjs;
+    __typename?: string;
 }

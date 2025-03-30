@@ -1,9 +1,12 @@
 import { useUser } from '@/hooks/use-user';
 import { authClient } from '@/lib/auth/AuthClient';
+import { setAuth } from '@/main';
 import { paths } from '@/paths';
+import { useApolloClient } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Container } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -12,7 +15,7 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { JSX, useCallback, useState } from 'react';
+import { JSX, useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { z as zod } from 'zod';
@@ -28,12 +31,16 @@ const defaultValues = { email: '', password: '' } satisfies Values;
 
 export function SignInForm(): JSX.Element {
     const navigate = useNavigate();
-
-    const { checkSession } = useUser();
-
+    const apolloClient = useApolloClient();
+    const { user, setUserStateFromStorage } = useUser();
     const [showPassword, setShowPassword] = useState<boolean>();
-
     const [isPending, setIsPending] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (user) {
+            navigate(paths.home);
+        }
+    }, [user]);
 
     const {
         control,
@@ -50,26 +57,22 @@ export function SignInForm(): JSX.Element {
 
             if (error) {
                 setError('root', { type: 'server', message: error });
-                setIsPending(false);
-                return;
+                return setIsPending(false);
             }
-
-            // Refresh the auth state
-            await checkSession();
-
-            // UserProvider, for this case, will not refresh the router
-            // After refresh, GuestGuard will handle the redirect
-            navigate(paths.home);
+            setAuth(apolloClient, true);
+            // Refresh the user state
+            setUserStateFromStorage();
         },
-        [checkSession, setError]
+        [setUserStateFromStorage, setError]
     );
 
     return (
-        <Stack spacing={4}>
-            <Stack spacing={1}>
-                <Typography variant='h4'>Sign in</Typography>
-                {/* Can be used for sign up */}
-                {/* <Typography color='text.secondary' variant='body2'>
+        <Container component='main' maxWidth='sm' sx={{ py: 8 }}>
+            <Stack spacing={4}>
+                <Stack spacing={1}>
+                    <Typography variant='h4'>Sign in</Typography>
+                    {/* Can be used for sign up */}
+                    {/* <Typography color='text.secondary' variant='body2'>
                     Don&apos;t have an account?{' '}
                     <Link
                         component={RouterLink}
@@ -80,60 +83,60 @@ export function SignInForm(): JSX.Element {
                         Sign up
                     </Link>
                 </Typography> */}
-            </Stack>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Stack spacing={2}>
-                    <Controller
-                        control={control}
-                        name='email'
-                        render={({ field }) => (
-                            <FormControl error={Boolean(errors.email)}>
-                                <InputLabel>Email address</InputLabel>
-                                <OutlinedInput {...field} label='Email address' type='email' />
-                                {errors.email ? (
-                                    <FormHelperText>{errors.email.message}</FormHelperText>
-                                ) : null}
-                            </FormControl>
-                        )}
-                    />
-                    <Controller
-                        control={control}
-                        name='password'
-                        render={({ field }) => (
-                            <FormControl error={Boolean(errors.password)}>
-                                <InputLabel>Password</InputLabel>
-                                <OutlinedInput
-                                    {...field}
-                                    endAdornment={
-                                        showPassword ? (
-                                            <VisibilityIcon
-                                                cursor='pointer'
-                                                fontSize='medium'
-                                                onClick={(): void => {
-                                                    setShowPassword(false);
-                                                }}
-                                            />
-                                        ) : (
-                                            <VisibilityOffIcon
-                                                cursor='pointer'
-                                                fontSize='medium'
-                                                onClick={(): void => {
-                                                    setShowPassword(true);
-                                                }}
-                                            />
-                                        )
-                                    }
-                                    label='Password'
-                                    type={showPassword ? 'text' : 'password'}
-                                />
-                                {errors.password ? (
-                                    <FormHelperText>{errors.password.message}</FormHelperText>
-                                ) : null}
-                            </FormControl>
-                        )}
-                    />
-                    {/* Can be used for password reset functionality */}
-                    {/* <div>
+                </Stack>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Stack spacing={2}>
+                        <Controller
+                            control={control}
+                            name='email'
+                            render={({ field }) => (
+                                <FormControl error={Boolean(errors.email)}>
+                                    <InputLabel>Email address</InputLabel>
+                                    <OutlinedInput {...field} label='Email address' type='email' />
+                                    {errors.email ? (
+                                        <FormHelperText>{errors.email.message}</FormHelperText>
+                                    ) : null}
+                                </FormControl>
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name='password'
+                            render={({ field }) => (
+                                <FormControl error={Boolean(errors.password)}>
+                                    <InputLabel>Password</InputLabel>
+                                    <OutlinedInput
+                                        {...field}
+                                        endAdornment={
+                                            showPassword ? (
+                                                <VisibilityIcon
+                                                    cursor='pointer'
+                                                    fontSize='medium'
+                                                    onClick={(): void => {
+                                                        setShowPassword(false);
+                                                    }}
+                                                />
+                                            ) : (
+                                                <VisibilityOffIcon
+                                                    cursor='pointer'
+                                                    fontSize='medium'
+                                                    onClick={(): void => {
+                                                        setShowPassword(true);
+                                                    }}
+                                                />
+                                            )
+                                        }
+                                        label='Password'
+                                        type={showPassword ? 'text' : 'password'}
+                                    />
+                                    {errors.password ? (
+                                        <FormHelperText>{errors.password.message}</FormHelperText>
+                                    ) : null}
+                                </FormControl>
+                            )}
+                        />
+                        {/* Can be used for password reset functionality */}
+                        {/* <div>
                         <Link
                             component={RouterLink}
                             to={paths.auth.resetPassword}
@@ -142,14 +145,14 @@ export function SignInForm(): JSX.Element {
                             Forgot password?
                         </Link>
                     </div> */}
-                    {errors.root ? <Alert color='error'>{errors.root.message}</Alert> : null}
-                    <Button disabled={isPending} type='submit' variant='contained'>
-                        Sign in
-                    </Button>
-                </Stack>
-            </form>
-            {/* Can be used for prompt */}
-            {/* <Alert color='warning'>
+                        {errors.root ? <Alert color='error'>{errors.root.message}</Alert> : null}
+                        <Button disabled={isPending} type='submit' variant='contained'>
+                            Sign in
+                        </Button>
+                    </Stack>
+                </form>
+                {/* Can be used for prompt */}
+                {/* <Alert color='warning'>
                 Use{' '}
                 <Typography component='span' sx={{ fontWeight: 700 }} variant='inherit'>
                     igk19@devias.io
@@ -159,6 +162,7 @@ export function SignInForm(): JSX.Element {
                     Secret1
                 </Typography>
             </Alert> */}
-        </Stack>
+            </Stack>
+        </Container>
     );
 }

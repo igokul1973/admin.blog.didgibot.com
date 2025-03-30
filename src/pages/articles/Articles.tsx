@@ -1,72 +1,40 @@
-import ArticlesTable from '@/components/articles-table/ArticlesTable';
+import ArticlesTable, { IArticlesTableRow } from '@/components/articles-table/ArticlesTable';
 import Filter from '@/components/filter/Filter';
 import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
+import { transformRawArticles } from '@/components/utils';
 import { useUser } from '@/hooks/use-user';
+import { GET_ARTICLES } from '@/operations';
+import { paths } from '@/paths';
 import { IRawArticle } from '@/types/article';
-import { LanguageEnum } from '@/types/translation';
-import { gql, useQuery } from '@apollo/client';
-import Stack from '@mui/material/Stack';
+import { useQuery } from '@apollo/client';
+import { Stack } from '@mui/material';
 import { JSX, useEffect, useState } from 'react';
-import { DEFAULT_ROWS_PER_PAGE } from '../constants';
-
-const GET_ARTICLES = gql`
-    query articles(
-        $userId: String
-        $limit: Int
-        $skip: Int
-        $entityName: EntityEnum
-        $filter: String
-        $sort: [SortInputType!]
-    ) {
-        articles(
-            filter_input: { search: $filter, user_id: $userId }
-            limit: $limit
-            skip: $skip
-            sort_input: $sort
-        ) {
-            id
-            translations {
-                language
-                header
-                content
-                is_published
-                published_at
-                category {
-                    id
-                    name
-                }
-                tags {
-                    id
-                    name
-                }
-            }
-            created_at
-            updated_at
-        }
-        count(entity: $entityName) {
-            count
-            entity
-        }
-    }
-`;
+import { DEFAULT_ROWS_PER_PAGE } from '@/pages/constants';
 
 export default function Articles(): JSX.Element {
-    // TODO: temp solution for the language
-    const language = LanguageEnum.EN;
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
     const [skip, setSkip] = useState(0);
     const [filter, setFilter] = useState('');
     const [sort, setSort] = useState<{ field: string; dir: string }[]>([
-        { field: 'updated_at', dir: 'desc' }
+        { field: 'updated_at', dir: 'asc' }
     ]);
     const { user } = useUser();
     const userId = user?.id;
-    const { data, error, loading } = useQuery(GET_ARTICLES, {
-        variables: { userId, limit: rowsPerPage, skip, filter, sort }
+    const [articles, setArticles] = useState<IArticlesTableRow[]>([]);
+    const [count, setCount] = useState<number>(0);
+    const { data, error, loading } = useQuery<{
+        articles: IRawArticle[];
+        count: { count: number };
+    }>(GET_ARTICLES, {
+        variables: {
+            entityName: 'article',
+            filterInput: { user_id: userId, search: filter },
+            sortInput: sort,
+            limit: rowsPerPage,
+            skip
+        }
     });
-
-    let articles = data?.articles ?? [];
 
     useEffect(() => {
         setSkip(page * rowsPerPage);
@@ -76,22 +44,25 @@ export default function Articles(): JSX.Element {
         setPage(0);
     }, [filter]);
 
-    articles = articles.map((article: IRawArticle) => {
-        const { id, translations, created_at, updated_at } = article;
-        const translation = translations.find((t) => t.language === language);
-        return {
-            translations: [translation],
-            id,
-            createdAt: new Date(created_at),
-            updatedAt: new Date(updated_at)
-        };
-    });
-
-    const count = data?.count.count ?? 0;
+    useEffect(() => {
+        if (data) {
+            const articles = transformRawArticles(data.articles);
+            setArticles(articles as IArticlesTableRow[]);
+            setCount(data.count.count);
+        } else if (error) {
+            console.error(
+                'Error occurred while fetching Articles. Please contact application administrator.'
+            );
+        }
+    }, [data, error]);
 
     return (
         <Stack spacing={3}>
-            <EntitiesPageHeader entityNamePlural='Articles' isDisplayAddButton />
+            <EntitiesPageHeader
+                entityNamePlural='Articles'
+                backPath={paths.dashboard.articles}
+                isDisplayAddButton
+            />
             <Filter
                 placeholder='Search articles by header, content, category or tag'
                 setFilter={setFilter}
@@ -99,6 +70,7 @@ export default function Articles(): JSX.Element {
             <ArticlesTable
                 count={count}
                 page={page}
+                setCount={setCount}
                 rows={articles}
                 rowsPerPage={rowsPerPage}
                 loading={loading}

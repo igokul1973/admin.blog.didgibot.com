@@ -2,42 +2,151 @@ import { useSnackbar } from '@/contexts/snackbar/provider';
 import { paths } from '@/paths';
 import { gql, useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { capitalize, TextField } from '@mui/material';
+import {
+    capitalize,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    TextField
+} from '@mui/material';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid2';
-import { JSX } from 'react';
-import { useForm } from 'react-hook-form';
+import { JSX, useEffect } from 'react';
+import { FieldErrors, useForm, UseFormRegister } from 'react-hook-form';
 import { useNavigate } from 'react-router';
+import { transformRawTag } from '../utils';
 import { tagCreateSchema, tagUpdateSchema } from './formSchema';
 import { IProps, TTagForm, TTagFormOutput } from './types';
 
 const CREATE_TAG = gql`
-    mutation set_tag($input: TagInputType!) {
+    mutation set_tag($input: TagCreateInputType!) {
         set_tag(data: $input) {
             id
             name
+            created_at
+            updated_at
         }
     }
 `;
 
-export function TagForm({ isEdit, defaultValues }: IProps): JSX.Element {
+const UPDATE_TAG = gql`
+    mutation update_tag($input: TagUpdateInputType!) {
+        update_tag(data: $input) {
+            id
+            name
+            created_at
+            updated_at
+        }
+    }
+`;
+
+interface IFieldProps {
+    register: UseFormRegister<{
+        name: string;
+    }>;
+    errors: FieldErrors<{
+        name: string;
+    }>;
+}
+
+function NameField({ register, errors }: IFieldProps): JSX.Element {
+    return (
+        <TextField
+            label={capitalize('Tag name')}
+            placeholder='Enter tag name...'
+            slotProps={{
+                htmlInput: {
+                    type: 'text'
+                }
+            }}
+            variant='outlined'
+            required
+            error={!!errors.name}
+            helperText={errors.name?.message && capitalize(errors.name.message)}
+            {...register('name')}
+        />
+    );
+}
+
+export function TagForm({
+    isEdit,
+    defaultValues,
+    formType,
+    closeDialog,
+    handleNewTag,
+    isNavigate = true
+}: IProps): JSX.Element {
     const { openSnackbar } = useSnackbar();
     const [
         createTagFunction,
         { data: createTagData, error: createTagError, loading: createTagLoading }
-    ] = useMutation(CREATE_TAG);
+    ] = useMutation(CREATE_TAG, {
+        update(cache, { data: { set_tag: data } }) {
+            cache.modify({
+                fields: {
+                    tags(existingTags = []) {
+                        const newTagRef = cache.writeFragment({
+                            data,
+                            fragment: gql`
+                                fragment NewTag on Tag {
+                                    id
+                                    name
+                                    created_at
+                                    updated_at
+                                }
+                            `
+                        });
+                        return [newTagRef, ...existingTags];
+                    },
+                    count(existingCount) {
+                        return existingCount.count + 1;
+                    }
+                }
+            });
+            if (data && handleNewTag) {
+                const sanitizedTag = transformRawTag(data);
+                handleNewTag(sanitizedTag);
+            }
+        }
+    });
     const [
         updateTagFunction,
         { data: updateTagData, error: updateTagError, loading: updateTagLoading }
-    ] = useMutation(CREATE_TAG);
+    ] = useMutation(UPDATE_TAG);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (createTagData) {
+            openSnackbar(capitalize('successfully created tag'), 'success');
+            if (isNavigate) {
+                navigate(paths.dashboard.tags);
+            }
+        } else if (createTagError) {
+            openSnackbar(createTagError.message, 'error');
+        } else if (createTagLoading) {
+            console.log('Creating tag...');
+        }
+    }, [createTagData, createTagError, createTagLoading]);
+
+    useEffect(() => {
+        if (updateTagData) {
+            openSnackbar(capitalize('successfully updated tag'), 'success');
+            if (isNavigate) {
+                navigate(paths.dashboard.tags);
+            }
+        } else if (updateTagError) {
+            openSnackbar(updateTagError.message, 'error');
+        } else if (updateTagLoading) {
+            console.log('Updating tag...');
+        }
+    }, [updateTagData, updateTagError, updateTagLoading]);
 
     const {
         // watch,
@@ -50,6 +159,12 @@ export function TagForm({ isEdit, defaultValues }: IProps): JSX.Element {
         defaultValues
     });
 
+    useEffect(() => {
+        if (errors) {
+            console.log('Errors: ', errors);
+        }
+    }, [errors]);
+
     const createTag = (formData: TTagFormOutput) => {
         return createTagFunction({
             variables: {
@@ -59,10 +174,15 @@ export function TagForm({ isEdit, defaultValues }: IProps): JSX.Element {
             }
         });
     };
+
     const updateTag = (formData: TTagFormOutput, df: typeof dirtyFields) => {
+        if (!df.name) {
+            return;
+        }
         return updateTagFunction({
             variables: {
                 input: {
+                    id: formData.id,
                     name: formData.name
                 }
             }
@@ -71,25 +191,29 @@ export function TagForm({ isEdit, defaultValues }: IProps): JSX.Element {
 
     const onSubmit = async (formData: TTagFormOutput) => {
         if (isEdit) {
-            const res = await updateTag(formData, dirtyFields);
-            if (res.errors) {
-                openSnackbar(capitalize('could not update user'), 'error');
-            } else {
-                openSnackbar(capitalize('successfully updated user'));
-                navigate(paths.dashboard.tags);
-            }
+            await updateTag(formData, dirtyFields);
         } else {
-            const res = await createTag(formData);
-            if (res.errors) {
-                openSnackbar(capitalize(res.errors[0].message), 'error');
-            } else {
-                openSnackbar(capitalize('successfully created user'));
-                navigate(paths.dashboard.tags);
-            }
+            await createTag(formData);
         }
     };
 
-    return (
+    return formType === 'dialog' ? (
+        <form>
+            <DialogTitle>Add a new tag</DialogTitle>
+            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <DialogContentText>Missing the tag? Please, add it!</DialogContentText>
+                <FormControl fullWidth>
+                    <NameField register={register} errors={errors} />
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={closeDialog}>Cancel</Button>
+                <Button type='button' onClick={handleSubmit(onSubmit)}>
+                    Add tag
+                </Button>
+            </DialogActions>
+        </form>
+    ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Card>
                 <Divider />
@@ -97,22 +221,7 @@ export function TagForm({ isEdit, defaultValues }: IProps): JSX.Element {
                     <Grid container spacing={3}>
                         <Grid size={{ md: 12, xs: 12 }}>
                             <FormControl fullWidth>
-                                <TextField
-                                    label={capitalize('Tag name')}
-                                    placeholder='Enter tag name...'
-                                    slotProps={{
-                                        htmlInput: {
-                                            type: 'text'
-                                        }
-                                    }}
-                                    variant='outlined'
-                                    required
-                                    error={!!errors.name}
-                                    helperText={
-                                        errors.name?.message && capitalize(errors.name.message)
-                                    }
-                                    {...register('name')}
-                                />
+                                <NameField register={register} errors={errors} />
                             </FormControl>
                         </Grid>
                     </Grid>

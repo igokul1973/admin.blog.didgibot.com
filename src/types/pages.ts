@@ -2,6 +2,7 @@ import { ApolloError } from '@apollo/client';
 
 export interface ITableProps<T> {
     readonly setPage: (page: number) => void;
+    readonly setCount: (count: number) => void;
     readonly setRowsPerPage: (rowsPerPage: number) => void;
     readonly count?: number;
     readonly page?: number;

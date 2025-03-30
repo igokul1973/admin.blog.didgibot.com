@@ -1,8 +1,16 @@
+import AnnotationPopover from '@/components/annotation-popover/AnnotationPopover';
+import BaseLinkIconButton from '@/components/base-link-icon-button/BaseLinkIconButton';
+import { DeleteIconButton } from '@/components/delete-icon-button/DeleteIconButton';
+import { useSnackbar } from '@/contexts/snackbar/provider';
+import { useSelection } from '@/hooks/use-selection';
+import { DELETE_ARTICLE } from '@/operations';
+import { IArticle } from '@/types/article';
+import { ITableProps } from '@/types/pages';
+import { useMutation } from '@apollo/client';
+import ModeEditOutlined from '@mui/icons-material/ModeEditOutlined';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,49 +19,93 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
-
-import { useSelection } from '@/hooks/use-selection';
-import { paths } from '@/paths';
-import { IArticle } from '@/types/article';
-import { ITableProps } from '@/types/pages';
-import { useMemo } from 'react';
-import { Navigate } from 'react-router';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+import { useEffect, useMemo } from 'react';
 import { onPageChange, onRowsPerPageChange } from '../utils';
+import { StyledCard, StyledStack } from './styled';
 
 export interface IArticlesTableRow extends IArticle {}
+
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
 
 export default function ArticlesTable({
     setPage,
     setRowsPerPage,
     count = 0,
+    setCount,
     rows = [],
     page = 0,
     rowsPerPage = 0,
     loading,
     error
 }: ITableProps<IArticlesTableRow>): React.JSX.Element {
+    const { openSnackbar } = useSnackbar();
     const rowIds = useMemo(() => {
         return rows.map((customer) => customer.id);
     }, [rows]);
 
     const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
 
-    if (error) {
-        debugger;
-        const m = error.message.toLocaleLowerCase();
-        if (m.startsWith('unauthorized user') || m.startsWith('invalid or missing jwt token')) {
-            return <Navigate replace to={paths.auth.signIn} />;
+    const [
+        deleteArticleFunction,
+        { data: deleteArticleData, error: deleteArticleError, loading: deleteArticleLoading }
+    ] = useMutation(DELETE_ARTICLE, {
+        update(cache, _, context) {
+            const { variables } = context;
+            if (!variables) {
+                return;
+            }
+            cache.modify({
+                fields: {
+                    articles(existingArticles = []) {
+                        return existingArticles.filter(
+                            (article: { __ref: string }) =>
+                                article.__ref !== 'ArticleType:' + variables.id
+                        );
+                    },
+                    count(existingCount) {
+                        return existingCount.count - 1;
+                    }
+                }
+            });
+        }
+    });
+
+    useEffect(() => {
+        if (deleteArticleData) {
+            openSnackbar('Article deleted successfully', 'success');
         }
 
-        // TODO: Handle error properly
-        return <div>Error: {error.message}</div>;
-    }
+        if (deleteArticleError) {
+            openSnackbar(deleteArticleError.message, 'error');
+        }
+    }, [deleteArticleData, deleteArticleError, deleteArticleLoading]);
 
     const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
     const selectedAll = rows.length > 0 && selected?.size === rows.length;
 
+    const deleteArticle = async (id: string) => {
+        try {
+            await deleteArticleFunction({ variables: { id } });
+        } catch (e) {
+            if (e instanceof Error || e instanceof String) {
+                openSnackbar('Something went wrong while deleting an article', 'error');
+            }
+        }
+    };
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
     return (
-        <Card>
+        <StyledCard>
             <Box sx={{ overflowX: 'auto' }}>
                 <Table sx={{ minWidth: '800px' }}>
                     <TableHead>
@@ -75,9 +127,11 @@ export default function ArticlesTable({
                             <TableCell width={250}>Content</TableCell>
                             <TableCell width={180}>Categories</TableCell>
                             <TableCell width={100}>Tags</TableCell>
+                            <TableCell>Is Published</TableCell>
+                            <TableCell>Published At</TableCell>
                             <TableCell>Created At</TableCell>
                             <TableCell>Updated At</TableCell>
-                            <TableCell>Is Published</TableCell>
+                            <TableCell align='center'>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -113,44 +167,97 @@ export default function ArticlesTable({
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <Stack
-                                                sx={{ alignItems: 'center' }}
-                                                direction='row'
-                                                spacing={2}
-                                            >
-                                                <Typography variant='subtitle2'>
-                                                    {row.translations[0].header}
-                                                </Typography>
-                                            </Stack>
+                                            <StyledStack>
+                                                {row.translations.map((translation) => (
+                                                    <Box key={translation.header}>
+                                                        <b>{translation.header}</b>
+                                                    </Box>
+                                                ))}
+                                            </StyledStack>
                                         </TableCell>
                                         <TableCell>
-                                            <Stack
-                                                sx={{ alignItems: 'center' }}
-                                                direction='row'
-                                                spacing={2}
-                                            >
-                                                <Typography
-                                                    variant='subtitle2'
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: row.translations[0].content
-                                                    }}
-                                                ></Typography>
-                                            </Stack>
-                                        </TableCell>
-                                        <TableCell>{row.translations[0].category.name}</TableCell>
-                                        <TableCell>
-                                            {row.translations[0].tags
-                                                .map((tag) => tag.name)
-                                                .join(', ')}
+                                            <StyledStack>
+                                                {row.translations.map((translation) => (
+                                                    <AnnotationPopover
+                                                        key={translation.header}
+                                                        translation={translation}
+                                                    />
+                                                ))}
+                                            </StyledStack>
                                         </TableCell>
                                         <TableCell>
-                                            {dayjs(row.createdAt).format('MMM D, YYYY')}
+                                            <StyledStack>
+                                                {row.translations.map((translation) => (
+                                                    <Box key={translation.header}>
+                                                        {translation.category.name}
+                                                    </Box>
+                                                ))}
+                                            </StyledStack>
                                         </TableCell>
                                         <TableCell>
-                                            {dayjs(row.updatedAt).format('MMM D, YYYY')}
+                                            <StyledStack>
+                                                {row.translations.map((translation) => (
+                                                    <Box key={translation.header}>
+                                                        {translation.tags
+                                                            .map((tag) => tag.name)
+                                                            .join(', ') || 'No tags'}
+                                                    </Box>
+                                                ))}
+                                            </StyledStack>
                                         </TableCell>
                                         <TableCell>
-                                            {row.translations[0].isPublished ? 'Yes' : 'No'}
+                                            <StyledStack>
+                                                {row.translations.map((translation) => (
+                                                    <Box key={translation.header}>
+                                                        {translation.isPublished ? 'Yes' : 'No'}
+                                                    </Box>
+                                                ))}
+                                            </StyledStack>
+                                        </TableCell>
+                                        <TableCell>
+                                            <StyledStack>
+                                                {row.translations.map((translation) => (
+                                                    <Box key={translation.header}>
+                                                        {translation.publishedAt
+                                                            ? translation.publishedAt
+                                                                  ?.local()
+                                                                  .format('MMM D, YYYY HH:mm:ss')
+                                                            : '-----'}
+                                                    </Box>
+                                                ))}
+                                            </StyledStack>
+                                        </TableCell>
+                                        <TableCell>
+                                            {row.createdAt?.local().format('MMM D, YYYY HH:mm:ss')}
+                                        </TableCell>
+                                        <TableCell>
+                                            {row.updatedAt?.local().format('MMM D, YYYY HH:mm:ss')}
+                                        </TableCell>
+                                        <TableCell
+                                            align='center'
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                height: 130
+                                            }}
+                                        >
+                                            <BaseLinkIconButton
+                                                icon={ModeEditOutlined}
+                                                ariaLabel='Update article'
+                                                href={`/articles/${row.id}/update`}
+                                                title={'Update article'}
+                                            />
+
+                                            <DeleteIconButton
+                                                title={
+                                                    deleteArticleLoading
+                                                        ? 'Deleting...'
+                                                        : 'Delete Article'
+                                                }
+                                                aria-label='Delete tag'
+                                                onClick={() => deleteArticle(row.id)}
+                                                disabled={deleteArticleLoading}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -161,7 +268,7 @@ export default function ArticlesTable({
             </Box>
             <Divider />
             <TablePagination
-                component='div'
+                component={Box}
                 count={count}
                 onPageChange={onPageChange(setPage)}
                 onRowsPerPageChange={onRowsPerPageChange(setRowsPerPage)}
@@ -169,6 +276,25 @@ export default function ArticlesTable({
                 rowsPerPage={rowsPerPage}
                 rowsPerPageOptions={[5, 10, 25]}
             />
-        </Card>
+            {/* <Dialog
+                open={isDialogOpen}
+                onClose={handleDialogClose}
+                aria-labelledby='alert-dialog-title'
+                aria-describedby='alert-dialog-description'
+            >
+                <DialogTitle id='alert-dialog-title'>
+                    {"Use Google's location service?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id='alert-dialog-description'>
+                        Let Google help apps determine location. This means sending anonymous
+                        location data to Google, even when no apps are running.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose}>Disagree</Button>
+                </DialogActions>
+            </Dialog> */}
+        </StyledCard>
     );
 }

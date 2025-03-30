@@ -1,39 +1,35 @@
 import Filter from '@/components/filter/Filter';
 import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
-import TagsTable from '@/components/tags-table/TagsTable';
+import TagsTable, { ITagTableRow } from '@/components/tags-table/TagsTable';
+import { transformRawTags } from '@/components/utils';
+import { GET_TAGS } from '@/operations';
+import { paths } from '@/paths';
 import { IRawTag } from '@/types/tag';
-import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
 import { DEFAULT_ROWS_PER_PAGE } from '../constants';
-
-const GET_TAGS = gql`
-    query tags($filter: String, $limit: Int, $skip: Int, $entityName: EntityEnum) {
-        tags(filter_input: { name: $filter }, limit: $limit, skip: $skip) {
-            id
-            name
-            created_at
-            updated_at
-        }
-        count(entity: $entityName) {
-            count
-            entity
-        }
-    }
-`;
 
 export default function Tags(): React.JSX.Element {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
     const [skip, setSkip] = useState(0);
     const [filter, setFilter] = useState('');
+    const [tags, setTags] = useState<ITagTableRow[]>([]);
+    const [count, setCount] = useState<number>(0);
 
-    const { data, error, loading } = useQuery(GET_TAGS, {
-        variables: { limit: rowsPerPage, skip, entityName: 'tag', filter }
+    const { data, error, loading } = useQuery<{
+        tags: IRawTag[];
+        count: { count: number };
+    }>(GET_TAGS, {
+        variables: {
+            entityName: 'tag',
+            filterInput: { name: filter },
+            sortInput: [{ field: 'name', dir: 'asc' }],
+            limit: rowsPerPage,
+            skip
+        }
     });
-
-    const client = useApolloClient();
-    console.log('Client: ', client);
 
     useEffect(() => {
         setSkip(page * rowsPerPage);
@@ -43,26 +39,29 @@ export default function Tags(): React.JSX.Element {
         setPage(0);
     }, [filter]);
 
-    let tags = data?.tags ?? [];
-    if (tags.length > 0) {
-        tags = tags.map((tag: IRawTag) => {
-            return {
-                id: tag.id,
-                name: tag.name,
-                createdAt: new Date(tag.created_at),
-                updatedAt: new Date(tag.updated_at)
-            };
-        });
-    }
-
-    const count = data?.count.count ?? 0;
+    useEffect(() => {
+        if (data) {
+            const tags = transformRawTags(data.tags);
+            setTags(tags);
+            setCount(data.count.count);
+        } else if (error) {
+            console.error(
+                'Error occurred while fetching Categories. Please contact application administrator.'
+            );
+        }
+    }, [data, error]);
 
     return (
         <Stack spacing={3}>
-            <EntitiesPageHeader entityNamePlural='Tags' isDisplayAddButton />
+            <EntitiesPageHeader
+                entityNamePlural='Tags'
+                backPath={paths.dashboard.categories}
+                isDisplayAddButton
+            />
             <Filter entityToSearch='tags' setFilter={setFilter} />
             <TagsTable
                 count={count}
+                setCount={setCount}
                 page={page}
                 rows={tags}
                 rowsPerPage={rowsPerPage}

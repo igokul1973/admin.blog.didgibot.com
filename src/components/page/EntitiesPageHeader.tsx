@@ -1,4 +1,3 @@
-import { paths } from '@/paths';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
@@ -9,6 +8,7 @@ import { Link, useNavigate } from 'react-router';
 
 interface IEntitiesPageHeaderProps {
     readonly entityNamePlural: string;
+    readonly backPath: string;
     readonly isDisplayImportExport?: boolean;
     readonly isDisplayBackButton?: boolean;
     readonly isDisplayAddButton?: boolean;
@@ -17,6 +17,7 @@ interface IEntitiesPageHeaderProps {
 
 export default function EntitiesPageHeader({
     entityNamePlural,
+    backPath,
     isDisplayImportExport = true,
     isDisplayBackButton = false,
     isDisplayAddButton = false,
@@ -32,7 +33,7 @@ export default function EntitiesPageHeader({
                     <Stack direction='row' spacing={1}>
                         <Button
                             component={Link}
-                            to={paths.dashboard.tags}
+                            to={backPath}
                             color='inherit'
                             startIcon={<KeyboardBackspaceOutlinedIcon fontSize='medium' />}
                         >

@@ -8,12 +8,13 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink } from 'react-router';
 
 import { useUser } from '@/hooks/use-user';
-import { authClient } from '@/lib/auth/AuthClient';
 import { logger } from '@/lib/default-logger';
+import { setAuth } from '@/main';
 import { paths } from '@/paths';
+import { useApolloClient } from '@apollo/client';
 import { JSX, useCallback } from 'react';
 
 export interface IUserPopoverProps {
@@ -23,29 +24,16 @@ export interface IUserPopoverProps {
 }
 
 export function UserPopover({ anchorEl, onClose, open }: IUserPopoverProps): JSX.Element {
-    const { user, checkSession } = useUser();
-
-    const navigate = useNavigate();
+    const { user, setUserStateFromStorage: checkSession } = useUser();
+    const apolloClient = useApolloClient();
 
     const handleSignOut = useCallback(async (): Promise<void> => {
         try {
-            const { error } = await authClient.signOut();
-
-            if (error) {
-                logger.error('Sign out error', error);
-                return;
-            }
-
-            // Refresh the auth state
-            await checkSession?.();
-
-            // UserProvider, for this case, will not refresh the router and we need to do it manually
-            navigate(0);
-            // After refresh, AuthGuard will handle the redirect
+            setAuth(apolloClient, false);
         } catch (err) {
             logger.error('Sign out error', err);
         }
-    }, [checkSession, navigate]);
+    }, [checkSession]);
 
     if (!user) {
         return <div>User not found</div>;
