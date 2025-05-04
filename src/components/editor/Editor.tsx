@@ -35,14 +35,8 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                 tools: {
                     // Add your desired tools here
                     header: Header,
-                    paragraph: {
-                        class: Paragraph,
-                        inlineToolbar: true
-                    },
-                    list: {
-                        class: List,
-                        inlineToolbar: true
-                    },
+                    paragraph: Paragraph,
+                    list: List,
                     code: {
                         class: Code,
                         inlineToolbar: true

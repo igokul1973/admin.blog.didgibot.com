@@ -25,8 +25,8 @@ import { JSX, useEffect } from 'react';
 import { FieldErrors, useForm, UseFormRegister } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { transformRawCategory } from '../utils';
-import { categoryCreateSchema, categoryUpdateSchema } from './formSchema';
-import { IProps, TCategoryForm, TCategoryFormOutput } from './types';
+import { categorySchema } from './formSchema';
+import { IProps, TCategoryFormInput, TCategoryFormOutput } from './types';
 
 interface IFieldProps {
     register: UseFormRegister<{
@@ -135,8 +135,8 @@ export function CategoryForm({
         register,
         handleSubmit,
         formState: { errors, dirtyFields }
-    } = useForm<TCategoryForm, unknown, TCategoryFormOutput>({
-        resolver: zodResolver(isEdit ? categoryUpdateSchema : categoryCreateSchema),
+    } = useForm<TCategoryFormInput, unknown, TCategoryFormOutput>({
+        resolver: zodResolver(categorySchema),
         reValidateMode: 'onChange',
         defaultValues
     });

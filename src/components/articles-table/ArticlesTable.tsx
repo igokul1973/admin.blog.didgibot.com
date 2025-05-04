@@ -38,7 +38,6 @@ export default function ArticlesTable({
     setPage,
     setRowsPerPage,
     count = 0,
-    setCount,
     rows = [],
     page = 0,
     rowsPerPage = 0,

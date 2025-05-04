@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const tagUpdateSchema = z.object({
-    id: z.string(),
+export const tagSchema = z.object({
+    id: z.string().optional(),
     name: z
         .string({
             required_error: "please enter tag's name",
@@ -9,8 +9,4 @@ export const tagUpdateSchema = z.object({
         })
         .min(3, { message: 'must be at least 3 characters' })
         .max(40, { message: 'must be less than 40 characters' })
-});
-
-export const tagCreateSchema = tagUpdateSchema.omit({
-    id: true
 });

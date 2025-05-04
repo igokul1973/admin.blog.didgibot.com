@@ -62,8 +62,7 @@ export function ArticleForm({ onSubmit, defaultValues, index }: IProps): JSX.Ele
         handleSubmit,
         setValue,
         reset,
-        trigger,
-        formState: { errors, dirtyFields, isValid, isDirty }
+        formState: { errors, dirtyFields, isDirty }
     } = useForm<TArticleFormInput, unknown, TArticleFormOutput>({
         resolver: zodResolver(articleSchema),
         reValidateMode: 'onChange',

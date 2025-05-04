@@ -21,8 +21,8 @@ import { JSX, useEffect } from 'react';
 import { FieldErrors, useForm, UseFormRegister } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { transformRawTag } from '../utils';
-import { tagCreateSchema, tagUpdateSchema } from './formSchema';
-import { IProps, TTagForm, TTagFormOutput } from './types';
+import { tagSchema } from './formSchema';
+import { IProps, TTagFormInput, TTagFormOutput } from './types';
 
 const CREATE_TAG = gql`
     mutation set_tag($input: TagCreateInputType!) {
@@ -153,8 +153,8 @@ export function TagForm({
         register,
         handleSubmit,
         formState: { errors, dirtyFields }
-    } = useForm<TTagForm, unknown, TTagFormOutput>({
-        resolver: zodResolver(isEdit ? tagUpdateSchema : tagCreateSchema),
+    } = useForm<TTagFormInput, unknown, TTagFormOutput>({
+        resolver: zodResolver(tagSchema),
         reValidateMode: 'onChange',
         defaultValues
     });

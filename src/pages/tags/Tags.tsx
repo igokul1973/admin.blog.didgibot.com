@@ -61,7 +61,6 @@ export default function Tags(): React.JSX.Element {
             <Filter entityToSearch='tags' setFilter={setFilter} />
             <TagsTable
                 count={count}
-                setCount={setCount}
                 page={page}
                 rows={tags}
                 rowsPerPage={rowsPerPage}

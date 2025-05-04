@@ -16,7 +16,7 @@ export default function Articles(): JSX.Element {
     const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
     const [skip, setSkip] = useState(0);
     const [filter, setFilter] = useState('');
-    const [sort, setSort] = useState<{ field: string; dir: string }[]>([
+    const [sort] = useState<{ field: string; dir: string }[]>([
         { field: 'updated_at', dir: 'asc' }
     ]);
     const { user } = useUser();
@@ -70,7 +70,6 @@ export default function Articles(): JSX.Element {
             <ArticlesTable
                 count={count}
                 page={page}
-                setCount={setCount}
                 rows={articles}
                 rowsPerPage={rowsPerPage}
                 loading={loading}

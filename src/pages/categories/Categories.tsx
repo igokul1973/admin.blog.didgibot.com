@@ -61,7 +61,6 @@ export default function Categories(): JSX.Element {
             <Filter entityToSearch='categories' setFilter={setFilter} />
             <CategoriesTable
                 count={count}
-                setCount={setCount}
                 page={page}
                 rows={categories}
                 rowsPerPage={rowsPerPage}

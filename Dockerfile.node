@@ -1,0 +1,11 @@
+# This file is needed to create a pod with node and git and chromium
+# I'll probably change it later
+FROM node:22-alpine3.21
+
+ENV CHROME_BIN=/usr/bin/chromium-browser
+RUN apk update && apk add --no-cache nmap && \
+  echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
+  echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
+  apk update && \
+  apk add --no-cache git chromium
+

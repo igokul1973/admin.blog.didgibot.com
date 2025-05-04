@@ -28,7 +28,6 @@ export interface ITagTableRow extends ITag {}
 export default function TagsTable({
     setPage,
     setRowsPerPage,
-    setCount,
     count = 0,
     rows = [],
     page = 0,

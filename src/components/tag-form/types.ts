@@ -1,10 +1,10 @@
 import { ITag } from '@/types/tag';
 import { Control, FieldValues } from 'react-hook-form';
 import { z } from 'zod';
-import { tagCreateSchema, tagUpdateSchema } from './formSchema';
+import { tagSchema } from './formSchema';
 
 export interface IProps {
-    readonly defaultValues: TTagForm;
+    readonly defaultValues: TTagFormInput;
     readonly isEdit: boolean;
     readonly isNavigate?: boolean;
     readonly formType?: 'dialog' | 'card';
@@ -12,6 +12,6 @@ export interface IProps {
     readonly handleNewTag?: (newTag: ITag) => void;
 }
 
-export type TTagForm = z.input<typeof tagCreateSchema>;
-export type TTagFormOutput = z.output<typeof tagUpdateSchema>;
-export type TTagFormControl = Control<TTagForm> & Control<FieldValues>;
+export type TTagFormInput = z.input<typeof tagSchema>;
+export type TTagFormOutput = z.output<typeof tagSchema>;
+export type TTagFormControl = Control<TTagFormInput> & Control<FieldValues>;

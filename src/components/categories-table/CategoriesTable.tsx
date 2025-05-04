@@ -28,7 +28,6 @@ export interface ICategoryTableRow extends ICategory {}
 export default function CategoriesTable({
     setPage,
     setRowsPerPage,
-    setCount,
     count = 0,
     rows = [],
     page = 0,
