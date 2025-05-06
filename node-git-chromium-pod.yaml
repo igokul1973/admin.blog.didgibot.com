@@ -13,13 +13,13 @@ spec:
               - infinity
           resources:
               requests:
-                  memory: '512Mi'
-                  cpu: '200m'
-                  ephemeral-storage: '500Mi'
+                  memory: '2048Mi'
+                  cpu: '600m'
+                  ephemeral-storage: '2Gi'
               limits:
-                  memory: '512Mi'
-                  cpu: '200m'
-                  ephemeral-storage: '500Mi'
+                  memory: '2048Mi'
+                  cpu: '600m'
+                  ephemeral-storage: '2Gi'
           securityContext:
               runAsUser: 1000 # default UID of jenkins user in agent image
         - name: kaniko
