@@ -6,20 +6,39 @@ spec:
     containers:
         - name: node-git-chromium
           image: igk19/node-git-chromium:1.0.9
+          automountServiceAccountToken: false
           command:
               - sleep
           args:
               - infinity
+          resources:
+              requests:
+                  memory: '512Mi'
+                  cpu: '200m'
+                  ephemeral-storage: '500Mi'
+              limits:
+                  memory: '512Mi'
+                  cpu: '200m'
+                  ephemeral-storage: '500Mi'
           securityContext:
               runAsUser: 1000 # default UID of jenkins user in agent image
         - name: kaniko
           image: gcr.io/kaniko-project/executor:debug
-          # workingDir: /home/jenkins
+          automountServiceAccountToken: false
           command:
               - sleep
           args:
               - infinity
           tty: true
+          resources:
+              requests:
+                  memory: '1024Mi'
+                  cpu: '400m'
+                  ephemeral-storage: '500Mi'
+              limits:
+                  memory: '1024Mi'
+                  cpu: '400m'
+                  ephemeral-storage: '1Gi'
           volumeMounts:
               - name: jenkins-docker-cfg
                 mountPath: /kaniko/.docker

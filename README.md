@@ -2,7 +2,7 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Just a line to see if the pipeline works.
+Just a line to see if the pipeline works. Another change.
 
 Currently, two official plugins are available:
 
