@@ -46,9 +46,9 @@ pipeline {
                   """
                   def new_app_version = readJSON text: sh(returnStdout: true, script: 'npm version')
                   env.NEW_APP_VERSION = new_app_version['admin.blog.didgibot.com']
-                  def commit_message = "Upgrade to new application version - ${env.NEW_APP_VERSION} - [version bump]"
+                  def commitMessage = "Upgrade to new application version - ${env.NEW_APP_VERSION} - [version bump]"
                   def encodedPassword = URLEncoder.encode("$GH_TOKEN", 'UTF-8')
-                  sh "git commit -m '${commit_message}'"
+                  sh "git commit -m '${commitMessage}'"
                   sh "git push https://${USERNAME}:${encodedPassword}@github.com/${USERNAME}/admin.blog.didgibot.com.git"
                 }
               }
