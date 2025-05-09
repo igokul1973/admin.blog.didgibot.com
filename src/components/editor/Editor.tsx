@@ -12,6 +12,7 @@ import Underline from '@editorjs/underline';
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
 import { StyledEditor } from './styled';
+import Quote from '@/editorjs-quote';
 
 interface IProps {
     readonly editor: RefObject<EditorJS | null>;
@@ -56,6 +57,15 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                     annotation: {
                         class: Annotation,
                         inlineToolbar: true
+                    },
+                    quote: {
+                        class: Quote,
+                        inlineToolbar: true,
+                        shortcut: 'CMD+SHIFT+O',
+                        config: {
+                            quotePlaceholder: 'Enter a quote',
+                            captionPlaceholder: "Quote's author"
+                        }
                     }
                 },
                 data: initialValue,

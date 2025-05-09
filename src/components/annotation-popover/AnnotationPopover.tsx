@@ -1,7 +1,9 @@
 import { Divider, Popover, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import BlockParser from 'editor-react-parser';
+// import BlockParser from 'editor-react-parser';
 import { JSX, SyntheticEvent, useCallback, useRef, useState } from 'react';
+import { BlockParser } from '../editorjs-parser/BlockParser';
+import { StyledBlockParserWrapper } from './styled';
 import { IAnnotationPopoverProps } from './types';
 
 export default function AnnotationPopover({ translation }: IAnnotationPopoverProps): JSX.Element {
@@ -39,14 +41,14 @@ export default function AnnotationPopover({ translation }: IAnnotationPopoverPro
 
     return (
         <>
-            <Box
+            <StyledBlockParserWrapper
                 key={translation.header}
                 className='html'
                 onMouseOver={handleMouseOver}
                 onMouseOut={handleMouseOut}
             >
                 <BlockParser data={translation.content} />
-            </Box>
+            </StyledBlockParserWrapper>
             <Popover
                 ref={ref}
                 style={{ pointerEvents: 'none' }}
