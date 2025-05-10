@@ -1,4 +1,5 @@
 import { TArticleFormContent } from '@/components/article-form/types';
+import Quote from '@/editorjs-quote';
 import Code from '@editorjs/code';
 import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -7,12 +8,14 @@ import List from '@editorjs/list';
 // @ts-expect-error
 import Marker from '@editorjs/marker';
 import Paragraph from '@editorjs/paragraph';
+// @ts-expect-error
+import RawTool from '@editorjs/raw';
+import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
 // @ts-expect-error
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
 import { StyledEditor } from './styled';
-import Quote from '@/editorjs-quote';
 
 interface IProps {
     readonly editor: RefObject<EditorJS | null>;
@@ -65,6 +68,20 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                         config: {
                             quotePlaceholder: 'Enter a quote',
                             captionPlaceholder: "Quote's author"
+                        }
+                    },
+                    raw: {
+                        class: RawTool,
+                        inlineToolbar: true
+                    },
+                    table: {
+                        class: Table,
+                        inlineToolbar: true,
+                        config: {
+                            rows: 2,
+                            cols: 3,
+                            maxRows: 5,
+                            maxCols: 5
                         }
                     }
                 },
