@@ -1,7 +1,7 @@
 import { TArticleFormContent } from '@/components/article-form/types';
 import Quote from '@/editorjs-quote';
 import Code from '@editorjs/code';
-import EditorJS from '@editorjs/editorjs';
+import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import InlineCode from '@editorjs/inline-code';
 import List from '@editorjs/list';
@@ -75,13 +75,14 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                         inlineToolbar: true
                     },
                     table: {
-                        class: Table,
+                        class: Table as unknown as ToolConstructable,
                         inlineToolbar: true,
                         config: {
                             rows: 2,
                             cols: 3,
                             maxRows: 5,
-                            maxCols: 5
+                            maxCols: 5,
+                            stretched: true
                         }
                     }
                 },
