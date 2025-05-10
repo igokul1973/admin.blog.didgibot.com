@@ -194,6 +194,7 @@ export default class Quote implements BlockTool {
             baseClass: this.api.styles.block,
             wrapper: 'cdx-quote',
             text: 'cdx-quote__text',
+            textTune: 'cdx-quote__text--' + this.data.alignment,
             input: this.api.styles.input,
             caption: 'cdx-quote__caption'
         };
