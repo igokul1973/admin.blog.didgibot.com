@@ -19,4 +19,8 @@ export const StyledBlockParserWrapper = styled(Box, {
     .text-justify {
         text-align: justify;
     }
+
+    .w-full {
+        width: 100%;
+    }
 `;
