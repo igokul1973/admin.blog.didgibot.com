@@ -20,6 +20,7 @@
     "@editorjs/raw": "^2.5.1",
     "@editorjs/table": "^2.4.4",
     "@editorjs/editorjs": "^2.30.8",
+    "@editorjs/delimiter": "^1.4.2",
     "@editorjs/header": "^2.8.8",
     "@editorjs/inline-code": "^1.5.1",
     "@editorjs/list": "^2.0.8",

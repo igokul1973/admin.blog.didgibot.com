@@ -1,6 +1,7 @@
 import { TArticleFormContent } from '@/components/article-form/types';
 import Quote from '@/editorjs-quote';
 import Code from '@editorjs/code';
+import Delimiter from '@editorjs/delimiter';
 import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import InlineCode from '@editorjs/inline-code';
@@ -43,6 +44,10 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                     list: List,
                     code: {
                         class: Code,
+                        inlineToolbar: true
+                    },
+                    delimiter: {
+                        class: Delimiter,
                         inlineToolbar: true
                     },
                     inlineCode: {

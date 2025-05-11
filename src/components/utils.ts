@@ -108,10 +108,12 @@ export const transformRawTranslations = (
             is_published,
             published_at,
             category: rawCategory,
-            content: rawContent,
+            content: rawContentSnakeCase,
             tags: rawTags,
             ...rest
         } = t;
+
+        const rawContent = camelCaseKeys<IContent, IContent>(rawContentSnakeCase);
 
         const category = transformRawCategory(rawCategory, isRemoveDateFields);
         const tags = transformRawTags(rawTags, isRemoveDateFields);

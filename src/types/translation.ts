@@ -1,4 +1,4 @@
-import { Dayjs } from 'dayjs';
+import { Dayjs, extend } from 'dayjs';
 import { ICategory, IRawCategory } from './category';
 import { IRawTag, ITag } from './tag';
 
@@ -14,7 +14,7 @@ interface IContentBlock {
     data: object[];
 }
 
-export interface IContent {
+export interface IContent extends Record<string, any> {
     __typename?: string;
     version?: string;
     time?: number;
