@@ -3,9 +3,13 @@ import Quote from '@/editorjs-quote';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
+// @ts-expect-error
+import EditorjsColumns from '@calumk/editorjs-columns';
 import Header from '@editorjs/header';
 import InlineCode from '@editorjs/inline-code';
 import List from '@editorjs/list';
+// @ts-expect-error
+import Alert from 'editorjs-alert';
 // @ts-expect-error
 import Marker from '@editorjs/marker';
 import Paragraph from '@editorjs/paragraph';
@@ -25,6 +29,13 @@ interface IProps {
     readonly index: number;
 }
 
+const columnTools = {
+    header: Header,
+    alert: Alert,
+    paragraph: Paragraph,
+    delimiter: Delimiter
+};
+
 export function Editor({ editor, onChange, initialValue, index }: IProps) {
     const isReady = useRef(false);
     useEffect(() => {
@@ -39,6 +50,10 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                 },
                 tools: {
                     // Add your desired tools here
+                    alert: {
+                        class: Alert,
+                        inlineToolbar: true
+                    },
                     header: Header,
                     paragraph: Paragraph,
                     list: List,
@@ -88,6 +103,13 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                             maxRows: 5,
                             maxCols: 5,
                             stretched: true
+                        }
+                    },
+                    columns: {
+                        class: EditorjsColumns,
+                        config: {
+                            EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
+                            tools: columnTools // IMPORTANT! ref the column_tools
                         }
                     }
                 },
