@@ -1,4 +1,5 @@
 import { TArticleFormContent } from '@/components/article-form/types';
+import { config } from '@/config';
 import Quote from '@/editorjs-quote';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
@@ -19,7 +20,6 @@ import RawTool from '@editorjs/raw';
 import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
 // @ts-expect-error
-import { config } from '@/config';
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
 import { StyledEditor } from './styled';

@@ -1,4 +1,4 @@
-import { Dayjs, extend } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { ICategory, IRawCategory } from './category';
 import { IRawTag, ITag } from './tag';
 
