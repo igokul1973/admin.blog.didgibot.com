@@ -6,6 +6,7 @@ import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
 // @ts-expect-error
 import EditorjsColumns from '@calumk/editorjs-columns';
 import Header from '@editorjs/header';
+import ImageTool from '@editorjs/image';
 import InlineCode from '@editorjs/inline-code';
 import List from '@editorjs/list';
 // @ts-expect-error
@@ -18,6 +19,7 @@ import RawTool from '@editorjs/raw';
 import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
 // @ts-expect-error
+import { config } from '@/config';
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
 import { StyledEditor } from './styled';
@@ -35,6 +37,8 @@ const columnTools = {
     paragraph: Paragraph,
     delimiter: Delimiter
 };
+
+const siteUrl = config.site.url;
 
 export function Editor({ editor, onChange, initialValue, index }: IProps) {
     const isReady = useRef(false);
@@ -61,9 +65,26 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                         class: Code,
                         inlineToolbar: true
                     },
+                    columns: {
+                        class: EditorjsColumns,
+                        config: {
+                            EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
+                            tools: columnTools // IMPORTANT! ref the column_tools
+                        }
+                    },
                     delimiter: {
                         class: Delimiter,
                         inlineToolbar: true
+                    },
+                    image: {
+                        class: ImageTool,
+                        inlineToolbar: true,
+                        config: {
+                            endpoints: {
+                                byFile: `${siteUrl}/api/uploadFile`, // Your backend file uploader endpoint
+                                byUrl: `${siteUrl}/api/fetchUrl` // Your endpoint that provides uploading by Url
+                            }
+                        }
                     },
                     inlineCode: {
                         class: InlineCode,
@@ -103,13 +124,6 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                             maxRows: 5,
                             maxCols: 5,
                             stretched: true
-                        }
-                    },
-                    columns: {
-                        class: EditorjsColumns,
-                        config: {
-                            EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
-                            tools: columnTools // IMPORTANT! ref the column_tools
                         }
                     }
                 },

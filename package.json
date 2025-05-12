@@ -13,7 +13,7 @@
     "format:check": "prettier --check --ignore-unknown ."
   },
   "dependencies": {
-    "@apollo/client": "^3.13.1",
+    "@apollo/client": "^3.13.8",
     "@calumk/editorjs-columns": "^0.3.2",
     "@codexteam/icons": "^0.3.3",
     "@editorjs/code": "^2.9.3",
@@ -21,6 +21,7 @@
     "@editorjs/dom": "^1.0.1",
     "@editorjs/editorjs": "^2.30.8",
     "@editorjs/header": "^2.8.8",
+    "@editorjs/image": "^2.10.2",
     "@editorjs/inline-code": "^1.5.1",
     "@editorjs/list": "^2.0.8",
     "@editorjs/marker": "^1.4.0",
