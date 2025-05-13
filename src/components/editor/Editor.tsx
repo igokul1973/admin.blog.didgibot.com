@@ -20,6 +20,7 @@ import RawTool from '@editorjs/raw';
 import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
 // @ts-expect-error
+import { authClient } from '@/lib/auth/AuthClient';
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
 import { StyledEditor } from './styled';
@@ -80,9 +81,46 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                         class: ImageTool,
                         inlineToolbar: true,
                         config: {
-                            endpoints: {
-                                byFile: `${siteUrl}/api/uploadFile`, // Your backend file uploader endpoint
-                                byUrl: `${siteUrl}/api/fetchUrl` // Your endpoint that provides uploading by Url
+                            // endpoints: {
+                            //     byFile: `${siteUrl}api/uploadFile` // Your backend file uploader endpoint
+                            //     //     byUrl: `${siteUrl}api/fetchUrl` // Your endpoint that provides uploading by Url
+                            // },
+                            // additionalRequestHeaders: {
+                            //     Authorization: `Bearer ${authClient.getUser().token}`
+                            // }
+                            uploader: {
+                                uploadByFile: async (file: File) => {
+                                    const formData = new FormData();
+                                    formData.append('image', file);
+                                    try {
+                                        const res = await fetch(`${siteUrl}api/uploadFile`, {
+                                            method: 'POST',
+                                            body: formData,
+                                            headers: {
+                                                Authorization: `Bearer ${authClient.getUser().token}`
+                                            }
+                                        });
+                                        const json = await res.json();
+                                        if (!res.ok) {
+                                            return {
+                                                success: 0,
+                                                message: json.message
+                                            };
+                                        }
+                                        return {
+                                            success: 1,
+                                            file: {
+                                                url: json.url
+                                            }
+                                        };
+                                    } catch (e) {
+                                        debugger;
+                                        return {
+                                            success: 0,
+                                            message: 'Upload Failed'
+                                        };
+                                    }
+                                }
                             }
                         }
                     },
