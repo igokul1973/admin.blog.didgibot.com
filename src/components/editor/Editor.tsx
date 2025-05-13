@@ -1,6 +1,7 @@
 import { TArticleFormContent } from '@/components/article-form/types';
 import { config } from '@/config';
 import Quote from '@/editorjs-quote';
+import { authClient } from '@/lib/auth/AuthClient';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
@@ -16,7 +17,6 @@ import Alert from 'editorjs-alert';
 import Marker from '@editorjs/marker';
 import Paragraph from '@editorjs/paragraph';
 // @ts-expect-error
-import { authClient } from '@/lib/auth/AuthClient';
 import RawTool from '@editorjs/raw';
 import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
