@@ -16,11 +16,11 @@ import Alert from 'editorjs-alert';
 import Marker from '@editorjs/marker';
 import Paragraph from '@editorjs/paragraph';
 // @ts-expect-error
+import { authClient } from '@/lib/auth/AuthClient';
 import RawTool from '@editorjs/raw';
 import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
 // @ts-expect-error
-import { authClient } from '@/lib/auth/AuthClient';
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
 import { StyledEditor } from './styled';
@@ -114,7 +114,12 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                                             }
                                         };
                                     } catch (e) {
-                                        debugger;
+                                        if (e instanceof Error) {
+                                            return {
+                                                success: 0,
+                                                message: e.message
+                                            };
+                                        }
                                         return {
                                             success: 0,
                                             message: 'Upload Failed'
