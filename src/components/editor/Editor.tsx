@@ -104,7 +104,7 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                                     const formData = new FormData();
                                     formData.append('image', file);
                                     try {
-                                        const res = await fetch(`${siteUrl}api/uploadFile`, {
+                                        const res = await fetch('/api/uploadFile', {
                                             method: 'POST',
                                             body: formData,
                                             headers: {
