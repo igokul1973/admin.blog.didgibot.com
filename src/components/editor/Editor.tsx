@@ -1,5 +1,4 @@
 import { TArticleFormContent } from '@/components/article-form/types';
-import { config } from '@/config';
 import Quote from '@/editorjs-quote';
 import { authClient } from '@/lib/auth/AuthClient';
 import Code from '@editorjs/code';
@@ -38,8 +37,6 @@ const columnTools = {
     paragraph: Paragraph,
     delimiter: Delimiter
 };
-
-const siteUrl = config.site.url;
 
 export function Editor({ editor, onChange, initialValue, index }: IProps) {
     const isReady = useRef(false);
