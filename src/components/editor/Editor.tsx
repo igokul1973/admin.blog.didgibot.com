@@ -88,8 +88,19 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                             // additionalRequestHeaders: {
                             //     Authorization: `Bearer ${authClient.getUser().token}`
                             // }
+                            field: 'image',
+                            types: 'image/jpeg,image/png,image/gif,image/webp',
+                            additionalRequestData: {
+                                token: authClient.getUser().token
+                            },
                             uploader: {
                                 uploadByFile: async (file: File) => {
+                                    if (file.size > 524288) {
+                                        return {
+                                            success: 0,
+                                            message: 'File must be less than 500kb'
+                                        };
+                                    }
                                     const formData = new FormData();
                                     formData.append('image', file);
                                     try {

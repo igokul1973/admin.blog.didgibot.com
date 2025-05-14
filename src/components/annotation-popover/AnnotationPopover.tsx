@@ -47,7 +47,10 @@ export default function AnnotationPopover({ translation }: IAnnotationPopoverPro
                 onMouseOver={handleMouseOver}
                 onMouseOut={handleMouseOut}
             >
-                <BlockParser data={translation.content} />
+                <BlockParser
+                    data={translation.content}
+                    config={{ image: { dimensions: { width: 400 } } }}
+                />
             </StyledBlockParserWrapper>
             <Popover
                 ref={ref}
