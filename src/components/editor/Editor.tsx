@@ -4,6 +4,8 @@ import { authClient } from '@/lib/auth/AuthClient';
 import Delimiter from '@editorjs/delimiter';
 import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
 // @ts-expect-error
+import editorjsCodecup from '@calumk/editorjs-codecup';
+// @ts-expect-error
 import EditorjsColumns from '@calumk/editorjs-columns';
 import Header from '@editorjs/header';
 import ImageTool from '@editorjs/image';
@@ -18,8 +20,9 @@ import Paragraph from '@editorjs/paragraph';
 import RawTool from '@editorjs/raw';
 import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
+// // @ts-expect-error
+// import CodeBox from '@bomdi/codebox';
 // @ts-expect-error
-import CodeBox from '@bomdi/codebox';
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
 import { StyledEditor } from './styled';
@@ -54,18 +57,19 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                     // Add your desired tools here
                     alert: {
                         class: Alert,
+
                         inlineToolbar: true
                     },
                     header: Header,
                     paragraph: Paragraph,
                     list: List,
-                    code: {
-                        class: CodeBox,
-                        config: {
-                            themeName: 'atom-one-dark'
-                        },
-                        inlineToolbar: true
-                    },
+                    // code: {
+                    //     class: CodeBox,
+                    //     config: {
+                    //         themeName: 'atom-one-dark'
+                    //     }
+                    // },
+                    code: editorjsCodecup,
                     columns: {
                         class: EditorjsColumns,
                         config: {

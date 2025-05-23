@@ -122,8 +122,9 @@ export default function ArticlesTable({
                                     }}
                                 />
                             </TableCell>
-                            <TableCell width={150}>Header</TableCell>
-                            <TableCell width={250}>Content</TableCell>
+                            <TableCell width='150px'>Header</TableCell>
+
+                            <TableCell sx={{ maxWidth: '300px' }}>Content</TableCell>
                             <TableCell width={180}>Categories</TableCell>
                             <TableCell width={100}>Tags</TableCell>
                             <TableCell>Is Published</TableCell>
@@ -174,7 +175,7 @@ export default function ArticlesTable({
                                                 ))}
                                             </StyledStack>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell sx={{ maxWidth: '300px' }}>
                                             <StyledStack>
                                                 {row.translations.map((translation) => (
                                                     <AnnotationPopover
