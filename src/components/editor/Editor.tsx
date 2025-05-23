@@ -1,7 +1,6 @@
 import { TArticleFormContent } from '@/components/article-form/types';
 import Quote from '@/editorjs-quote';
 import { authClient } from '@/lib/auth/AuthClient';
-import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
 // @ts-expect-error
@@ -20,6 +19,7 @@ import RawTool from '@editorjs/raw';
 import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
 // @ts-expect-error
+import CodeBox from '@bomdi/codebox';
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
 import { StyledEditor } from './styled';
@@ -60,7 +60,10 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                     paragraph: Paragraph,
                     list: List,
                     code: {
-                        class: Code,
+                        class: CodeBox,
+                        config: {
+                            themeName: 'atom-one-dark'
+                        },
                         inlineToolbar: true
                     },
                     columns: {

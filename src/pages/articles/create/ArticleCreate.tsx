@@ -44,7 +44,15 @@ export default function ArticleCreate(): JSX.Element {
                                     translations {
                                         language
                                         header
-                                        content
+                                        content {
+                                            version
+                                            time
+                                            blocks {
+                                                id
+                                                type
+                                                data
+                                            }
+                                        }
                                         is_published
                                         category {
                                             id
@@ -92,7 +100,32 @@ export default function ArticleCreate(): JSX.Element {
             return openSnackbar('No form changes detected', 'warning');
         }
 
-        const data = snakeCaseKeys(formData);
+        let data = snakeCaseKeys(formData);
+
+        // Due to MongoDB not accepting the 'language' field in case
+        // the DB is text-indexed, renaming the 'language' field to 'lang'.
+        data = {
+            ...data,
+            translations: data.translations.map(
+                (translation: TArticleFormOutput['translations'][number]) => ({
+                    ...translation,
+                    content: {
+                        ...translation.content,
+                        blocks: translation.content.blocks.map((block) => {
+                            if (block.type === 'code') {
+                                const { data, ...rest } = block;
+                                const { language, ...restData } = data;
+                                return {
+                                    ...rest,
+                                    data: { ...restData, lang: language }
+                                };
+                            }
+                            return block;
+                        })
+                    }
+                })
+            )
+        };
 
         createArticleFunction({
             variables: {

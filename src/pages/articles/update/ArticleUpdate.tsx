@@ -96,6 +96,27 @@ export default function ArticleUpdate(): JSX.Element {
                     };
                 }
             }
+
+            article = {
+                ...article,
+                translations: article.translations.map((translation) => ({
+                    ...translation,
+                    content: {
+                        ...translation.content,
+                        blocks: translation.content.blocks.map((block) => {
+                            if (block.type === 'code') {
+                                const { data, ...rest } = block;
+                                const { lang, ...restData } = data;
+                                return {
+                                    ...rest,
+                                    data: { ...restData, language: lang }
+                                };
+                            }
+                            return block;
+                        })
+                    }
+                }))
+            };
             setArticle(article);
         } else {
             fetchArticle();
@@ -144,7 +165,29 @@ export default function ArticleUpdate(): JSX.Element {
             return openSnackbar('No form changes detected', 'warning');
         }
 
-        const { id, translations } = snakeCaseKeys(formData);
+        let { id, translations } = snakeCaseKeys(formData);
+
+        // Due to MongoDB not accepting the 'language' field in case
+        // the DB is text-indexed, renaming the 'language' field to 'lang'.
+        translations = translations.map(
+            (translation: TArticleFormOutput['translations'][number]) => ({
+                ...translation,
+                content: {
+                    ...translation.content,
+                    blocks: translation.content.blocks.map((block) => {
+                        if (block.type === 'code') {
+                            const { data, ...rest } = block;
+                            const { language, ...restData } = data;
+                            return {
+                                ...rest,
+                                data: { ...restData, lang: language }
+                            };
+                        }
+                        return block;
+                    })
+                }
+            })
+        );
 
         updateArticleFunction({
             variables: {
