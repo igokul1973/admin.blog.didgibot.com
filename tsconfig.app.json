@@ -31,6 +31,7 @@
   },
   "include": [
     "src",
-    "src/components/app-snackbar/AppSnackbar.tsx"
+    "src/components/app-snackbar/AppSnackbar.tsx",
+    "playground3.mongodb.mjs"
   ]
 }

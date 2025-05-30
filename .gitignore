@@ -24,5 +24,9 @@ dist-ssr
 *.sln
 *.sw?
 
+# Env
+.env
+
 # Temp restriction
 r
+
