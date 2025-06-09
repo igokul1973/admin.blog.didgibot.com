@@ -270,10 +270,10 @@ export function ArticleForm({ onSubmit, defaultValues, index }: IProps): JSX.Ele
                                             />
                                         )}
                                     />
-                                    {contentError && (
+                                    {contentError?.blocks && (
                                         <FormHelperText sx={{ color: 'error.main' }}>
-                                            {contentError.message &&
-                                                capitalize(contentError.message)}
+                                            {contentError.blocks.message &&
+                                                capitalize(contentError.blocks.message)}
                                         </FormHelperText>
                                     )}
                                 </FormControl>
