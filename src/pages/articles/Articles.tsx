@@ -4,12 +4,12 @@ import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
 import { transformRawArticles } from '@/components/utils';
 import { useUser } from '@/hooks/use-user';
 import { GET_ARTICLES } from '@/operations';
+import { DEFAULT_ROWS_PER_PAGE } from '@/pages/constants';
 import { paths } from '@/paths';
 import { IRawArticle } from '@/types/article';
 import { useQuery } from '@apollo/client';
 import { Stack } from '@mui/material';
 import { JSX, useEffect, useState } from 'react';
-import { DEFAULT_ROWS_PER_PAGE } from '@/pages/constants';
 
 export default function Articles(): JSX.Element {
     const [page, setPage] = useState(0);
@@ -17,7 +17,7 @@ export default function Articles(): JSX.Element {
     const [skip, setSkip] = useState(0);
     const [filter, setFilter] = useState('');
     const [sort] = useState<{ field: string; dir: string }[]>([
-        { field: 'updated_at', dir: 'asc' }
+        { field: 'updated_at', dir: 'desc' }
     ]);
     const { user } = useUser();
     const userId = user?.id;
