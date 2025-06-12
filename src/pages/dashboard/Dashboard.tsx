@@ -1,5 +1,6 @@
 import { AppSnackbar } from '@/components/app-snackbar/AppSnackbar';
 import { MainNav } from '@/components/nav/main-nav/MainNav';
+import { ArticleFormProvider } from '@/contexts/ArticleFormContext';
 import { useUser } from '@/hooks/use-user';
 import { authClient } from '@/lib/auth/AuthClient';
 import { gql, useSubscription } from '@apollo/client';
@@ -37,13 +38,15 @@ export function Dashboard(): React.JSX.Element {
                     pl: { lg: 'var(--SideNav-width)' }
                 }}
             >
-                <MainNav />
-                <main>
-                    <Container maxWidth='xl' sx={{ py: '64px' }}>
-                        <Outlet />
-                    </Container>
-                </main>
-                <AppSnackbar />
+                <ArticleFormProvider>
+                    <MainNav />
+                    <main>
+                        <Container maxWidth='xl' sx={{ py: '64px' }}>
+                            <Outlet />
+                        </Container>
+                    </main>
+                    <AppSnackbar />
+                </ArticleFormProvider>
             </StyledDashboardWrapper>
         </StyledDashboard>
     );

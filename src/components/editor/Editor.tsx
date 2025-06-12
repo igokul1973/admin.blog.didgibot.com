@@ -61,7 +61,11 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                         inlineToolbar: true
                     },
                     header: Header,
-                    paragraph: Paragraph,
+                    // paragraph: Paragraph,
+                    paragraph: {
+                        class: Paragraph as unknown as ToolConstructable,
+                        inlineToolbar: true
+                    },
                     list: List,
                     // code: {
                     //     class: CodeBox,
@@ -93,7 +97,7 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                             //     Authorization: `Bearer ${authClient.getUser().token}`
                             // }
                             field: 'image',
-                            types: 'image/jpeg,image/png,image/gif,image/webp',
+                            types: 'image/jpeg,image/png,image/gif,image/webp,image/svg+xml',
                             additionalRequestData: {
                                 token: authClient.getUser().token
                             },
@@ -129,6 +133,7 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                                             }
                                         };
                                     } catch (e) {
+                                        debugger;
                                         if (e instanceof Error) {
                                             return {
                                                 success: 0,
@@ -140,6 +145,15 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                                             message: 'Upload Failed'
                                         };
                                     }
+                                },
+                                uploadByUrl(url: string) {
+                                    // your ajax request for uploading
+                                    return {
+                                        success: 1,
+                                        file: {
+                                            url
+                                        }
+                                    };
                                 }
                             }
                         }

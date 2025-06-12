@@ -52,8 +52,17 @@ const getInitialVariables = () => ({
     skip: OFFSET
 });
 
-export function ArticleForm({ onSubmit, defaultValues, index }: IProps): JSX.Element {
+export function ArticleForm({
+    onSubmit,
+    defaultValues,
+    index,
+    submitEvent = { isSubmit: false },
+    setIsArticleFormDirty
+}: IProps): JSX.Element {
     const { openSnackbar } = useSnackbar();
+
+    const submitButtonRef = useRef<HTMLButtonElement>(null);
+    const editor = useRef<EditorJS | null>(null);
 
     const {
         watch,
@@ -68,8 +77,6 @@ export function ArticleForm({ onSubmit, defaultValues, index }: IProps): JSX.Ele
         reValidateMode: 'onChange',
         defaultValues
     });
-
-    const editor = useRef<EditorJS | null>(null);
 
     const {
         data: initialRawCategories,
@@ -90,6 +97,16 @@ export function ArticleForm({ onSubmit, defaultValues, index }: IProps): JSX.Ele
     const [isShowPreview, setIsShowPreview] = useState<boolean>(false);
     const [categoryOptions, setCategoryOptions] = useState<ICategory[]>([]);
     const [tagOptions, setTagOptions] = useState<ITag[]>([]);
+
+    useEffect(() => {
+        setIsArticleFormDirty && setIsArticleFormDirty(isDirty);
+    }, [isDirty]);
+
+    useEffect(() => {
+        if (submitEvent.isSubmit) {
+            submitButtonRef.current?.click();
+        }
+    }, [submitEvent, reset]);
 
     useEffect(() => {
         if (initialRawCategories) {
@@ -142,6 +159,15 @@ export function ArticleForm({ onSubmit, defaultValues, index }: IProps): JSX.Ele
             openSnackbar(filteredTagsError.message, 'error');
         }
     }, [filteredTags, filteredTagsError]);
+
+    useEffect(() => {
+        // The default values may change if the user submitted
+        // the article changes and stayed on the same page.
+        // When default values change, we must reset the form.
+        // This way the Save button will be disabled until the form
+        // is changed again.
+        reset(defaultValues);
+    }, [defaultValues]);
 
     const getCategories = async (value: string) => {
         await getCategoriesFn({
@@ -596,8 +622,13 @@ export function ArticleForm({ onSubmit, defaultValues, index }: IProps): JSX.Ele
                         {/* <Button type='submit' variant='contained' disabled={!isDirty || !isValid}>
                             Save details
                         </Button> */}
-                        <Button type='submit' variant='contained' disabled={!isDirty}>
-                            Save details
+                        <Button
+                            type='submit'
+                            variant='contained'
+                            disabled={!isDirty}
+                            ref={submitButtonRef}
+                        >
+                            Save
                         </Button>
                     </CardActions>
                 </Card>

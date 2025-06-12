@@ -3,6 +3,7 @@ import LanguageForm from '@/components/article-form/language-form/LanguageForm';
 import { TArticleFormInput, TArticleFormOutput } from '@/components/article-form/types';
 import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
 import { getEmptyArticle, snakeCaseKeys, transformRawArticle } from '@/components/utils';
+import { ArticleFormContext } from '@/contexts/ArticleFormContext';
 import { useSnackbar } from '@/contexts/snackbar/provider';
 import { GET_ARTICLES, UPDATE_ARTICLE } from '@/operations';
 import { paths } from '@/paths';
@@ -11,7 +12,7 @@ import { LanguageEnum } from '@/types/translation';
 import { gql, useApolloClient, useLazyQuery, useMutation } from '@apollo/client';
 import { Box, capitalize } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { JSX, useEffect, useState } from 'react';
+import { JSX, use, useEffect, useState } from 'react';
 import { FieldNamesMarkedBoolean, FieldValues } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 
@@ -20,6 +21,8 @@ export default function ArticleUpdate(): JSX.Element {
     const client = useApolloClient();
     const navigate = useNavigate();
     const { openSnackbar } = useSnackbar();
+    const { submitEvent, setIsArticleFormDirty, isRedirectOnArticleSubmit } =
+        use(ArticleFormContext);
 
     const [
         getArticlesFn,
@@ -135,15 +138,22 @@ export default function ArticleUpdate(): JSX.Element {
     const [
         updateArticleFunction,
         { data: updateArticleData, error: updateArticleError, loading: updateArticleLoading }
-    ] = useMutation(UPDATE_ARTICLE);
+    ] = useMutation<{ update_article: IRawArticle }>(UPDATE_ARTICLE);
 
     useEffect(() => {
         if (updateArticleData) {
+            // When article is successfully updated...
             openSnackbar(capitalize('successfully updated article'), 'success');
-            navigate(paths.dashboard.articles);
+            if (isRedirectOnArticleSubmit) {
+                navigate(paths.dashboard.articles);
+            } else {
+                setRawArticle(updateArticleData.update_article);
+            }
         } else if (updateArticleError) {
+            // When article update failed...
             openSnackbar(updateArticleError.message, 'error');
         } else if (updateArticleLoading) {
+            // When article update is in progress...
             console.log('Sending article update request...');
         }
     }, [updateArticleData, updateArticleError, updateArticleLoading]);
@@ -211,7 +221,13 @@ export default function ArticleUpdate(): JSX.Element {
                 <LanguageForm language={language} setLanguage={setLanguage} />
             </Stack>
             {article ? (
-                <ArticleForm defaultValues={article} onSubmit={onSubmit} index={index} />
+                <ArticleForm
+                    defaultValues={article}
+                    onSubmit={onSubmit}
+                    submitEvent={submitEvent}
+                    setIsArticleFormDirty={setIsArticleFormDirty}
+                    index={index}
+                />
             ) : (
                 <Box>Article not found</Box>
             )}
