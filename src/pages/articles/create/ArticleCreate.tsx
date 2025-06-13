@@ -3,7 +3,6 @@ import LanguageForm from '@/components/article-form/language-form/LanguageForm';
 import { TArticleFormOutput } from '@/components/article-form/types';
 import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
 import { getEmptyArticle, snakeCaseKeys } from '@/components/utils';
-import { ArticleFormContext } from '@/contexts/ArticleFormContext';
 import { useSnackbar } from '@/contexts/snackbar/provider';
 import { CREATE_ARTICLE } from '@/operations';
 import { paths } from '@/paths';
@@ -11,7 +10,7 @@ import { LanguageEnum } from '@/types/translation';
 import { gql, useMutation } from '@apollo/client';
 import { capitalize } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { JSX, use, useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { FieldNamesMarkedBoolean, FieldValues } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 

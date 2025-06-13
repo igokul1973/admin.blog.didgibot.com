@@ -133,7 +133,6 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                                             }
                                         };
                                     } catch (e) {
-                                        debugger;
                                         if (e instanceof Error) {
                                             return {
                                                 success: 0,

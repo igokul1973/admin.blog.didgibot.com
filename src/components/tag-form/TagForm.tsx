@@ -133,7 +133,7 @@ export function TagForm({
         } else if (createTagLoading) {
             console.log('Creating tag...');
         }
-    }, [createTagData, createTagError, createTagLoading]);
+    }, [createTagData, createTagError, createTagLoading, isNavigate, navigate, openSnackbar]);
 
     useEffect(() => {
         if (updateTagData) {

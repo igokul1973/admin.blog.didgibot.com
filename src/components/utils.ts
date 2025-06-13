@@ -36,7 +36,7 @@ export const transformRawCategory = (
     category: IRawCategory,
     isRemoveDateFields = false
 ): ICategory => {
-    let { id, name, created_at, updated_at } = category;
+    const { id, name, created_at, updated_at } = category;
     let c: ICategory = { id, name };
 
     if (!isRemoveDateFields) {
@@ -57,7 +57,7 @@ export const transformRawCategories = (
 };
 
 export const transformRawTag = (tag: IRawTag, isRemoveDateFields = false): ITag => {
-    let { id, name, created_at, updated_at } = tag;
+    const { id, name, created_at, updated_at } = tag;
     let t: ITag = { id, name };
 
     if (!isRemoveDateFields) {
@@ -212,8 +212,8 @@ export const getEmptyArticle = (): TArticleFormInput => {
 export const deepDiff = <T extends Record<string, any>>(
     obj1: T,
     obj2: T
-): { [key: string]: any } => {
-    const diff: { [key: string]: any } = {};
+): { [key: string]: unknown } => {
+    const diff: { [key: string]: unknown } = {};
 
     Object.keys(obj1).forEach((key) => {
         if (obj2 && !Object.hasOwn(obj2, key)) {
@@ -291,7 +291,10 @@ export const areObjectsDeepEqual = (obj1: unknown, obj2: unknown): boolean => {
     return obj1 === obj2;
 };
 
-export const camelCaseKeys = <T extends Record<keyof T, any>, K extends Record<keyof K, any>>(
+export const camelCaseKeys = <
+    T extends Record<keyof T, unknown>,
+    K extends Record<keyof K, unknown>
+>(
     obj: T | T[]
 ): K => {
     if (Array.isArray(obj)) {
