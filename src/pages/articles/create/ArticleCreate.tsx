@@ -19,7 +19,7 @@ export default function ArticleCreate(): JSX.Element {
     const { openSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const [index, setIndex] = useState<number>(0);
-    const initialArticle = getEmptyArticle();
+    const [initialArticle] = useState(getEmptyArticle());
 
     useEffect(() => {
         const index = initialArticle.translations.findIndex((t) => t.language === language);
