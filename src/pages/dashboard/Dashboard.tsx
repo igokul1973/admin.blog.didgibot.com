@@ -8,6 +8,7 @@ import { Container } from '@mui/material';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { StyledDashboard, StyledDashboardWrapper } from './styled';
+import Scroller from '@/components/scroller/Scroller';
 
 const JWT_REFRESH = gql`
     subscription jwt {
@@ -48,6 +49,7 @@ export function Dashboard(): React.JSX.Element {
                     <AppSnackbar />
                 </ArticleFormProvider>
             </StyledDashboardWrapper>
+            <Scroller />
         </StyledDashboard>
     );
 }
