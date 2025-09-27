@@ -26,6 +26,8 @@ dist-ssr
 
 # Env
 .env
+# Playground files
+playground.ts
 
 # Temp restriction
 r
