@@ -3,7 +3,7 @@
 # spin up Dev Container in VS Code (see .devcontainer/devcontainer.json)
 # It ensures no need for specific Node version on the host machine as
 # the container will always use Node version specified in this Dockerfile
-FROM igk19/debian-base:0.4.0
+FROM igk19/debian-base:0.5.0
 
 # Set environment variables to ensure non-interactive installation
 ENV DEBIAN_FRONTEND=noninteractive
