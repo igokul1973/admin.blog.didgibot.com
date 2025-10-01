@@ -1,0 +1,26 @@
+# This Dockerfile is for development purposes only
+# It is used to build a docker container with Node.js in order to
+# spin up Dev Container in VS Code (see .devcontainer/devcontainer.json)
+# It ensures no need for specific Node version on the host machine as
+# the container will always use Node version specified in this Dockerfile
+FROM igk19/debian-base:0.4.0
+
+# Set environment variables to ensure non-interactive installation
+ENV DEBIAN_FRONTEND=noninteractive
+ENV NVM_DIR=/root/.nvm
+
+ENV NODE_VERSION=22
+
+# Update apt, install necessary build tools and Python 3.13, and then clean up apt cache
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | /bin/bash
+
+RUN /bin/bash -c "source $NVM_DIR/nvm.sh && \
+    nvm install $NODE_VERSION && \
+    nvm alias default $NODE_VERSION && \
+    nvm use default"
+
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
