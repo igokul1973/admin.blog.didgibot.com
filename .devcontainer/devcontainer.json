@@ -27,7 +27,8 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "codeium.codeium"
+                "codeium.codeium",
+                "codeandstuff.package-json-upgrade"
             ]
         }
     },
