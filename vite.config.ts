@@ -12,12 +12,14 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'http://localhost:8888',
+                // target: 'http://localhost:8888',
+                target: 'http://host.docker.internal:8888',
                 changeOrigin: true
                 // rewrite: (path) => path.replace(/^\/api/, '')
             },
             '/graphql': {
-                target: 'http://localhost:8888',
+                // target: 'http://localhost:8888',
+                target: 'http://host.docker.internal:8888',
                 changeOrigin: true
                 // rewrite: (path) => path.replace(/^\/api/, '')
             }

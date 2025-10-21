@@ -34,11 +34,56 @@ interface IProps {
     readonly index: number;
 }
 
-const columnTools = {
-    header: Header,
-    alert: Alert,
-    paragraph: Paragraph,
-    delimiter: Delimiter
+const commonTools = {
+    alert: {
+        class: Alert,
+        inlineToolbar: true
+    },
+    header: {
+        class: Header,
+        inlineToolbar: true
+    },
+    paragraph: {
+        class: Paragraph as unknown as ToolConstructable,
+        inlineToolbar: true
+    },
+    list: {
+        class: List,
+        inlineToolbar: true
+    },
+    delimiter: {
+        class: Delimiter,
+        inlineToolbar: true
+    },
+    inlineCode: {
+        class: InlineCode,
+        inlineToolbar: true
+    },
+    marker: {
+        class: Marker,
+        inlineToolbar: true
+    },
+    underline: {
+        class: Underline,
+        inlineToolbar: true
+    },
+    annotation: {
+        class: Annotation,
+        inlineToolbar: true
+    },
+    quote: {
+        class: Quote,
+        inlineToolbar: true,
+        shortcut: 'CMD+SHIFT+O',
+        config: {
+            quotePlaceholder: 'Enter a quote',
+            captionPlaceholder: "Quote's author"
+        }
+    },
+    raw: {
+        class: RawTool,
+        inlineToolbar: true
+    },
 };
 
 export function Editor({ editor, onChange, initialValue, index }: IProps) {
@@ -49,41 +94,26 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                 minHeight: 200,
                 holder: `editorjs-container-${index}`,
                 placeholder: 'Type here to write the article',
-                // inlineToolbar: true,
+                inlineToolbar: true,
                 onReady: () => {
                     editor.current = editorJs;
                 },
                 tools: {
                     // Add your desired tools here
-                    alert: {
-                        class: Alert,
-
-                        inlineToolbar: true
-                    },
-                    header: Header,
-                    // paragraph: Paragraph,
-                    paragraph: {
-                        class: Paragraph as unknown as ToolConstructable,
-                        inlineToolbar: true
-                    },
-                    list: List,
+                    ...commonTools,
+                    code: editorjsCodecup,
                     // code: {
                     //     class: CodeBox,
                     //     config: {
                     //         themeName: 'atom-one-dark'
                     //     }
                     // },
-                    code: editorjsCodecup,
                     columns: {
-                        class: EditorjsColumns,
+                        class: EditorjsColumns as unknown as ToolConstructable,
                         config: {
                             EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
-                            tools: columnTools // IMPORTANT! ref the column_tools
+                            tools: commonTools, // IMPORTANT! ref the column_tools
                         }
-                    },
-                    delimiter: {
-                        class: Delimiter,
-                        inlineToolbar: true
                     },
                     image: {
                         class: ImageTool,
@@ -156,35 +186,6 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                                 }
                             }
                         }
-                    },
-                    inlineCode: {
-                        class: InlineCode,
-                        inlineToolbar: true
-                    },
-                    marker: {
-                        class: Marker,
-                        inlineToolbar: true
-                    },
-                    underline: {
-                        class: Underline,
-                        inlineToolbar: true
-                    },
-                    annotation: {
-                        class: Annotation,
-                        inlineToolbar: true
-                    },
-                    quote: {
-                        class: Quote,
-                        inlineToolbar: true,
-                        shortcut: 'CMD+SHIFT+O',
-                        config: {
-                            quotePlaceholder: 'Enter a quote',
-                            captionPlaceholder: "Quote's author"
-                        }
-                    },
-                    raw: {
-                        class: RawTool,
-                        inlineToolbar: true
                     },
                     table: {
                         class: Table as unknown as ToolConstructable,
