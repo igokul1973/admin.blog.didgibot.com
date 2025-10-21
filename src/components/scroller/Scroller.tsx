@@ -12,10 +12,6 @@ const Scroller = () => {
             setShowDownButton(
                 document.documentElement.scrollHeight - (window.innerHeight + window.scrollY) >= 800
             );
-            console.log(
-                'window.scrollY + window.innerHeight: ',
-                window.scrollY + window.innerHeight
-            );
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);

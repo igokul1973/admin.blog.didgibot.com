@@ -146,7 +146,7 @@ export function TagForm({
         } else if (updateTagLoading) {
             console.log('Updating tag...');
         }
-    }, [updateTagData, updateTagError, updateTagLoading]);
+    }, [isNavigate, navigate, openSnackbar, updateTagData, updateTagError, updateTagLoading]);
 
     const {
         // watch,

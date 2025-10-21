@@ -137,7 +137,7 @@ export const transformRawTranslations = (
                 Object.keys(transformedTranslation) as (keyof IArticleTranslation)[]
             ).reduce<Partial<IArticleTranslation>>((acc, key) => {
                 if (!removeTranslationFields.includes(key)) {
-                    (newTranslation as Record<string, unknown>)[key] = transformedTranslation[key];
+                    (acc as Record<string, unknown>)[key] = transformedTranslation[key];
                 }
                 return acc;
             }, {});

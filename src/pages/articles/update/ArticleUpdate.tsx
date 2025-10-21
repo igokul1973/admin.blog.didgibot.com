@@ -156,7 +156,14 @@ export default function ArticleUpdate(): JSX.Element {
             // When article update is in progress...
             console.log('Sending article update request...');
         }
-    }, [updateArticleData, updateArticleError, updateArticleLoading]);
+    }, [
+        isRedirectOnArticleSubmit,
+        navigate,
+        openSnackbar,
+        updateArticleData,
+        updateArticleError,
+        updateArticleLoading
+    ]);
 
     useEffect(() => {
         if (article) {
@@ -177,7 +184,7 @@ export default function ArticleUpdate(): JSX.Element {
 
         const transformedFormData = snakeCaseKeys(formData);
         const id = transformedFormData.id;
-        let { translations } = transformedFormData.translations;
+        let translations = transformedFormData.translations;
 
         // Due to MongoDB not accepting the 'language' field in case
         // the DB is text-indexed, renaming the 'language' field to 'lang'.

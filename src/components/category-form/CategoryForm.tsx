@@ -115,7 +115,14 @@ export function CategoryForm({
         } else if (createCategoryLoading) {
             console.log('Loading...');
         }
-    }, [createCategoryData, createCategoryError, createCategoryLoading]);
+    }, [
+        createCategoryData,
+        createCategoryError,
+        createCategoryLoading,
+        isNavigate,
+        navigate,
+        openSnackbar
+    ]);
 
     useEffect(() => {
         if (updateCategoryData) {
@@ -128,7 +135,14 @@ export function CategoryForm({
         } else if (updateCategoryLoading) {
             console.log('Loading...');
         }
-    }, [updateCategoryData, updateCategoryError, updateCategoryLoading]);
+    }, [
+        isNavigate,
+        navigate,
+        openSnackbar,
+        updateCategoryData,
+        updateCategoryError,
+        updateCategoryLoading
+    ]);
 
     const {
         // watch,

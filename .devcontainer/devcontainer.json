@@ -32,7 +32,8 @@
                 "codeium.codeium",
                 "codeandstuff.package-json-upgrade",
                 "esbenp.prettier-vscode",
-                "dbaeumer.vscode-eslint"
+                "dbaeumer.vscode-eslint",
+                "eamodio.gitlens"
             ]
         }
     },
