@@ -1,10 +1,10 @@
 import Filter from '@/components/filter/Filter';
 import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
-import TagsTable, { ITagTableRow } from '@/components/tags-table/TagsTable';
+import TagsTable from '@/components/tags-table/TagsTable';
 import { transformRawTags } from '@/components/utils';
 import { GET_TAGS } from '@/operations';
 import { paths } from '@/paths';
-import { IRawTag } from '@/types/tag';
+import { IRawTag, ITag } from '@/types/tag';
 import { useQuery } from '@apollo/client';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ export default function Tags(): React.JSX.Element {
     const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
     const [skip, setSkip] = useState(0);
     const [filter, setFilter] = useState('');
-    const [tags, setTags] = useState<ITagTableRow[]>([]);
+    const [tags, setTags] = useState<ITag[]>([]);
     const [count, setCount] = useState<number>(0);
 
     const { data, error, loading } = useQuery<{

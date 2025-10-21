@@ -14,7 +14,7 @@ interface IContentBlock {
     data: object[];
 }
 
-export interface IContent extends Record<string, any> {
+export interface IContent extends Record<string, unknown> {
     __typename?: string;
     version?: string;
     time?: number;

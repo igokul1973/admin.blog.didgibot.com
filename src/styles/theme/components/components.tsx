@@ -14,15 +14,15 @@ import { MuiTableCell } from './table-cell';
 import { MuiTableHead } from './table-head';
 
 export const components = {
-  MuiAvatar,
-  MuiButton,
-  MuiCard,
-  MuiCardContent,
-  MuiCardHeader,
-  MuiLink,
-  MuiStack,
-  MuiTab,
-  MuiTableBody,
-  MuiTableCell,
-  MuiTableHead,
+    MuiAvatar,
+    MuiButton,
+    MuiCard,
+    MuiCardContent,
+    MuiCardHeader,
+    MuiLink,
+    MuiStack,
+    MuiTab,
+    MuiTableBody,
+    MuiTableCell,
+    MuiTableHead
 } satisfies Components<Theme>;

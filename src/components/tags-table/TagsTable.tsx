@@ -23,8 +23,6 @@ import dayjs from 'dayjs';
 import { JSX, useEffect, useMemo } from 'react';
 import { DeleteIconButton } from '../delete-icon-button/DeleteIconButton';
 
-export interface ITagTableRow extends ITag {}
-
 export default function TagsTable({
     setPage,
     setRowsPerPage,
@@ -34,7 +32,7 @@ export default function TagsTable({
     rowsPerPage = 0,
     loading,
     error
-}: ITableProps<ITagTableRow>): JSX.Element {
+}: ITableProps<ITag>): JSX.Element {
     const { openSnackbar } = useSnackbar();
     const rowIds = useMemo(() => {
         return rows.map((customer) => customer.id);

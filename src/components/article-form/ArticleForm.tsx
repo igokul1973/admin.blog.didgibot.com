@@ -99,8 +99,8 @@ export function ArticleForm({
     const [tagOptions, setTagOptions] = useState<ITag[]>([]);
 
     useEffect(() => {
-        setIsArticleFormDirty && setIsArticleFormDirty(isDirty);
-    }, [isDirty]);
+        if (setIsArticleFormDirty) setIsArticleFormDirty(isDirty);
+    }, [isDirty, setIsArticleFormDirty]);
 
     useEffect(() => {
         if (submitEvent.isSubmit) {
@@ -115,7 +115,7 @@ export function ArticleForm({
         } else if (initialRawCategoriesError) {
             openSnackbar(initialRawCategoriesError.message, 'error');
         }
-    }, [initialRawCategories, initialRawCategoriesError]);
+    }, [initialRawCategories, initialRawCategoriesError, openSnackbar]);
 
     useEffect(() => {
         if (initialRawTags) {
@@ -124,7 +124,7 @@ export function ArticleForm({
         } else if (initialRawTagsError) {
             openSnackbar(initialRawTagsError.message, 'error');
         }
-    }, [initialRawTags, initialRawTagsError]);
+    }, [initialRawTags, initialRawTagsError, openSnackbar]);
 
     // Lazily load categories
     const [
@@ -149,7 +149,7 @@ export function ArticleForm({
         } else if (filteredCategoriesError) {
             openSnackbar(filteredCategoriesError.message, 'error');
         }
-    }, [filteredCategories, filteredCategoriesError]);
+    }, [filteredCategories, filteredCategoriesError, openSnackbar]);
 
     useEffect(() => {
         if (filteredTags) {
@@ -158,7 +158,7 @@ export function ArticleForm({
         } else if (filteredTagsError) {
             openSnackbar(filteredTagsError.message, 'error');
         }
-    }, [filteredTags, filteredTagsError]);
+    }, [filteredTags, filteredTagsError, openSnackbar]);
 
     useEffect(() => {
         // The default values may change if the user submitted
@@ -167,7 +167,7 @@ export function ArticleForm({
         // This way the Save button will be disabled until the form
         // is changed again.
         reset(defaultValues);
-    }, [defaultValues]);
+    }, [defaultValues, reset]);
 
     const getCategories = async (value: string) => {
         await getCategoriesFn({

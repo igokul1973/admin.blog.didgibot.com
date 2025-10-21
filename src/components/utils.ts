@@ -130,19 +130,17 @@ export const transformRawTranslations = (
             publishedAt: published_at ? dayjs.utc(published_at) : undefined
         } as IArticleTranslation;
 
-        type TTransformedTranslationKeys = keyof typeof transformedTranslation;
+        // type TTransformedTranslationKeys = keyof typeof transformedTranslation;
 
         if (removeTranslationFields.length > 0) {
             const newTranslation = (
-                Object.keys(transformedTranslation) as TTransformedTranslationKeys[]
+                Object.keys(transformedTranslation) as (keyof IArticleTranslation)[]
             ).reduce<Partial<IArticleTranslation>>((acc, key) => {
                 if (!removeTranslationFields.includes(key)) {
-                    const s = transformedTranslation[key];
-                    // @ts-expect-error
-                    acc[key] = s;
+                    (newTranslation as Record<string, unknown>)[key] = transformedTranslation[key];
                 }
                 return acc;
-            }, {} as Partial<IArticleTranslation>);
+            }, {});
 
             return newTranslation;
         }
@@ -209,17 +207,31 @@ export const getEmptyArticle = (): TArticleFormInput => {
     };
 };
 
-export const deepDiff = <T extends Record<string, any>>(
+export const deepDiff = <T extends Record<string, unknown> | null>(
     obj1: T,
     obj2: T
 ): { [key: string]: unknown } => {
+    if (obj1 === null && obj2 === null) {
+        return {};
+    }
+
+    if (obj1 === null) {
+        return obj2 ? { ...obj2 } : {};
+    }
+
+    if (obj2 === null) {
+        return obj1 ? { ...obj1 } : {};
+    }
     const diff: { [key: string]: unknown } = {};
 
     Object.keys(obj1).forEach((key) => {
         if (obj2 && !Object.hasOwn(obj2, key)) {
             diff[key] = obj1[key];
         } else if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
-            const nestedDiff = deepDiff(obj1[key], obj2[key]);
+            const nestedDiff = deepDiff(
+                obj1[key] as Record<string, unknown>,
+                obj2[key] as Record<string, unknown>
+            );
             if (Object.keys(nestedDiff).length > 0) {
                 diff[key] = nestedDiff;
             }
@@ -332,6 +344,7 @@ const toCamelCase = <T, K>(str: T): K => {
  * - The function is recursive, converting all nested objects and arrays.
  * - Primitive values are returned as-is.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const snakeCaseKeys = <T extends Record<string, any>, K extends Record<string, any>>(
     obj: T | T[]
 ): K => {

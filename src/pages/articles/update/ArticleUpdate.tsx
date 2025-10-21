@@ -175,7 +175,9 @@ export default function ArticleUpdate(): JSX.Element {
             return openSnackbar('No form changes detected', 'warning');
         }
 
-        let { id, translations } = snakeCaseKeys(formData);
+        const transformedFormData = snakeCaseKeys(formData);
+        const id = transformedFormData.id;
+        let { translations } = transformedFormData.translations;
 
         // Due to MongoDB not accepting the 'language' field in case
         // the DB is text-indexed, renaming the 'language' field to 'lang'.

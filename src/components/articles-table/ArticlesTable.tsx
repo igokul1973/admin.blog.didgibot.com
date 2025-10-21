@@ -27,8 +27,6 @@ import { useEffect, useMemo } from 'react';
 import { onPageChange, onRowsPerPageChange } from '../utils';
 import { StyledCard, StyledStack } from './styled';
 
-export interface IArticlesTableRow extends IArticle {}
-
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -43,7 +41,7 @@ export default function ArticlesTable({
     rowsPerPage = 0,
     loading,
     error
-}: ITableProps<IArticlesTableRow>): React.JSX.Element {
+}: ITableProps<IArticle>): React.JSX.Element {
     const { openSnackbar } = useSnackbar();
     const rowIds = useMemo(() => {
         return rows.map((customer) => customer.id);

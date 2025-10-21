@@ -30,7 +30,9 @@
         "vscode": {
             "extensions": [
                 "codeium.codeium",
-                "codeandstuff.package-json-upgrade"
+                "codeandstuff.package-json-upgrade",
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint"
             ]
         }
     },

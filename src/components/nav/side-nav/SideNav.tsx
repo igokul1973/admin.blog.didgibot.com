@@ -34,7 +34,11 @@ export function SideNav({ isOpen, onClose, items }: ISideNavProps): JSX.Element 
                 }
             }}
             onClose={(_, reason) => {
-                (reason === 'backdropClick' || reason === 'escapeKeyDown') && onClose && onClose();
+                return (
+                    (reason === 'backdropClick' || reason === 'escapeKeyDown') &&
+                    onClose &&
+                    onClose()
+                );
             }}
             open={isOpen}
         >

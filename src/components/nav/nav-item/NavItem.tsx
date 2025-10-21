@@ -45,7 +45,9 @@ export default function NavItem({
                     })
                 }}
                 onClick={() => {
-                    isUpToLargeScreen && onClose();
+                    if (isUpToLargeScreen) {
+                        onClose();
+                    }
                 }}
             >
                 <Box

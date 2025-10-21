@@ -23,8 +23,6 @@ import dayjs from 'dayjs';
 import { JSX, useEffect, useMemo } from 'react';
 import { DeleteIconButton } from '../delete-icon-button/DeleteIconButton';
 
-export interface ICategoryTableRow extends ICategory {}
-
 export default function CategoriesTable({
     setPage,
     setRowsPerPage,
@@ -34,7 +32,7 @@ export default function CategoriesTable({
     rowsPerPage = 0,
     loading,
     error
-}: ITableProps<ICategoryTableRow>): JSX.Element {
+}: ITableProps<ICategory>): JSX.Element {
     const { openSnackbar } = useSnackbar();
     const rowIds = useMemo(() => {
         return rows.map((customer) => customer.id);

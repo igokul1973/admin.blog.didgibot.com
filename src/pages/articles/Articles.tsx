@@ -1,4 +1,4 @@
-import ArticlesTable, { IArticlesTableRow } from '@/components/articles-table/ArticlesTable';
+import ArticlesTable from '@/components/articles-table/ArticlesTable';
 import Filter from '@/components/filter/Filter';
 import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
 import { transformRawArticles } from '@/components/utils';
@@ -6,7 +6,7 @@ import { useUser } from '@/hooks/use-user';
 import { GET_ARTICLES } from '@/operations';
 import { DEFAULT_ROWS_PER_PAGE } from '@/pages/constants';
 import { paths } from '@/paths';
-import { IRawArticle } from '@/types/article';
+import { IArticle, IRawArticle } from '@/types/article';
 import { useQuery } from '@apollo/client';
 import { Stack } from '@mui/material';
 import { JSX, useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ export default function Articles(): JSX.Element {
     ]);
     const { user } = useUser();
     const userId = user?.id;
-    const [articles, setArticles] = useState<IArticlesTableRow[]>([]);
+    const [articles, setArticles] = useState<IArticle[]>([]);
     const [count, setCount] = useState<number>(0);
     const { data, error, loading } = useQuery<{
         articles: IRawArticle[];
@@ -47,7 +47,7 @@ export default function Articles(): JSX.Element {
     useEffect(() => {
         if (data) {
             const articles = transformRawArticles(data.articles);
-            setArticles(articles as IArticlesTableRow[]);
+            setArticles(articles as IArticle[]);
             setCount(data.count.count);
         } else if (error) {
             console.error(

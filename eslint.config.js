@@ -5,7 +5,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-    { ignores: ['dist', 'r', '.history', 'src/components/editorjs-parser'] },
+    { ignores: ['dist', 'r', '.history', 'src/components/editorjs-parser', '**/playground.ts'] },
     {
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
         files: ['**/*.{ts,tsx}'],

@@ -2,45 +2,43 @@ import { TArticleFormContent } from '@/components/article-form/types';
 import Quote from '@/editorjs-quote';
 import { authClient } from '@/lib/auth/AuthClient';
 import Delimiter from '@editorjs/delimiter';
-import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
-// @ts-expect-error
+import EditorJS, { ToolConstructable, ToolSettings } from '@editorjs/editorjs';
+// @ts-expect-error Could not find a declaration file for module
 import editorjsCodecup from '@calumk/editorjs-codecup';
-// @ts-expect-error
+// @ts-expect-error Could not find a declaration file for module
 import EditorjsColumns from '@calumk/editorjs-columns';
 import Header from '@editorjs/header';
 import ImageTool from '@editorjs/image';
 import InlineCode from '@editorjs/inline-code';
 import List from '@editorjs/list';
-// @ts-expect-error
+// @ts-expect-error Could not find a declaration file for module
 import Alert from 'editorjs-alert';
-// @ts-expect-error
+// @ts-expect-error Could not find a declaration file for module
 import Marker from '@editorjs/marker';
 import Paragraph from '@editorjs/paragraph';
-// @ts-expect-error
+// @ts-expect-error Could not find a declaration file for module
 import RawTool from '@editorjs/raw';
 import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
-// // @ts-expect-error
-// import CodeBox from '@bomdi/codebox';
-// @ts-expect-error
+// @ts-expect-error Could not find a declaration file for module
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
 import { StyledEditor } from './styled';
 
 interface IProps {
     readonly editor: RefObject<EditorJS | null>;
-    readonly onChange: (...event: any[]) => void;
+    readonly onChange: (...event: unknown[]) => void;
     readonly initialValue?: TArticleFormContent;
     readonly index: number;
 }
 
-const commonTools = {
+const commonTools: Record<string, ToolConstructable | ToolSettings> = {
     alert: {
-        class: Alert,
+        class: Alert as unknown as ToolConstructable,
         inlineToolbar: true
     },
     header: {
-        class: Header,
+        class: Header as unknown as ToolConstructable,
         inlineToolbar: true
     },
     paragraph: {
@@ -83,7 +81,7 @@ const commonTools = {
     raw: {
         class: RawTool,
         inlineToolbar: true
-    },
+    }
 };
 
 export function Editor({ editor, onChange, initialValue, index }: IProps) {
@@ -109,10 +107,10 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                     //     }
                     // },
                     columns: {
-                        class: EditorjsColumns as unknown as ToolConstructable,
+                        class: EditorjsColumns,
                         config: {
                             EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
-                            tools: commonTools, // IMPORTANT! ref the column_tools
+                            tools: commonTools // IMPORTANT! ref the column_tools
                         }
                     },
                     image: {
@@ -214,7 +212,9 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
         }
 
         return () => {
-            editor.current?.destroy && editor.current.destroy();
+            if (editor.current?.destroy) {
+                editor.current.destroy();
+            }
             editor.current = null;
         };
     }, []);
