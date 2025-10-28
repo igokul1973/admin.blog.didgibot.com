@@ -16,13 +16,12 @@ import Alert from 'editorjs-alert';
 // @ts-expect-error Could not find a declaration file for module
 import Marker from '@editorjs/marker';
 import Paragraph from '@editorjs/paragraph';
-// @ts-expect-error Could not find a declaration file for module
-import RawTool from '@editorjs/raw';
 import Table from '@editorjs/table';
 import Underline from '@editorjs/underline';
 // @ts-expect-error Could not find a declaration file for module
 import Annotation from 'editorjs-annotation';
 import { RefObject, useEffect, useRef } from 'react';
+import SanitizedRawTool from './sanitized-raw-tool/SanitizedRawTool';
 import { StyledEditor } from './styled';
 
 interface IProps {
@@ -79,7 +78,7 @@ const commonTools: Record<string, ToolConstructable | ToolSettings> = {
         }
     },
     raw: {
-        class: RawTool,
+        class: SanitizedRawTool as unknown as ToolConstructable,
         inlineToolbar: true
     }
 };
