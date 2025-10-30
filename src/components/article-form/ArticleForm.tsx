@@ -33,7 +33,7 @@ import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid2';
-import { JSX, useEffect, useRef, useState } from 'react';
+import { FocusEvent, JSX, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router';
 import AnnotationPopover from '../annotation-popover/AnnotationPopover';
@@ -152,6 +152,7 @@ export function ArticleForm({
     }, [filteredCategories, filteredCategoriesError, openSnackbar]);
 
     useEffect(() => {
+        console.log('Checking filteredTags: ', filteredTags);
         if (filteredTags) {
             const tags = transformRawTags(filteredTags.tags);
             setTagOptions(tags);
@@ -172,8 +173,8 @@ export function ArticleForm({
     const getCategories = async (value: string) => {
         await getCategoriesFn({
             variables: {
-                filter_input: { name: value },
-                sort_input: [{ field: 'name', dir: 'asc' }],
+                filterInput: { name: value },
+                sortInput: [{ field: 'name', dir: 'asc' }],
                 limit: LIMIT,
                 skip: OFFSET
             }
@@ -181,10 +182,11 @@ export function ArticleForm({
     };
 
     const getTags = async (value: string) => {
+        console.log('Calling getTags() with value:', value);
         await getTagsFn({
             variables: {
-                filter_input: { name: value },
-                sort_input: [{ field: 'name', dir: 'asc' }],
+                filterInput: { name: value },
+                sortInput: [{ field: 'name', dir: 'asc' }],
                 limit: LIMIT,
                 skip: OFFSET
             }
@@ -247,6 +249,20 @@ export function ArticleForm({
         const tags = watchedForm.translations[index].tags;
         setValue(`translations.${index}.tags`, tags?.length ? [...tags, newTag] : [newTag]);
         handleAddTagDialogClose();
+    };
+
+    const handleCategoryFieldClear = async (
+        event: FocusEvent<HTMLDivElement, Element>
+    ): Promise<void> => {
+        console.log('Clearing occurred and here is the event: ', event);
+        await getTags('');
+    };
+
+    const handleTagFieldClear = async (
+        event: FocusEvent<HTMLDivElement, Element>
+    ): Promise<void> => {
+        console.log('Clearing occurred and here is the event: ', event);
+        await getTags('');
     };
 
     return (
@@ -330,7 +346,9 @@ export function ArticleForm({
                                     <Controller
                                         name={`translations.${index}.category`}
                                         control={control}
-                                        render={({ field: { onChange, ref, ...field } }) => {
+                                        render={({
+                                            field: { onChange, onBlur, ref, ...field }
+                                        }) => {
                                             return (
                                                 <Autocomplete
                                                     freeSolo
@@ -392,6 +410,10 @@ export function ArticleForm({
                                                         return option.name;
                                                     }}
                                                     selectOnFocus
+                                                    onBlur={(event) => {
+                                                        onBlur();
+                                                        handleCategoryFieldClear(event);
+                                                    }}
                                                     clearOnBlur
                                                     handleHomeEndKeys
                                                     onChange={(_, newValue) => {
@@ -449,7 +471,9 @@ export function ArticleForm({
                                     <Controller
                                         name={`translations.${index}.tags`}
                                         control={control}
-                                        render={({ field: { onChange, ref, ...field } }) => {
+                                        render={({
+                                            field: { onChange, onBlur, ref, ...field }
+                                        }) => {
                                             return (
                                                 <Autocomplete
                                                     multiple
@@ -508,6 +532,10 @@ export function ArticleForm({
                                                         return option.name;
                                                     }}
                                                     selectOnFocus
+                                                    onBlur={(event) => {
+                                                        onBlur();
+                                                        handleTagFieldClear(event);
+                                                    }}
                                                     clearOnBlur
                                                     handleHomeEndKeys
                                                     getOptionDisabled={(option) =>
