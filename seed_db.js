@@ -39,10 +39,10 @@ function randomId() {
 const user = {
     created_at: new Date('2025-05-23T00:52:57.120'),
     updated_at: new Date('2025-05-25T01:01:43.516'),
-    email: 'igk19@me.com',
-    phone: '+1-‪5037655684‬',
+    email: 'igk100@fake.com',
+    phone: '+1-‪5031112233‬',
     first_name: 'Igor',
-    last_name: 'Kulebyakin',
+    last_name: 'Kniazev',
     ip: '172.19.0.1',
     last_logged_at: new Date(),
     articles: [],
