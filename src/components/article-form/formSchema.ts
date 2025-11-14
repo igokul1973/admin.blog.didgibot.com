@@ -90,5 +90,25 @@ export const articleSchema = z.object({
                     .optional()
             })
         )
-        .min(2, 'please enter at least two translations')
+        .min(2, 'please enter at least two translations'),
+    slug: z
+        .string({
+            required_error: 'please enter the slug name',
+            invalid_type_error: 'slug must be a string'
+        })
+        .min(3, { message: 'must be at least 3 characters' })
+        .max(60, { message: 'must be less than 61 characters' })
+        .optional(),
+    priority: z.preprocess(
+        (val) => (val === '' || val === undefined ? undefined : val),
+        z
+            .number()
+            .min(0)
+            .max(1)
+            .refine((val) => {
+                const decimalPart = val.toString().split('.')[1];
+                return !decimalPart || decimalPart.length <= 1;
+            }, 'Priority can have at most one decimal place')
+            .optional()
+    )
 });

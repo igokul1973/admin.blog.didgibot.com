@@ -33,6 +33,8 @@ export const GET_ARTICLES = gql`
                     name
                 }
             }
+            slug
+            priority
             created_at
             updated_at
         }
@@ -115,6 +117,8 @@ export const CREATE_ARTICLE = gql`
                     name
                 }
             }
+            slug
+            priority
             created_at
             updated_at
         }
@@ -149,6 +153,8 @@ export const UPDATE_ARTICLE = gql`
                     name
                 }
             }
+            slug
+            priority
             created_at
             updated_at
         }

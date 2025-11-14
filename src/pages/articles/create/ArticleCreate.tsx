@@ -18,15 +18,7 @@ export default function ArticleCreate(): JSX.Element {
     const [language, setLanguage] = useState(LanguageEnum.EN);
     const { openSnackbar } = useSnackbar();
     const navigate = useNavigate();
-    const [index, setIndex] = useState<number>(0);
     const [initialArticle] = useState(getEmptyArticle());
-
-    useEffect(() => {
-        const index = initialArticle.translations.findIndex((t) => t.language === language);
-        setTimeout(() => {
-            setIndex(index);
-        }, 10);
-    }, [language]);
 
     const [
         createArticleFunction,
@@ -96,7 +88,7 @@ export default function ArticleCreate(): JSX.Element {
         formData: TArticleFormOutput,
         dirtyFields: Partial<Readonly<FieldNamesMarkedBoolean<FieldValues>>>
     ): Promise<void> => {
-        if (!dirtyFields.translations) {
+        if (!dirtyFields.translations && !dirtyFields.slug && !dirtyFields.priority) {
             return openSnackbar('No form changes detected', 'warning');
         }
 
@@ -130,7 +122,9 @@ export default function ArticleCreate(): JSX.Element {
         createArticleFunction({
             variables: {
                 input: {
-                    translations: data.translations
+                    translations: data.translations,
+                    slug: data.slug,
+                    priority: data.priority
                 }
             }
         });
@@ -147,7 +141,7 @@ export default function ArticleCreate(): JSX.Element {
                 />
                 <LanguageForm language={language} setLanguage={setLanguage} />
             </Stack>
-            <ArticleForm defaultValues={initialArticle} onSubmit={onSubmit} index={index} />
+            <ArticleForm defaultValues={initialArticle} onSubmit={onSubmit} language={language} />
         </Stack>
     );
 }

@@ -85,6 +85,14 @@ const commonTools: Record<string, ToolConstructable | ToolSettings> = {
 
 export function Editor({ editor, onChange, initialValue, index }: IProps) {
     const isReady = useRef(false);
+    const onChangeRef = useRef(onChange);
+    // Capture initial value only once
+    const initialValueRef = useRef(initialValue);
+
+    useEffect(() => {
+        onChangeRef.current = onChange;
+    }, [onChange]);
+
     useEffect(() => {
         if (!isReady.current) {
             const editorJs = new EditorJS({
@@ -99,12 +107,6 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                     // Add your desired tools here
                     ...commonTools,
                     code: editorjsCodecup,
-                    // code: {
-                    //     class: CodeBox,
-                    //     config: {
-                    //         themeName: 'atom-one-dark'
-                    //     }
-                    // },
                     columns: {
                         class: EditorjsColumns,
                         config: {
@@ -196,11 +198,11 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                         }
                     }
                 },
-                data: initialValue,
+                data: initialValueRef.current,
                 onChange: () => {
                     const save = async () => {
                         const content = await editorJs.save();
-                        onChange(content);
+                        onChangeRef.current(content);
                     };
 
                     save();
@@ -216,7 +218,7 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
             }
             editor.current = null;
         };
-    }, []);
+    }, [editor, index]);
 
     return <StyledEditor id={`editorjs-container-${index}`} />;
 }

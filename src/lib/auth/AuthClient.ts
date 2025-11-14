@@ -2,7 +2,7 @@ import getErrorMessage from '@/lib/getErrorMessage';
 import type { IUser } from '@/types/user';
 
 export interface IUserPayload {
-    sub: 'igk19@me.com';
+    sub: 'igk100@fake.com';
     exp: 1740287614;
     user: IUser;
 }
