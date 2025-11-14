@@ -154,16 +154,18 @@ export const transformRawArticle = (
     removeTranslationFields: (keyof IArticle['translations'][number] | '__typename')[] = [],
     isRemoveDateFields = false
 ): IArticlePartial => {
-    const { id, translations: rawTranslations, created_at, updated_at } = article;
+    const { translations: rawTranslations, created_at, updated_at, ...rest } = article;
     const translations = transformRawTranslations(
         rawTranslations,
         removeTranslationFields,
         isRemoveDateFields
     );
     let a: IArticlePartial = {
-        id,
+        ...rest,
         translations
     };
+
+    console.log('a: ', a);
 
     if (!isRemoveDateFields) {
         a = {
@@ -371,4 +373,60 @@ const toSnakeCase = <T, K>(str: T): K => {
         /([A-Z])/g,
         (_: string, group: string) => `_${group.toLowerCase()}`
     ) as K;
+};
+
+/**
+ * Converts an article title into an SEO-optimized URL slug.
+ *
+ * @param {string} title - The article title to convert
+ * @param {string|null} suffix - Optional suffix to append to the slug
+ * @returns {string} SEO-friendly URL slug
+ */
+export const generateSlug = (title: string, suffix?: string) => {
+    // Convert to lowercase
+    let slug = title.toLowerCase();
+
+    // Remove accents and convert to ASCII
+    slug = slug.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+
+    // Replace spaces and underscores with hyphens
+    slug = slug.replace(/[\s_]+/g, '-');
+
+    // Remove all non-alphanumeric characters except hyphens
+    slug = slug.replace(/[^a-z0-9-]/g, '');
+
+    // Add suffix if provided
+    if (suffix) {
+        slug += '-' + suffix.toLocaleLowerCase();
+    }
+
+    // Remove common stop words (optional but recommended for SEO)
+    const stopWords = [
+        'a',
+        'an',
+        'and',
+        'at',
+        'by',
+        'for',
+        'in',
+        'is',
+        'it',
+        'on',
+        'or',
+        'the',
+        'to',
+        'with'
+    ];
+    let words = slug.split('-');
+    // Keep stop word if it is first
+    words = words.filter((w, index) => !stopWords.includes(w) || index === 0);
+    slug = words.join('-');
+
+    // Remove consecutive hyphens and trim hyphens from ends
+    slug = slug
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .trim();
+
+    return slug;
 };

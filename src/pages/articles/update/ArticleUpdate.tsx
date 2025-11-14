@@ -56,6 +56,8 @@ export default function ArticleUpdate(): JSX.Element {
                     }
                     is_published
                 }
+                slug
+                priority
             }
         `
     });
@@ -63,7 +65,6 @@ export default function ArticleUpdate(): JSX.Element {
     const [rawArticle, setRawArticle] = useState<IRawArticle | null>(rawArticleFragment);
     const [article, setArticle] = useState<TArticleFormInput | null>(null);
     const [language, setLanguage] = useState(LanguageEnum.EN);
-    const [index, setIndex] = useState<number>(0);
 
     useEffect(() => {
         const fetchArticle = async () => {
@@ -165,20 +166,11 @@ export default function ArticleUpdate(): JSX.Element {
         updateArticleLoading
     ]);
 
-    useEffect(() => {
-        if (article) {
-            const i = article.translations.findIndex((t) => t.language === language);
-            if (i !== index) {
-                setIndex(i);
-            }
-        }
-    }, [language, article]);
-
     const onSubmit = async (
         formData: TArticleFormOutput,
         dirtyFields: Partial<Readonly<FieldNamesMarkedBoolean<FieldValues>>>
     ): Promise<void> => {
-        if (!dirtyFields.translations) {
+        if (!dirtyFields.translations && !dirtyFields.slug && !dirtyFields.priority) {
             return openSnackbar('No form changes detected', 'warning');
         }
 
@@ -212,7 +204,9 @@ export default function ArticleUpdate(): JSX.Element {
             variables: {
                 input: {
                     id,
-                    translations
+                    translations,
+                    slug: transformedFormData.slug,
+                    priority: transformedFormData.priority
                 }
             }
         });
@@ -235,7 +229,7 @@ export default function ArticleUpdate(): JSX.Element {
                     onSubmit={onSubmit}
                     submitEvent={submitEvent}
                     setIsArticleFormDirty={setIsArticleFormDirty}
-                    index={index}
+                    language={language}
                 />
             ) : (
                 <Box>Article not found</Box>

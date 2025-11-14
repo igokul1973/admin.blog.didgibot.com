@@ -11,6 +11,10 @@ const dbName = process.env.MONGO_INITDB_DATABASE;
 console.log('uri', uri);
 const client = new mongoDB.MongoClient(uri);
 const db = client.db(dbName);
+const adminEmail = process.env.ADMIN_EMAIL;
+const adminPhone = process.env.ADMIN_PHONE;
+const adminFirstName = process.env.ADMIN_FIRST_NAME;
+const adminLastName = process.env.ADMIN_LAST_NAME;
 
 // An example of how to get all articles
 // const articles = db
@@ -39,14 +43,70 @@ function randomId() {
 const user = {
     created_at: new Date('2025-05-23T00:52:57.120'),
     updated_at: new Date('2025-05-25T01:01:43.516'),
-    email: 'igk100@fake.com',
-    phone: '+1-‪5031112233‬',
-    first_name: 'Igor',
-    last_name: 'Kniazev',
+    email: adminEmail,
+    phone: adminPhone,
+    first_name: adminFirstName,
+    last_name: adminLastName,
     ip: '172.19.0.1',
     last_logged_at: new Date(),
     articles: [],
     __typename: 'UserTypePartial'
+};
+
+/**
+ * Converts an article title into an SEO-optimized URL slug.
+ *
+ * @param {string} title - The article title to convert
+ * @param {string|null} suffix - Optional suffix to append to the slug
+ * @returns {string} SEO-friendly URL slug
+ */
+const generateSlug = (title, suffix = null) => {
+    // Convert to lowercase
+    let slug = title.toLowerCase();
+
+    // Remove accents and convert to ASCII
+    slug = slug.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+
+    // Replace spaces and underscores with hyphens
+    slug = slug.replace(/[\s_]+/g, '-');
+
+    // Remove all non-alphanumeric characters except hyphens
+    slug = slug.replace(/[^a-z0-9-]/g, '');
+
+    // Add suffix if provided
+    if (suffix) {
+        slug += '-' + suffix.toLocaleLowerCase();
+    }
+
+    // Remove common stop words (optional but recommended for SEO)
+    const stopWords = [
+        'a',
+        'an',
+        'and',
+        'at',
+        'by',
+        'for',
+        'in',
+        'is',
+        'it',
+        'on',
+        'or',
+        'the',
+        'to',
+        'with'
+    ];
+    let words = slug.split('-');
+    // Keep stop word if it is first
+    words = words.filter((w, index) => !stopWords.includes(w) || index === 0);
+    slug = words.join('-');
+
+    // Remove consecutive hyphens and trim hyphens from ends
+    slug = slug
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .trim();
+
+    return slug;
 };
 
 const getRussianCategories = () => {
@@ -137,24 +197,34 @@ const getEnglishTags = () => {
     });
 };
 
+const getUniqueArticleName = (titleGenerator, existingArticleNames) => {
+    if (typeof titleGenerator !== 'function') {
+        throw new Error('The title generator is not a function');
+    }
+    let name = titleGenerator();
+    if (name.length > 40) {
+        name = name.slice(0, 40);
+    }
+    if (existingArticleNames.has(name)) {
+        return getUniqueArticleName(titleGenerator, existingArticleNames);
+    }
+    // Add to set
+    existingArticleNames.add(name);
+    // Return
+    return name;
+};
+
 const createArticles = async (length, author) => {
     const rusTextGenerator = await TextGenerator.build();
+    const existingArticleNames = new Set();
 
     const englishArticleNames = Array.from({ length }, (_, i) => {
-        let name = faker.book.title();
-        if (name.length > 40) {
-            name = name.slice(0, 40);
-        }
-        return name;
+        return getUniqueArticleName(faker.book.title, existingArticleNames);
     });
 
     const russianArticleNames = Array.from({ length }, (_, i) => {
-        let name = rusTextGenerator.createRandomText(5, true);
-        if (name.length > 40) {
-            name = name.slice(0, 40);
-        }
-
-        return name;
+        const gen = rusTextGenerator.createRandomText.bind(rusTextGenerator, 5, true);
+        return getUniqueArticleName(gen, existingArticleNames);
     });
 
     const articlesArray = Array(length).fill(undefined);
@@ -205,6 +275,8 @@ const createArticles = async (length, author) => {
         const updated_at = faker.date.soon({ refDate: created_at });
 
         articles.push({
+            slug: generateSlug(englishArticleNames[i]),
+            priority: 0.8,
             translations: [
                 {
                     language: 'en',

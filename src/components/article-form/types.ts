@@ -2,13 +2,14 @@ import { FieldNamesMarkedBoolean, FieldValues } from 'react-hook-form';
 import { z } from 'zod';
 import { articleSchema, editorJsSchema } from './formSchema';
 import { ISubmitEvent } from '@/contexts/ArticleFormContext';
+import { LanguageEnum } from '@/types/translation';
 
 export interface IProps {
     readonly onSubmit: (
         formData: TArticleFormOutput,
         dirtyFields: Partial<Readonly<FieldNamesMarkedBoolean<FieldValues>>>
     ) => Promise<void>;
-    readonly index: number;
+    readonly language: LanguageEnum;
     readonly defaultValues: TArticleFormInput;
     readonly submitEvent?: ISubmitEvent;
     readonly setIsArticleFormDirty?: (isDirty: boolean) => void;

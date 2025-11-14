@@ -45,72 +45,6 @@ use(database);
   }
 )*/
 
-// More information on the `createCollection` command can be found at:
-// https://www.mongodb.com/docs/manual/reference/method/db.createCollection/
-
-// get the only user in the database in the shape of:
-/*
-        "author": {
-            "id": ObjectId("682fc6e9d1b8df284665d0fb"),
-            "created_at": ISODate("2025-05-23T00:52:57.120"),
-            "updated_at": ISODate("2025-05-25T01:01:43.516"),
-            "email": "igk19@me.com",
-            "phone": "+1-‪5037655684‬",
-            "first_name": "Igor",
-            "last_name": "Kulebyakin",
-            "ip": "172.19.0.1",
-            "last_logged_at": ISODate("2025-05-25T01:38:03.847"),
-            "articles": [
-                {
-                    "id": "682ffc40688ab2c6443ff75d",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "6830cd4f997378eaa374f12a",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "6830cd4f997378eaa374f12b",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "6830ce6325e6907fc6f5ce32",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "6830ce6325e6907fc6f5ce33",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "6830cf456d4b69831bf206cb",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "6830cf456d4b69831bf206cc",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "6830d03c44081ece11b865fe",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "6830d03c44081ece11b865ff",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "68326bf72f6275427933aaad",
-                    "__typename": "IdType"
-                },
-                {
-                    "id": "68326bf72f6275427933aaae",
-                    "__typename": "IdType"
-                }
-            ],
-            "__typename": "UserTypePartial"
-        },
-
-*/
-
 rusTextGenerator.createText(10);
 
 const categoryRussian = [
@@ -403,10 +337,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -558,10 +492,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -713,10 +647,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -868,10 +802,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -1023,10 +957,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -1178,10 +1112,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -1333,10 +1267,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -1488,10 +1422,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -1643,10 +1577,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -1798,10 +1732,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T01:38:03.847'),
             articles: [
@@ -1953,10 +1887,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -2108,10 +2042,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -2263,10 +2197,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -2418,10 +2352,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -2573,10 +2507,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -2728,10 +2662,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -2883,10 +2817,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -3038,10 +2972,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -3193,10 +3127,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -3348,10 +3282,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -3503,10 +3437,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -3658,10 +3592,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -3813,10 +3747,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -3968,10 +3902,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -4123,10 +4057,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -4278,10 +4212,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -4433,10 +4367,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -4588,10 +4522,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -4743,10 +4677,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -4898,10 +4832,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
@@ -5053,10 +4987,10 @@ const fakeArticles = [
             id: ObjectId('682fc6e9d1b8df284665d0fb'),
             created_at: ISODate('2025-05-23T00:52:57.120'),
             updated_at: ISODate('2025-05-25T01:01:43.516'),
-            email: 'igk19@me.com',
-            phone: '+1-‪5037655684‬',
+            email: 'igk100@fake.com',
+            phone: '+1-5031112233‬',
             first_name: 'Igor',
-            last_name: 'Kulebyakin',
+            last_name: 'Kniazev',
             ip: '172.19.0.1',
             last_logged_at: ISODate('2025-05-25T02:09:55.281'),
             articles: [
