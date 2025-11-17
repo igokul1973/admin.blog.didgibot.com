@@ -15,7 +15,6 @@ interface IRawData {
  */
 class SanitizedRawTool extends RawTool {
     private data: IRawData;
-    private api: API;
 
     constructor({
         data,
@@ -30,7 +29,6 @@ class SanitizedRawTool extends RawTool {
     }) {
         super({ data, config, api, readOnly });
         this.data = data;
-        this.api = api;
     }
 
     /**
