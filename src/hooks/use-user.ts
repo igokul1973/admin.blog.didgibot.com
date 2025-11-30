@@ -1,5 +1,5 @@
-import type { IUserContextValue } from '@/contexts/UserContext';
-import { UserContext } from '@/contexts/UserContext';
+import { UserContext } from '@/contexts/user/UserContext';
+import type { IUserContextValue } from '@/contexts/user/UserProvider';
 import { useContext } from 'react';
 
 export function useUser(): IUserContextValue {

@@ -1,7 +1,7 @@
 import App from '@/App.tsx';
 import { LocalizationProvider } from '@/components/core/LocalizationProvider.tsx';
 import { ThemeProvider } from '@/components/core/theme-provider/ThemeProvider.tsx';
-import { UserProvider } from '@/contexts/UserContext.tsx';
+import { UserProvider } from '@/contexts/user/UserProvider';
 import { authClient } from '@/lib/auth/AuthClient';
 import Articles from '@/pages/articles/Articles';
 import ArticleCreate from '@/pages/articles/create/ArticleCreate';
@@ -15,16 +15,10 @@ import Tags from '@/pages/tags/Tags';
 import TagUpdate from '@/pages/tags/update/TagUpdate';
 import { paths } from '@/paths.ts';
 import '@/styles/global.css';
-import {
-    ApolloClient,
-    ApolloProvider,
-    createHttpLink,
-    from,
-    gql,
-    InMemoryCache
-} from '@apollo/client';
+import { ApolloClient, createHttpLink, from, gql, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { ErrorHandler, onError } from '@apollo/client/link/error';
+import { onError } from '@apollo/client/link/error';
+import { ApolloProvider } from '@apollo/client/react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
@@ -45,7 +39,7 @@ export const SET_AUTH = gql`
     }
 `;
 
-export const setAuth = (client: ApolloClient<object>, isAuthenticated: boolean) => {
+export const setAuth = (client: ApolloClient, isAuthenticated: boolean) => {
     client.cache.writeQuery({
         query: SET_AUTH,
         data: {
@@ -82,16 +76,18 @@ const authLink = setContext((_, { headers }) => {
 // 5. If the login status changes to `true`, we redirect further (probably to the home page?).
 // 6. Upon log-in, we set the login status in Apollo Client cache.
 
-const errorHandler: ErrorHandler = ({ graphQLErrors }) => {
+const logoutLink = onError((options) => {
+    const { graphQLErrors } = options as {
+        graphQLErrors?: readonly { extensions?: { error_code?: number } | null }[];
+    };
     if (graphQLErrors?.length) {
         const isForbidden = graphQLErrors.some((error) => error.extensions?.error_code === 401);
         if (isForbidden) {
             setAuth(client, false);
         }
     }
-};
+});
 
-const logoutLink = onError(errorHandler);
 export const nonTerminatingLinks = [authLink, logoutLink];
 
 export const client = new ApolloClient({

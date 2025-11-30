@@ -3,16 +3,17 @@ import LanguageForm from '@/components/article-form/language-form/LanguageForm';
 import { TArticleFormInput, TArticleFormOutput } from '@/components/article-form/types';
 import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
 import { getEmptyArticle, snakeCaseKeys, transformRawArticle } from '@/components/utils';
-import { ArticleFormContext } from '@/contexts/ArticleFormContext';
-import { useSnackbar } from '@/contexts/snackbar/provider';
+import { ArticleFormContext } from '@/contexts/article/ArticleFormContext';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { GET_ARTICLES, UPDATE_ARTICLE } from '@/operations';
 import { paths } from '@/paths';
 import { IRawArticle } from '@/types/article';
 import { LanguageEnum } from '@/types/translation';
-import { gql, useApolloClient, useLazyQuery, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useApolloClient, useLazyQuery, useMutation } from '@apollo/client/react';
 import { Box, capitalize } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { JSX, use, useEffect, useState } from 'react';
+import { JSX, use, useEffect, useMemo, useState } from 'react';
 import { FieldNamesMarkedBoolean, FieldValues } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 
@@ -24,10 +25,10 @@ export default function ArticleUpdate(): JSX.Element {
     const { submitEvent, setIsArticleFormDirty, isRedirectOnArticleSubmit } =
         use(ArticleFormContext);
 
-    const [
-        getArticlesFn,
-        { data: fetchedArticles, error: fetchedArticlesError, loading: fetchedArticlesLoading }
-    ] = useLazyQuery(GET_ARTICLES);
+    const [getArticlesFn, { data: fetchedArticles, error: fetchedArticlesError }] = useLazyQuery<{
+        articles: IRawArticle[];
+        count: { count: number };
+    }>(GET_ARTICLES);
 
     const rawArticleFragment = client.readFragment<IRawArticle>({
         id: `ArticleType:${id}`,
@@ -62,84 +63,92 @@ export default function ArticleUpdate(): JSX.Element {
         `
     });
 
-    const [rawArticle, setRawArticle] = useState<IRawArticle | null>(rawArticleFragment);
-    const [article, setArticle] = useState<TArticleFormInput | null>(null);
-    const [language, setLanguage] = useState(LanguageEnum.EN);
-
-    useEffect(() => {
-        const fetchArticle = async () => {
-            await getArticlesFn({
-                variables: {
-                    filterInput: { ids: [id] },
-                    limit: 1,
-                    skip: 0
-                }
-            });
-        };
-        if (rawArticle) {
-            let article =
-                rawArticle &&
-                (transformRawArticle(
-                    rawArticle,
-                    ['__typename', 'publishedAt'],
-                    true
-                ) as TArticleFormInput);
-
-            if (article.translations.length === 1) {
-                const existingTranslation = article.translations.at(-1);
-                const initialArticle = getEmptyArticle();
-                const missingTranslation = initialArticle.translations.find((t) => {
-                    return t.language !== existingTranslation?.language;
-                });
-                if (missingTranslation) {
-                    article = {
-                        ...article,
-                        translations: article.translations
-                            ? [...article.translations, missingTranslation]
-                            : [missingTranslation]
-                    };
-                }
-            }
-
-            article = {
-                ...article,
-                translations: article.translations.map((translation) => ({
-                    ...translation,
-                    content: {
-                        ...translation.content,
-                        blocks: translation.content.blocks.map((block) => {
-                            if (block.type === 'code') {
-                                const { data, ...rest } = block;
-                                const { lang, ...restData } = data;
-                                return {
-                                    ...rest,
-                                    data: { ...restData, language: lang }
-                                };
-                            }
-                            return block;
-                        })
-                    }
-                }))
-            };
-            setArticle(article);
-        } else {
-            fetchArticle();
-        }
-    }, [rawArticle]);
-
-    useEffect(() => {
-        if (fetchedArticles && fetchedArticles.articles.length > 0) {
-            setRawArticle(fetchedArticles.articles[0]);
-        } else if (fetchedArticlesError) {
-            console.error(fetchedArticlesError);
-        }
-    }, [fetchedArticles, fetchedArticlesError, fetchedArticlesLoading]);
-
     // TODO: probably need to update cache as just above
     const [
         updateArticleFunction,
         { data: updateArticleData, error: updateArticleError, loading: updateArticleLoading }
     ] = useMutation<{ update_article: IRawArticle }>(UPDATE_ARTICLE);
+
+    const [rawArticleFragmentState] = useState<IRawArticle | null>(rawArticleFragment);
+
+    const rawArticle: IRawArticle | null =
+        updateArticleData?.update_article ??
+        fetchedArticles?.articles?.[0] ??
+        rawArticleFragmentState ??
+        null;
+
+    const article: TArticleFormInput | null = useMemo(() => {
+        if (!rawArticle) {
+            return null;
+        }
+
+        let article = transformRawArticle(
+            rawArticle,
+            ['__typename', 'publishedAt'],
+            true
+        ) as TArticleFormInput;
+
+        if (article.translations.length === 1) {
+            const existingTranslation = article.translations.at(-1);
+            const initialArticle = getEmptyArticle();
+            const missingTranslation = initialArticle.translations.find((t) => {
+                return t.language !== existingTranslation?.language;
+            });
+            if (missingTranslation) {
+                article = {
+                    ...article,
+                    translations: article.translations
+                        ? [...article.translations, missingTranslation]
+                        : [missingTranslation]
+                };
+            }
+        }
+
+        article = {
+            ...article,
+            translations: article.translations.map((translation) => ({
+                ...translation,
+                content: {
+                    ...translation.content,
+                    blocks: translation.content.blocks.map((block) => {
+                        if (block.type === 'code') {
+                            const { data, ...rest } = block;
+                            const { lang, ...restData } = data;
+                            return {
+                                ...rest,
+                                data: { ...restData, language: lang }
+                            };
+                        }
+                        return block;
+                    })
+                }
+            }))
+        };
+
+        return article;
+    }, [rawArticle]);
+    const [language, setLanguage] = useState(LanguageEnum.EN);
+
+    useEffect(() => {
+        if (!rawArticle) {
+            const fetchArticle = async () => {
+                await getArticlesFn({
+                    variables: {
+                        filterInput: { ids: [id] },
+                        limit: 1,
+                        skip: 0
+                    }
+                });
+            };
+            fetchArticle();
+        }
+    }, [getArticlesFn, id, rawArticle]);
+
+    useEffect(() => {
+        if (fetchedArticlesError) {
+            console.error(fetchedArticlesError);
+        }
+    }, [fetchedArticlesError]);
 
     useEffect(() => {
         if (updateArticleData) {
@@ -147,8 +156,6 @@ export default function ArticleUpdate(): JSX.Element {
             openSnackbar(capitalize('successfully updated article'), 'success');
             if (isRedirectOnArticleSubmit) {
                 navigate(paths.dashboard.articles);
-            } else {
-                setRawArticle(updateArticleData.update_article);
             }
         } else if (updateArticleError) {
             // When article update failed...

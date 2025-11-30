@@ -1,12 +1,12 @@
 import AnnotationPopover from '@/components/annotation-popover/AnnotationPopover';
 import BaseLinkIconButton from '@/components/base-link-icon-button/BaseLinkIconButton';
 import { DeleteIconButton } from '@/components/delete-icon-button/DeleteIconButton';
-import { useSnackbar } from '@/contexts/snackbar/provider';
 import { useSelection } from '@/hooks/use-selection';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { DELETE_ARTICLE } from '@/operations';
 import { IArticle } from '@/types/article';
 import { ITableProps } from '@/types/pages';
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import ModeEditOutlined from '@mui/icons-material/ModeEditOutlined';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
@@ -82,7 +82,7 @@ export default function ArticlesTable({
         if (deleteArticleError) {
             openSnackbar(deleteArticleError.message, 'error');
         }
-    }, [deleteArticleData, deleteArticleError, deleteArticleLoading]);
+    }, [deleteArticleData, deleteArticleError, deleteArticleLoading, openSnackbar]);
 
     const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
     const selectedAll = rows.length > 0 && selected?.size === rows.length;

@@ -1,5 +1,5 @@
 import { AuthGuard } from '@/guards/AuthGuard';
-import { SnackbarProvider } from './contexts/snackbar/provider';
+import { SnackbarProvider } from './contexts/snackbar/SnackbarProvider';
 import { Dashboard } from './pages/dashboard/Dashboard';
 
 function App() {

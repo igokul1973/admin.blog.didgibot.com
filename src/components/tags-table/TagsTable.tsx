@@ -1,11 +1,11 @@
 import BaseLinkIconButton from '@/components/base-link-icon-button/BaseLinkIconButton';
 import { onPageChange, onRowsPerPageChange } from '@/components/utils';
-import { useSnackbar } from '@/contexts/snackbar/provider';
 import { useSelection } from '@/hooks/use-selection';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { DELETE_TAG } from '@/operations';
 import { ITableProps } from '@/types/pages';
 import { ITag } from '@/types/tag';
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import ModeEditOutlined from '@mui/icons-material/ModeEditOutlined';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -72,7 +72,7 @@ export default function TagsTable({
         if (deleteTagError) {
             openSnackbar(deleteTagError.message, 'error');
         }
-    }, [deleteTagData, deleteTagError, deleteTagLoading]);
+    }, [deleteTagData, deleteTagError, deleteTagLoading, openSnackbar]);
 
     if (error) {
         return <div>Error: {error.message}</div>;

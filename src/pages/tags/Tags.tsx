@@ -5,7 +5,7 @@ import { transformRawTags } from '@/components/utils';
 import { GET_TAGS } from '@/operations';
 import { paths } from '@/paths';
 import { IRawTag, ITag } from '@/types/tag';
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
 import { DEFAULT_ROWS_PER_PAGE } from '../constants';
@@ -13,10 +13,12 @@ import { DEFAULT_ROWS_PER_PAGE } from '../constants';
 export default function Tags(): React.JSX.Element {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
-    const [skip, setSkip] = useState(0);
     const [filter, setFilter] = useState('');
-    const [tags, setTags] = useState<ITag[]>([]);
-    const [count, setCount] = useState<number>(0);
+
+    const handleFilterChange = (value: string) => {
+        setFilter(value);
+        setPage(0);
+    };
 
     const { data, error, loading } = useQuery<{
         tags: IRawTag[];
@@ -27,29 +29,20 @@ export default function Tags(): React.JSX.Element {
             filterInput: { name: filter },
             sortInput: [{ field: 'name', dir: 'asc' }],
             limit: rowsPerPage,
-            skip
+            skip: page * rowsPerPage
         }
     });
 
-    useEffect(() => {
-        setSkip(page * rowsPerPage);
-    }, [page]);
+    const tags: ITag[] = data ? transformRawTags(data.tags) : [];
+    const count: number = data ? data.count.count : 0;
 
     useEffect(() => {
-        setPage(0);
-    }, [filter]);
-
-    useEffect(() => {
-        if (data) {
-            const tags = transformRawTags(data.tags);
-            setTags(tags);
-            setCount(data.count.count);
-        } else if (error) {
+        if (error) {
             console.error(
                 'Error occurred while fetching Categories. Please contact application administrator.'
             );
         }
-    }, [data, error]);
+    }, [error]);
 
     return (
         <Stack spacing={3}>
@@ -58,7 +51,7 @@ export default function Tags(): React.JSX.Element {
                 backPath={paths.dashboard.categories}
                 isDisplayAddButton
             />
-            <Filter entityToSearch='tags' setFilter={setFilter} />
+            <Filter entityToSearch='tags' setFilter={handleFilterChange} />
             <TagsTable
                 count={count}
                 page={page}

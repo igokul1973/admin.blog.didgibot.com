@@ -1,4 +1,4 @@
-import { ArticleFormContext } from '@/contexts/ArticleFormContext';
+import { ArticleFormContext } from '@/contexts/article/ArticleFormContext';
 import { usePopover } from '@/hooks/use-popover';
 import ListIcon from '@mui/icons-material/List';
 import BellIcon from '@mui/icons-material/Notifications';
@@ -36,6 +36,8 @@ export function MainNav(): JSX.Element {
     } = use(ArticleFormContext);
     const { pathname } = useLocation();
     const [isUpdateArticlePage, setIsUpdateArticlePage] = useState(false);
+    const [userPopoverAnchorEl, setUserPopoverAnchorEl] = useState<HTMLDivElement | null>(null);
+    const { handleOpen, handleClose, open, anchorRef } = userPopover;
 
     useEffect(() => {
         if (upToXLargeScreen) {
@@ -50,6 +52,10 @@ export function MainNav(): JSX.Element {
         const isUpdate = pathname.match(/articles\/[^/]+\/update/) !== null;
         setIsUpdateArticlePage(isUpdate);
     }, [pathname]);
+
+    useEffect(() => {
+        setUserPopoverAnchorEl(anchorRef.current);
+    }, [anchorRef]);
 
     return (
         <>
@@ -130,19 +136,15 @@ export function MainNav(): JSX.Element {
                             </Badge>
                         </Tooltip>
                         <Avatar
-                            onClick={userPopover.handleOpen}
-                            ref={userPopover.anchorRef}
+                            onClick={handleOpen}
+                            ref={anchorRef}
                             src='/assets/avatar.png'
                             sx={{ cursor: 'pointer' }}
                         />
                     </Stack>
                 </Stack>
             </StyledMainNav>
-            <UserPopover
-                anchorEl={userPopover.anchorRef.current}
-                onClose={userPopover.handleClose}
-                open={userPopover.open}
-            />
+            <UserPopover anchorEl={userPopoverAnchorEl} onClose={handleClose} open={open} />
             <SideNav onClose={() => setIsNavOpen(false)} isOpen={isNavOpen} />
         </>
     );

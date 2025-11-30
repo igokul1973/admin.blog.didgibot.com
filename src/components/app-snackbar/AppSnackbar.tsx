@@ -1,4 +1,4 @@
-import { useSnackbar } from '@/contexts/snackbar/provider';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, Snackbar, SnackbarCloseReason, useTheme } from '@mui/material';
 

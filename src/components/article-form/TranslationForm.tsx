@@ -1,9 +1,9 @@
-import { useSnackbar } from '@/contexts/snackbar/provider';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { GET_CATEGORIES, GET_TAGS } from '@/operations';
-import { ICategory } from '@/types/category';
-import { ITag } from '@/types/tag';
+import { ICategory, IRawCategory } from '@/types/category';
+import { IRawTag, ITag } from '@/types/tag';
 import { LanguageEnum } from '@/types/translation';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client/react';
 import EditorJS from '@editorjs/editorjs';
 import {
     Autocomplete,
@@ -62,7 +62,7 @@ export function TranslationForm({
         data: initialRawCategories,
         error: initialRawCategoriesError,
         loading: initialRawCategoriesLoading
-    } = useQuery(GET_CATEGORIES, {
+    } = useQuery<{ categories: IRawCategory[]; count: { count: number } }>(GET_CATEGORIES, {
         variables: getInitialVariables()
     });
 
@@ -70,32 +70,11 @@ export function TranslationForm({
         data: initialRawTags,
         error: initialRawTagsError,
         loading: initialRawTagsLoading
-    } = useQuery(GET_TAGS, {
+    } = useQuery<{ tags: IRawTag[]; count: { count: number } }>(GET_TAGS, {
         variables: getInitialVariables()
     });
 
     const watchedForm = watch();
-
-    const [categoryOptions, setCategoryOptions] = useState<ICategory[]>([]);
-    const [tagOptions, setTagOptions] = useState<ITag[]>([]);
-
-    useEffect(() => {
-        if (initialRawCategories) {
-            const categories = transformRawCategories(initialRawCategories.categories, true);
-            setCategoryOptions(categories);
-        } else if (initialRawCategoriesError) {
-            openSnackbar(initialRawCategoriesError.message, 'error');
-        }
-    }, [initialRawCategories, initialRawCategoriesError, openSnackbar]);
-
-    useEffect(() => {
-        if (initialRawTags) {
-            const tags = transformRawTags(initialRawTags.tags, true);
-            setTagOptions(tags);
-        } else if (initialRawTagsError) {
-            openSnackbar(initialRawTagsError.message, 'error');
-        }
-    }, [initialRawTags, initialRawTagsError, openSnackbar]);
 
     // Lazily load categories
     const [
@@ -105,31 +84,49 @@ export function TranslationForm({
             error: filteredCategoriesError,
             loading: filteredCategoriesLoading
         }
-    ] = useLazyQuery(GET_CATEGORIES);
+    ] = useLazyQuery<{ categories: IRawCategory[]; count: { count: number } }>(GET_CATEGORIES);
 
     // Lazily load tags
     const [
         getTagsFn,
         { data: filteredTags, error: filteredTagsError, loading: filteredTagsLoading }
-    ] = useLazyQuery(GET_TAGS);
+    ] = useLazyQuery<{ tags: IRawTag[]; count: { count: number } }>(GET_TAGS);
+
+    const categoryOptions = filteredCategories
+        ? transformRawCategories(filteredCategories.categories)
+        : initialRawCategories
+          ? transformRawCategories(initialRawCategories.categories, true)
+          : [];
+
+    const tagOptions = filteredTags
+        ? transformRawTags(filteredTags.tags)
+        : initialRawTags
+          ? transformRawTags(initialRawTags.tags, true)
+          : [];
 
     useEffect(() => {
-        if (filteredCategories) {
-            const categories = transformRawCategories(filteredCategories.categories);
-            setCategoryOptions(categories);
-        } else if (filteredCategoriesError) {
+        if (initialRawCategoriesError) {
+            openSnackbar(initialRawCategoriesError.message, 'error');
+        }
+    }, [initialRawCategoriesError, openSnackbar]);
+
+    useEffect(() => {
+        if (initialRawTagsError) {
+            openSnackbar(initialRawTagsError.message, 'error');
+        }
+    }, [initialRawTagsError, openSnackbar]);
+
+    useEffect(() => {
+        if (filteredCategoriesError) {
             openSnackbar(filteredCategoriesError.message, 'error');
         }
-    }, [filteredCategories, filteredCategoriesError, openSnackbar]);
+    }, [filteredCategoriesError, openSnackbar]);
 
     useEffect(() => {
-        if (filteredTags) {
-            const tags = transformRawTags(filteredTags.tags);
-            setTagOptions(tags);
-        } else if (filteredTagsError) {
+        if (filteredTagsError) {
             openSnackbar(filteredTagsError.message, 'error');
         }
-    }, [filteredTags, filteredTagsError, openSnackbar]);
+    }, [filteredTagsError, openSnackbar]);
 
     const getCategories = useCallback(
         async (value: string) => {
@@ -213,7 +210,7 @@ export function TranslationForm({
                     });
                 }
             }),
-        [setValue]
+        [language, setValue]
     );
 
     const headerError = errors.translations?.[languageIndex]?.header;
@@ -222,19 +219,11 @@ export function TranslationForm({
     const tagsError = errors.translations?.[languageIndex]?.tags;
 
     const handleNewCategory = (newCategory: ICategory) => {
-        setCategoryOptions(
-            [...categoryOptions, newCategory].sort((a: ICategory, b: ICategory) =>
-                a.name.localeCompare(b.name)
-            )
-        );
         setValue(`translations.${languageIndex}.category`, newCategory);
         handleAddCategoryDialogClose();
     };
 
     const handleNewTag = (newTag: ITag) => {
-        setTagOptions(
-            [...tagOptions, newTag].sort((a: ITag, b: ITag) => a.name.localeCompare(b.name))
-        );
         const tags = watchedForm.translations[languageIndex].tags;
         setValue(`translations.${languageIndex}.tags`, tags?.length ? [...tags, newTag] : [newTag]);
         handleAddTagDialogClose();

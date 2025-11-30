@@ -1,8 +1,8 @@
+import { ISubmitEvent } from '@/contexts/article/types';
+import { LanguageEnum } from '@/types/translation';
 import { FieldNamesMarkedBoolean, FieldValues } from 'react-hook-form';
 import { z } from 'zod';
 import { articleSchema, editorJsSchema } from './formSchema';
-import { ISubmitEvent } from '@/contexts/ArticleFormContext';
-import { LanguageEnum } from '@/types/translation';
 
 export interface IProps {
     readonly onSubmit: (

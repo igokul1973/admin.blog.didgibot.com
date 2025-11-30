@@ -28,7 +28,8 @@ export interface IResetPasswordParams {
 }
 
 class AuthClient {
-    async signInWithOAuth(_: ISignInWithOAuthParams): Promise<{ error?: string }> {
+    async signInWithOAuth(params: ISignInWithOAuthParams): Promise<{ error?: string }> {
+        void params;
         return { error: 'Social authentication not implemented' };
     }
 
@@ -87,11 +88,13 @@ class AuthClient {
         }
     }
 
-    async resetPassword(_: IResetPasswordParams): Promise<{ error?: string }> {
+    async resetPassword(params: IResetPasswordParams): Promise<{ error?: string }> {
+        void params;
         return { error: 'Password reset not implemented' };
     }
 
-    async updatePassword(_: IResetPasswordParams): Promise<{ error?: string }> {
+    async updatePassword(params: IResetPasswordParams): Promise<{ error?: string }> {
+        void params;
         return { error: 'Update reset not implemented' };
     }
 

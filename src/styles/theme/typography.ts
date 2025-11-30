@@ -1,5 +1,3 @@
-import type { TypographyOptions } from '@mui/material/styles/createTypography';
-
 export const typography = {
     fontFamily:
         '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
@@ -22,4 +20,4 @@ export const typography = {
     h4: { fontSize: '2rem', fontWeight: 500, lineHeight: 1.2 },
     h5: { fontSize: '1.5rem', fontWeight: 500, lineHeight: 1.2 },
     h6: { fontSize: '1.125rem', fontWeight: 500, lineHeight: 1.2 }
-} satisfies TypographyOptions;
+};

@@ -1,10 +1,12 @@
-import { useSnackbar } from '@/contexts/snackbar/provider';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import {
     CREATE_category as CREATE_CATEGORY,
     UPDATE_category as UPDATE_CATEGORY
 } from '@/operations';
 import { paths } from '@/paths';
-import { gql, useMutation } from '@apollo/client';
+import { IRawCategory } from '@/types/category';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     capitalize,
@@ -20,7 +22,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { JSX, useEffect } from 'react';
 import { FieldErrors, useForm, UseFormRegister } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -68,13 +70,19 @@ export function CategoryForm({
     const [
         createCategoryFunction,
         { data: createCategoryData, error: createCategoryError, loading: createCategoryLoading }
-    ] = useMutation(CREATE_CATEGORY, {
-        update(cache, { data: { set_category: data } }) {
+    ] = useMutation<{ set_category: IRawCategory }>(CREATE_CATEGORY, {
+        update(cache, { data }) {
+            if (!data?.set_category) {
+                return;
+            }
+
+            const category = data.set_category;
+
             cache.modify({
                 fields: {
                     categories(existingCategories = []) {
                         const newCategoryRef = cache.writeFragment({
-                            data,
+                            data: category,
                             fragment: gql`
                                 fragment NewCategory on Category {
                                     id
@@ -91,8 +99,8 @@ export function CategoryForm({
                     }
                 }
             });
-            if (data && handleNewCategory) {
-                const sanitizedCategory = transformRawCategory(data);
+            if (handleNewCategory) {
+                const sanitizedCategory = transformRawCategory(category);
                 handleNewCategory(sanitizedCategory);
             }
         }

@@ -3,11 +3,13 @@ import LanguageForm from '@/components/article-form/language-form/LanguageForm';
 import { TArticleFormOutput } from '@/components/article-form/types';
 import EntitiesPageHeader from '@/components/page/EntitiesPageHeader';
 import { getEmptyArticle, snakeCaseKeys } from '@/components/utils';
-import { useSnackbar } from '@/contexts/snackbar/provider';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { CREATE_ARTICLE } from '@/operations';
 import { paths } from '@/paths';
+import { IRawArticle } from '@/types/article';
 import { LanguageEnum } from '@/types/translation';
-import { gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { capitalize } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { JSX, useEffect, useState } from 'react';
@@ -23,13 +25,18 @@ export default function ArticleCreate(): JSX.Element {
     const [
         createArticleFunction,
         { data: createArticleData, error: createArticleError, loading: createArticleLoading }
-    ] = useMutation(CREATE_ARTICLE, {
-        update(cache, { data: { set_article: data } }) {
+    ] = useMutation<{ set_article: IRawArticle }>(CREATE_ARTICLE, {
+        update(cache, { data }) {
+            if (!data?.set_article) {
+                return;
+            }
+            const article = data.set_article;
+
             cache.modify({
                 fields: {
                     articles(existingArticles = []) {
                         const newArticleRef = cache.writeFragment({
-                            data,
+                            data: article,
                             fragment: gql`
                                 fragment NewArticle on Article {
                                     id
@@ -82,7 +89,7 @@ export default function ArticleCreate(): JSX.Element {
         if (createArticleLoading) {
             console.log('Sending article create request...');
         }
-    }, [createArticleData, createArticleError, createArticleLoading]);
+    }, [createArticleData, createArticleError, createArticleLoading, navigate, openSnackbar]);
 
     const onSubmit = async (
         formData: TArticleFormOutput,

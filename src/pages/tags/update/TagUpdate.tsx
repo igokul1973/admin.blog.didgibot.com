@@ -4,21 +4,24 @@ import { transformRawTag } from '@/components/utils';
 import { GET_TAGS } from '@/operations';
 import { paths } from '@/paths';
 import { IRawTag, ITag } from '@/types/tag';
-import { gql, useApolloClient, useLazyQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useApolloClient, useLazyQuery } from '@apollo/client/react';
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { JSX, useEffect, useState } from 'react';
+import { JSX, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router';
 
 export default function TagUpdate(): JSX.Element {
     const { id } = useParams();
     const client = useApolloClient();
 
-    const [getTagsFn, { data: fetchedTags, error: fetchedTagsError, loading: fetchedTagsLoading }] =
-        useLazyQuery(GET_TAGS);
+    const [getTagsFn, { data: fetchedTags, error: fetchedTagsError }] = useLazyQuery<{
+        tags: IRawTag[];
+        count: { count: number };
+    }>(GET_TAGS);
 
     // Fetch the cached tag
-    const rawTagFragment = client.readFragment({
+    const rawTagFragment = client.readFragment<IRawTag>({
         id: `TagType:${id}`, // The value of the to-do item's cache ID
         fragment: gql`
             fragment Z on TagType {
@@ -30,8 +33,8 @@ export default function TagUpdate(): JSX.Element {
         `
     });
 
-    const [rawTag, setRawTag] = useState<IRawTag | null>(rawTagFragment);
-    const [tag, setTag] = useState<ITag | null>(null);
+    const rawTag: IRawTag | null = fetchedTags?.tags?.[0] ?? rawTagFragment ?? null;
+    const tag: ITag | null = useMemo(() => (rawTag ? transformRawTag(rawTag) : null), [rawTag]);
 
     useEffect(() => {
         const fetchTag = async () => {
@@ -41,21 +44,14 @@ export default function TagUpdate(): JSX.Element {
                 }
             });
         };
-        if (rawTag) {
-            const tag = rawTag && transformRawTag(rawTag);
-            setTag(tag);
-        } else {
-            fetchTag();
-        }
-    }, [rawTag]);
+        fetchTag();
+    }, [rawTag, getTagsFn, id]);
 
     useEffect(() => {
-        if (fetchedTags && fetchedTags.tags.length > 0) {
-            setRawTag(fetchedTags.tags[0]);
-        } else if (fetchedTagsError) {
+        if (fetchedTagsError) {
             console.error(fetchedTagsError);
         }
-    }, [fetchedTags, fetchedTagsError, fetchedTagsLoading]);
+    }, [fetchedTagsError]);
 
     return (
         <Stack spacing={3}>

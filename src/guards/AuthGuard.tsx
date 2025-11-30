@@ -3,8 +3,9 @@ import { authClient } from '@/lib/auth/AuthClient';
 import { logger } from '@/lib/default-logger';
 import { httpLink, nonTerminatingLinks, SET_AUTH } from '@/main';
 import { paths } from '@/paths';
-import { from, split, useApolloClient } from '@apollo/client';
+import { from, split } from '@apollo/client';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { useApolloClient } from '@apollo/client/react';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient } from 'graphql-ws';
 import { JSX, ReactNode, useEffect } from 'react';
@@ -13,6 +14,12 @@ import { useNavigate } from 'react-router';
 export interface IAuthGuardProps {
     readonly children: ReactNode;
 }
+
+export type AuthWatchResult = {
+    auth: {
+        isAuthenticated: boolean;
+    };
+};
 
 export function AuthGuard({ children }: IAuthGuardProps): JSX.Element | null {
     const navigate = useNavigate();
@@ -55,21 +62,27 @@ export function AuthGuard({ children }: IAuthGuardProps): JSX.Element | null {
 
             apolloClient.setLink(from([...nonTerminatingLinks, splitLink]));
         }
-    }, [user]);
+    }, [user, navigate, apolloClient]);
 
     useEffect(() => {
         apolloClient.cache.watch({
             query: SET_AUTH,
             optimistic: true,
-            callback: ({ complete, result }) => {
-                if (complete && !result.auth.isAuthenticated) {
+            callback: ({
+                complete,
+                result
+            }: {
+                complete: boolean;
+                result: AuthWatchResult | null;
+            }) => {
+                if (complete && result && !result.auth.isAuthenticated) {
                     authClient.unsetAuthInStorage();
                     setUserStateFromStorage();
                     apolloClient.clearStore();
                 }
             }
-        });
-    }, []);
+        } as unknown as Parameters<typeof apolloClient.cache.watch>[0]);
+    }, [apolloClient, setUserStateFromStorage]);
 
     return <>{children}</>;
 }

@@ -2,7 +2,7 @@ import { useUser } from '@/hooks/use-user';
 import { authClient } from '@/lib/auth/AuthClient';
 import { setAuth } from '@/main';
 import { paths } from '@/paths';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -40,7 +40,7 @@ export function SignInForm(): JSX.Element {
         if (user) {
             navigate(paths.home);
         }
-    }, [user]);
+    }, [navigate, user]);
 
     const {
         control,
@@ -63,7 +63,7 @@ export function SignInForm(): JSX.Element {
             // Refresh the user state
             setUserStateFromStorage();
         },
-        [setUserStateFromStorage, setError]
+        [apolloClient, setUserStateFromStorage, setError]
     );
 
     return (

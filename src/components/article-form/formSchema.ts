@@ -44,20 +44,18 @@ export const articleSchema = z.object({
             z.object({
                 language: z.nativeEnum(LanguageEnum),
                 header: z
-                    .string({
-                        required_error: "please enter tag's name",
-                        invalid_type_error: "please enter the tag's name"
-                    })
+                    .string()
+                    .trim()
+                    .nonempty({ message: "please enter tag's name" })
                     .min(3, { message: 'must be at least 3 characters' })
-                    .max(80, { message: 'must be less than 81 characters' }),
+                    .max(80, { message: 'must be less than 81 characters' })
+                    .transform((val) => val.replace(/\s+/g, ' ')),
                 content: editorJsSchema,
                 isPublished: z.boolean(),
                 category: z
                     .object({
                         id: z.string(),
-                        name: z.string({
-                            required_error: 'please select the category name'
-                        })
+                        name: z.string().min(1, { message: 'please select the category name' })
                     })
                     .nullable()
                     .transform((val, ctx) => {
@@ -73,18 +71,12 @@ export const articleSchema = z.object({
                 tags: z
                     .array(
                         z
-                            .object(
-                                {
-                                    id: z.string(),
-                                    name: z.string({
-                                        required_error: 'please select the inventory item name'
-                                    })
-                                },
-                                {
-                                    required_error: 'please enter the inventory item name',
-                                    invalid_type_error: 'please enter the inventory item name'
-                                }
-                            )
+                            .object({
+                                id: z.string(),
+                                name: z
+                                    .string()
+                                    .min(1, { message: 'please select the inventory item name' })
+                            })
                             .optional()
                     )
                     .optional()
@@ -92,19 +84,18 @@ export const articleSchema = z.object({
         )
         .min(2, 'please enter at least two translations'),
     slug: z
-        .string({
-            required_error: 'please enter the slug name',
-            invalid_type_error: 'slug must be a string'
-        })
+        .string()
+        .trim()
         .min(3, { message: 'must be at least 3 characters' })
         .max(60, { message: 'must be less than 61 characters' })
+        .transform((val) => val.toLocaleLowerCase())
         .optional(),
     priority: z.preprocess(
         (val) => (val === '' || val === undefined ? undefined : val),
         z
             .number()
-            .min(0)
-            .max(1)
+            .min(0, { message: 'priority can be at least 0' })
+            .max(1, { message: 'priority can be at most 1' })
             .refine((val) => {
                 const decimalPart = val.toString().split('.')[1];
                 return !decimalPart || decimalPart.length <= 1;

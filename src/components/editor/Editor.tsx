@@ -83,7 +83,7 @@ const commonTools: Record<string, ToolConstructable | ToolSettings> = {
     }
 };
 
-export function Editor({ editor, onChange, initialValue, index }: IProps) {
+export function Editor({ editor: editorRef, onChange, initialValue, index }: IProps) {
     const isReady = useRef(false);
     const onChangeRef = useRef(onChange);
     // Capture initial value only once
@@ -101,7 +101,7 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                 placeholder: 'Type here to write the article',
                 inlineToolbar: true,
                 onReady: () => {
-                    editor.current = editorJs;
+                    editorRef.current = editorJs;
                 },
                 tools: {
                     // Add your desired tools here
@@ -209,16 +209,16 @@ export function Editor({ editor, onChange, initialValue, index }: IProps) {
                 }
             });
             isReady.current = true;
-            editor.current = editorJs;
+            editorRef.current = editorJs;
         }
 
         return () => {
-            if (editor.current?.destroy) {
-                editor.current.destroy();
+            if (editorRef.current?.destroy) {
+                editorRef.current.destroy();
             }
-            editor.current = null;
+            editorRef.current = null;
         };
-    }, [editor, index]);
+    }, [editorRef, index]);
 
     return <StyledEditor id={`editorjs-container-${index}`} />;
 }

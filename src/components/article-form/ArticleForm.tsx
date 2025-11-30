@@ -9,14 +9,14 @@ import {
     CardContent,
     Divider,
     FormControl,
-    Grid2 as Grid,
+    Grid,
     Paper,
     Stack,
     TextField,
     Typography
 } from '@mui/material';
-import { JSX, useEffect, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { JSX, useEffect, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { Link } from 'react-router';
 import AnnotationPopover from '../annotation-popover/AnnotationPopover';
 import { articleSchema } from './formSchema';
@@ -31,20 +31,20 @@ export function ArticleForm({
     setIsArticleFormDirty
 }: IProps): JSX.Element {
     const submitButtonRef = useRef<HTMLButtonElement>(null);
-    const [languageIndex, setLanguageIndex] = useState<number>(0);
-
-    useEffect(() => {
-        if (defaultValues) {
-            const i = defaultValues.translations.findIndex((t) => t.language === language);
-            setLanguageIndex(i);
+    const languageIndex = useMemo(() => {
+        if (!defaultValues) {
+            return 0;
         }
-    }, [language, defaultValues]);
+        const index = defaultValues.translations.findIndex((t) => t.language === language);
+        return index >= 0 ? index : 0;
+    }, [defaultValues, language]);
 
     const {
         watch,
         reset,
         register,
         handleSubmit,
+        control,
         formState: { errors, dirtyFields, isDirty, ...formState },
         ...methods
     } = useForm<TArticleFormInput, unknown, TArticleFormOutput>({
@@ -74,7 +74,8 @@ export function ArticleForm({
         reset(defaultValues);
     }, [defaultValues, reset]);
 
-    const watchedForm = watch();
+    const watchedForm = useWatch({ control });
+    const currentTranslation = watchedForm?.translations?.[languageIndex];
 
     const slugError = errors.slug;
     const priorityError = errors.priority;
@@ -83,6 +84,7 @@ export function ArticleForm({
         <FormProvider
             watch={watch}
             register={register}
+            control={control}
             reset={reset}
             handleSubmit={handleSubmit}
             formState={{ errors, dirtyFields, isDirty, ...formState }}
@@ -194,14 +196,16 @@ export function ArticleForm({
                 </Card>
             </form>
 
-            {watchedForm.translations[languageIndex].content && isShowPreview && (
+            {currentTranslation?.content && isShowPreview && (
                 <Paper sx={{ mt: 1, p: 2 }}>
                     <Typography variant='h5' sx={{ mb: 2 }} color='primary'>
                         Preview
                     </Typography>
                     <Box sx={{ border: '1px solid #ccc', p: 2, borderRadius: '4px' }}>
                         <AnnotationPopover
-                            translation={watchedForm['translations'][languageIndex]}
+                            translation={
+                                currentTranslation as TArticleFormInput['translations'][number]
+                            }
                         />
                         {/* <pre>
                             {JSON.stringify(watchedForm.translations[index].content, null, 2)}

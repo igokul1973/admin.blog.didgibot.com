@@ -6,7 +6,7 @@ import { shadows } from './shadows';
 import type { Theme } from './types';
 import { typography } from './typography';
 
-declare module '@mui/material/styles/createPalette' {
+declare module '@mui/material/styles' {
     interface PaletteRange {
         50: string;
         100: string;

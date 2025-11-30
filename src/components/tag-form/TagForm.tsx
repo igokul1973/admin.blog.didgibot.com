@@ -1,6 +1,8 @@
-import { useSnackbar } from '@/contexts/snackbar/provider';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { paths } from '@/paths';
-import { gql, useMutation } from '@apollo/client';
+import { IRawTag } from '@/types/tag';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     capitalize,
@@ -16,7 +18,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { JSX, useEffect } from 'react';
 import { FieldErrors, useForm, UseFormRegister } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -86,13 +88,17 @@ export function TagForm({
     const [
         createTagFunction,
         { data: createTagData, error: createTagError, loading: createTagLoading }
-    ] = useMutation(CREATE_TAG, {
-        update(cache, { data: { set_tag: data } }) {
+    ] = useMutation<{ set_tag: IRawTag }>(CREATE_TAG, {
+        update(cache, { data }) {
+            if (!data?.set_tag) {
+                return;
+            }
+            const tag = data.set_tag;
             cache.modify({
                 fields: {
                     tags(existingTags = []) {
                         const newTagRef = cache.writeFragment({
-                            data,
+                            data: tag,
                             fragment: gql`
                                 fragment NewTag on Tag {
                                     id
@@ -109,8 +115,8 @@ export function TagForm({
                     }
                 }
             });
-            if (data && handleNewTag) {
-                const sanitizedTag = transformRawTag(data);
+            if (handleNewTag) {
+                const sanitizedTag = transformRawTag(tag);
                 handleNewTag(sanitizedTag);
             }
         }

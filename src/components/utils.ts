@@ -75,10 +75,12 @@ export const transformRawTags = (tags: IRawTag[], isRemoveDateFields = false): I
 };
 
 export function transformRawContent(rawContent: IContent) {
-    const { __typename, version, time, blocks, ...content } = rawContent;
+    const { __typename: _contentTypename, version, time, blocks, ...content } = rawContent;
+    void _contentTypename;
     const transformedBlocks = [];
     for (const block of blocks) {
-        const { __typename, ...blockRest } = block;
+        const { __typename: _blockTypename, ...blockRest } = block;
+        void _blockTypename;
         transformedBlocks.push(blockRest);
     }
 
@@ -202,6 +204,7 @@ export const getEmptyTranslationByLanguage = (
 export const getEmptyArticle = (): TArticleFormInput => {
     return {
         id: null,
+        priority: undefined,
         translations: [
             getEmptyTranslationByLanguage(LanguageEnum.EN),
             getEmptyTranslationByLanguage(LanguageEnum.RU)

@@ -14,7 +14,7 @@ import { useUser } from '@/hooks/use-user';
 import { logger } from '@/lib/default-logger';
 import { setAuth } from '@/main';
 import { paths } from '@/paths';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { JSX, useCallback } from 'react';
 
 export interface IUserPopoverProps {
@@ -24,7 +24,7 @@ export interface IUserPopoverProps {
 }
 
 export function UserPopover({ anchorEl, onClose, open }: IUserPopoverProps): JSX.Element {
-    const { user, setUserStateFromStorage: checkSession } = useUser();
+    const { user } = useUser();
     const apolloClient = useApolloClient();
 
     const handleSignOut = useCallback(async (): Promise<void> => {
@@ -33,7 +33,7 @@ export function UserPopover({ anchorEl, onClose, open }: IUserPopoverProps): JSX
         } catch (err) {
             logger.error('Sign out error', err);
         }
-    }, [checkSession]);
+    }, [apolloClient]);
 
     if (!user) {
         return <div>User not found</div>;

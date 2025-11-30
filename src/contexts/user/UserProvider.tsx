@@ -1,18 +1,8 @@
 import { authClient } from '@/lib/auth/AuthClient';
 import type { IUser } from '@/types/user';
-import { createContext, JSX, ReactNode, useCallback, useMemo, useState } from 'react';
-
-export interface IUserContextValue {
-    user: IUser | null;
-    setUserStateFromStorage: () => void;
-}
-
-export const UserContext = createContext<IUserContextValue | undefined>(undefined);
-
-export interface UserProviderProps {
-    readonly children: ReactNode;
-    readonly initialState: { user: IUser | null };
-}
+import { JSX, useCallback, useMemo, useState } from 'react';
+import { UserContext } from './UserContext';
+import { UserProviderProps } from './types';
 
 export function UserProvider({ initialState, children }: UserProviderProps): JSX.Element {
     const [state, setState] = useState<{
@@ -33,5 +23,3 @@ export function UserProvider({ initialState, children }: UserProviderProps): JSX
 
     return <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>;
 }
-
-export const UserConsumer = UserContext.Consumer;

@@ -1,4 +1,6 @@
-import { ApolloError } from '@apollo/client';
+export interface ITableError {
+    readonly message: string;
+}
 
 export interface ITableProps<T> {
     readonly setPage: (page: number) => void;
@@ -8,5 +10,5 @@ export interface ITableProps<T> {
     readonly rows?: T[];
     readonly rowsPerPage?: number;
     readonly loading?: boolean;
-    readonly error?: ApolloError;
+    readonly error?: ITableError;
 }

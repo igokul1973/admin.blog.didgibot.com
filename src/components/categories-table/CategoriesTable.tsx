@@ -1,11 +1,11 @@
 import BaseLinkIconButton from '@/components/base-link-icon-button/BaseLinkIconButton';
 import { onPageChange, onRowsPerPageChange } from '@/components/utils';
-import { useSnackbar } from '@/contexts/snackbar/provider';
 import { useSelection } from '@/hooks/use-selection';
+import { useSnackbar } from '@/hooks/use-snackbar';
 import { DELETE_CATEGORY } from '@/operations';
 import { ICategory } from '@/types/category';
 import { ITableProps } from '@/types/pages';
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import ModeEditOutlined from '@mui/icons-material/ModeEditOutlined';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -73,7 +73,7 @@ export default function CategoriesTable({
         if (deleteCategoryError) {
             openSnackbar(deleteCategoryError.message, 'error');
         }
-    }, [deleteCategoryData, deleteCategoryError, deleteCategoryLoading]);
+    }, [deleteCategoryData, deleteCategoryError, deleteCategoryLoading, openSnackbar]);
 
     if (error) {
         return <div>Error: {error.message}</div>;

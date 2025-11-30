@@ -1,30 +1,6 @@
-import { createContext, JSX, ReactNode, useMemo, useState } from 'react';
-
-export interface ISubmitEvent {
-    isSubmit: boolean;
-}
-
-export interface IArticleFormContextValue {
-    submitEvent: ISubmitEvent;
-    setSubmitEvent: React.Dispatch<React.SetStateAction<ISubmitEvent>>;
-    isRedirectOnArticleSubmit: boolean;
-    setIsRedirectOnArticleSubmit: React.Dispatch<React.SetStateAction<boolean>>;
-    isArticleFormDirty: boolean;
-    setIsArticleFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const ArticleFormContext = createContext<IArticleFormContextValue>({
-    submitEvent: { isSubmit: false },
-    setSubmitEvent: () => {},
-    isRedirectOnArticleSubmit: false,
-    setIsRedirectOnArticleSubmit: () => {},
-    isArticleFormDirty: false,
-    setIsArticleFormDirty: () => {}
-});
-
-export interface ArticleFormProviderProps {
-    readonly children: ReactNode;
-}
+import { JSX, useMemo, useState } from 'react';
+import { ArticleFormContext } from './ArticleFormContext';
+import { ArticleFormProviderProps, ISubmitEvent } from './types';
 
 export function ArticleFormProvider({ children }: ArticleFormProviderProps): JSX.Element {
     const [submitEvent, setSubmitEvent] = useState<ISubmitEvent>({ isSubmit: false });
@@ -54,5 +30,3 @@ export function ArticleFormProvider({ children }: ArticleFormProviderProps): JSX
         <ArticleFormContext.Provider value={contextValue}>{children}</ArticleFormContext.Provider>
     );
 }
-
-export const UserConsumer = ArticleFormContext.Consumer;

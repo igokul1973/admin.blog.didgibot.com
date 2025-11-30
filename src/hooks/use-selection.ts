@@ -15,6 +15,7 @@ export function useSelection<T = string>(keys: T[] = []): ISelection<T> {
     const [selected, setSelected] = useState<Set<T>>(new Set());
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelected(new Set());
     }, [keys]);
 
