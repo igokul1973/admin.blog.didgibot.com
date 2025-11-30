@@ -41,10 +41,10 @@ pipeline {
                   sh """
                     git config --global --add safe.directory ${env.WORKSPACE}
                     git checkout ${env.BRANCH_NAME}
-                    npm version --no-git-tag-version patch
+                    pnpm version --no-git-tag-version patch
                     git add --all
                   """
-                  def new_app_version = readJSON text: sh(returnStdout: true, script: 'npm version')
+                  def new_app_version = readJSON text: sh(returnStdout: true, script: 'pnpm version')
                   env.NEW_APP_VERSION = new_app_version['admin.blog.didgibot.com']
                   def commitMessage = "Upgrade to new application version - ${env.NEW_APP_VERSION} - [version bump]"
                   def encodedPassword = URLEncoder.encode("$GH_TOKEN", 'UTF-8')
@@ -63,8 +63,8 @@ pipeline {
         container('node-git-chromium') {
           sh '''
             echo 'Building the app...'
-            npm i
-            npm run build
+            pnpm i
+            pnpm run build
           '''
         }
       }

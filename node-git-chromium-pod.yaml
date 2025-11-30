@@ -5,7 +5,7 @@ metadata:
 spec:
     containers:
         - name: node-git-chromium
-          image: igk19/node-git-chromium:1.0.9
+          image: igk19/node-git-chromium:1.0.10
           automountServiceAccountToken: false
           command:
               - sleep

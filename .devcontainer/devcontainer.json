@@ -11,7 +11,8 @@
     // Mounts
     "mounts": [
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,readonly"
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,readonly",
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.docker/config.json,target=/root/.docker/config.json,type=bind,readonly"
     ],
     "runArgs": [
         //     "--volume",
@@ -34,13 +35,13 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "codeium.codeium",
                 "codeandstuff.package-json-upgrade",
                 "buenon.scratchpads",
                 "esbenp.prettier-vscode",
                 "dbaeumer.vscode-eslint",
                 "eamodio.gitlens",
-                "wallabyjs.quokka-vscode"
+                "wallabyjs.quokka-vscode",
+                "gruntfuggly.todo-tree"
             ]
         }
     },

@@ -3,7 +3,7 @@
 # spin up Dev Container in VS Code (see .devcontainer/devcontainer.json)
 # It ensures no need for specific Node version on the host machine as
 # the container will always use Node version specified in this Dockerfile
-FROM igk19/debian-base:0.5.0
+FROM igk19/debian-base:0.6.0
 
 # Set environment variables to ensure non-interactive installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -21,6 +21,7 @@ RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | /b
 RUN /bin/bash -c "source $NVM_DIR/nvm.sh && \
     nvm install $NODE_VERSION && \
     nvm alias default $NODE_VERSION && \
-    nvm use default"
+    nvm use default && \
+    npm install -g pnpm"
 
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
